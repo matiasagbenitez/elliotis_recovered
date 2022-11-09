@@ -20,7 +20,7 @@
 
 <body class="container w-2/3 my-6 bg-gray-100">
     <div class="bg-white shadow p-6 rounded-xl">
-        <h1 class="text-2xl uppercase text-center font-bold mb-4">¡Oferta creada con éxito!</h1>
+        <h1 class="text-2xl uppercase text-center font-bold mb-4">¡Oferta actualizada con éxito!</h1>
 
         <p class="text-justify">
             Hola,

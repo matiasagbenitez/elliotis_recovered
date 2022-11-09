@@ -13,9 +13,9 @@ class ShowOfferTendering extends Component
     public $offer;
     public $supplier;
 
-    public function mount(Tendering $tendering, Hash $hash)
+    public function mount(Tendering $tender, Hash $hash)
     {
-        $this->tender = $tendering;
+        $this->tender = $tender;
         $this->hash = $hash;
         $this->offer = $hash->offer;
         $this->supplier = $hash->supplier;

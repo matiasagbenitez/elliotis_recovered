@@ -183,7 +183,7 @@
                                     @if ($hash->offer)
                                         <div class="flex items-center justify-end gap-2">
                                             <a title="Ver detalle"
-                                                href="{{ route('admin.tenderings.show-offer-detail', [$tender, $hash]) }}">
+                                                href="{{ route('admin.tenderings.show-offer-detail', ['tendering' => $tender, $hash]) }}">
                                                 <x-jet-secondary-button>
                                                     <i class="fas fa-list"></i>
                                                 </x-jet-secondary-button>

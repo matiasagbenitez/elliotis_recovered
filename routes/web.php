@@ -1,7 +1,10 @@
 <?php
 
 use App\Http\Livewire\Offers\CreateOffer;
+use App\Http\Livewire\Offers\EditOffer;
+use App\Http\Livewire\Offers\OfferDeletedSuccessfully;
 use App\Http\Livewire\Offers\OfferSentSuccesfully;
+use App\Http\Livewire\Offers\OfferUpdatedSuccessfully;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -30,9 +33,7 @@ Route::middleware([
 });
 
 Route::get('/offer/{hash:hash}', CreateOffer::class)->name('offer.create');
-
+Route::get('/offer/{hash:hash}/edit', EditOffer::class)->name('offer.edit');
 Route::get('/offer/{hash:hash}/sent-successfully', OfferSentSuccesfully::class)->name('offer.sent-successfully');
-
-Route::get('/prueba', function() {
-    return 'view';
-});
+Route::get('/offer/{hash:hash}/updated-successfully', OfferUpdatedSuccessfully::class)->name('offer.updated-successfully');
+Route::get('/offer/{hash:hash}/deleted-successfully', OfferDeletedSuccessfully::class)->name('offer.deleted-successfully');

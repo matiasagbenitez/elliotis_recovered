@@ -4,7 +4,7 @@
         <div class="flex items-center justify-between">
 
             {{-- GO BACK BUTTON --}}
-            <a href="{{ route('admin.tenderings.show-detail', $tender) }}">
+            <a href="{{ route('admin.tenderings.show-detail', ['tendering' => $hash->tendering]) }}">
                 <x-jet-button>
                     <i class="fas fa-arrow-left mr-2"></i>
                     Volver
@@ -47,7 +47,7 @@
             <p class="text-sm font-bold my-1">Fecha última modificación:
                 <span class="font-normal">
                     @if ($hash->answered)
-                        {{ Date::parse($offer->hash->updated_at)->format('d-m-Y H:i') }} hs
+                        {{ Date::parse($offer->updated_at)->format('d-m-Y H:i') }} hs
                     @else
                         No modificado
                     @endif
@@ -55,11 +55,11 @@
             </p>
             <p class="text-sm font-bold my-1">Fecha de cancelación:
                 <span class="font-normal">
-                    {{-- @if ($offer->hash->canceled_at)
+                    @if ($offer->hash->cancelled)
                         {{ Date::parse($offer->hash->canceled_at)->format('d-m-Y H:i') }}
                     @else
                         No cancelado
-                    @endif --}}
+                    @endif
                 </span>
             </p>
             <p class="text-sm font-bold my-1">Hash:
