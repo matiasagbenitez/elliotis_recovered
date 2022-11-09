@@ -114,7 +114,7 @@ class CreateOffer extends Component
     public function save()
     {
         $this->validate([
-            'createForm.delivery_date' => 'required|date',
+            'createForm.delivery_date' => 'required|date|after_or_equal:' . $this->tender->end_date,
             'createForm.observations' => 'nullable|string',
             'orderProducts' => 'required|array',
             'orderProducts.*.product_id' => 'required|exists:products,id',

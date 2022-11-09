@@ -88,7 +88,7 @@
 
     {{-- DETALLE DE HASHES --}}
     <div class="px-6 py-3 bg-white rounded-lg shadow mt-4">
-        <p class="text-sm font-bold my-1">Solicitudes enviadas</p>
+        <p class="font-bold my-1">Solicitudes enviadas</p>
         <hr class="mt-1 mb-2">
         @if ($hashes->count())
             <x-responsive-table>
@@ -114,7 +114,7 @@
                                 Fecha respuesta
                             </th>
                             <th scope="col" class="px-4 py-2">
-                                Acción
+                                Detalle
                             </th>
                         </tr>
                     </thead>
@@ -180,13 +180,16 @@
                                     </p>
                                 </td>
                                 <td class="px-6 py-2 whitespace-nowrap text-sm font-medium">
-                                    <div class="flex items-center justify-end gap-2">
-                                        <a title="Ver detalle" href="#">
-                                            <x-jet-secondary-button>
-                                                <i class="fas fa-list"></i>
-                                            </x-jet-secondary-button>
-                                        </a>
-                                    </div>
+                                    @if ($hash->offer)
+                                        <div class="flex items-center justify-end gap-2">
+                                            <a title="Ver detalle"
+                                                href="{{ route('admin.tenderings.show-offer-detail', [$tender, $hash]) }}">
+                                                <x-jet-secondary-button>
+                                                    <i class="fas fa-list"></i>
+                                                </x-jet-secondary-button>
+                                            </a>
+                                        </div>
+                                    @endif
                                 </td>
                             </tr>
                         @endforeach

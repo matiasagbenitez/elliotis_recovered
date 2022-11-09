@@ -11,6 +11,12 @@ class Hash extends Model
 
     protected $guarded = ['id', 'created_at', 'updated_at'];
 
+    // Route key name
+    public function getRouteKeyName()
+    {
+        return 'hash';
+    }
+
     // Relationship with Tendering
     public function tendering()
     {

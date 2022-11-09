@@ -38,6 +38,7 @@ use App\Http\Livewire\PurchaseOrders\ShowPurchaseOrder;
 use App\Http\Livewire\PurchaseOrders\CreatePurchaseOrder;
 use App\Http\Livewire\PurchaseOrders\PurchaseOrdersIndex;
 use App\Http\Livewire\PucharseParameters\IndexPucharseParameters;
+use App\Http\Livewire\Tenderings\ShowOfferTendering;
 
 Route::get('/countries', IndexCountries::class)->name('admin.countries.index');
 Route::get('/provinces', IndexProvinces::class)->name('admin.provinces.index');
@@ -87,3 +88,4 @@ Route::get('/purchase-order/{purchaseOrder}/detail', ShowPurchaseOrder::class)->
 Route::get('/tenderings', IndexTenderings::class)->name('admin.tenderings.index');
 Route::get('/tendering/create', CreateTendering::class)->name('admin.tenderings.create');
 Route::get('/tendering/{tendering}/detail', ShowTendering::class)->name('admin.tenderings.show-detail');
+Route::get('/tendering/{tendering}/hash/{hash:hash}/detail', ShowOfferTendering::class)->name('admin.tenderings.show-offer-detail');
