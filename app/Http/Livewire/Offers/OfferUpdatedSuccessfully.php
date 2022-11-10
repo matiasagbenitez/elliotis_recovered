@@ -17,7 +17,7 @@ class OfferUpdatedSuccessfully extends Component
 
     public function mount(Hash $hash)
     {
-        if (!$hash->is_active) {
+        if (!$hash->is_active || !$hash->offer) {
             // Abort
             abort(404, 'Hash no válido');
         }

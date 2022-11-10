@@ -31,7 +31,7 @@ class EditOffer extends Component
 
     public function mount(Hash $hash)
     {
-        if (!$hash->is_active) {
+        if (!$hash->is_active || !$hash->offer) {
             // Abort with message
             abort(404, 'Hash no válido');
         }
