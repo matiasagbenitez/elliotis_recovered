@@ -85,9 +85,17 @@
                             <li class="text-xs">{{ $product->name }} (x{{ $product->pivot->quantity }})</li>
                         @endforeach
                     </ul>
-                    <p class="text-sm my-1 font-bold">Subtotal estimado:
-                        <span class="font-normal">${{ number_format($tender->subtotal, 2, ',', '.') }}</span>
-                    </p>
+                    <div class="flex justify-between">
+                        <p class="text-sm my-1 font-bold">Subtotal estimado:
+                            <span class="font-normal">${{ number_format($tender->subtotal, 2, ',', '.') }}</span>
+                        </p>
+                        <p class="text-sm my-1 font-bold">IVA estimado:
+                            <span class="font-normal">${{ number_format($tender->iva, 2, ',', '.') }}</span>
+                        </p>
+                        <p class="text-sm my-1 font-bold">Total estimado:
+                            <span class="font-normal">${{ number_format($tender->total, 2, ',', '.') }}</span>
+                        </p>
+                    </div>
                     <div class="flex justify-between">
                         <p class="text-sm my-1 font-bold">Concurso analizado:
                             <span class="font-normal">{{ $tender->is_analyzed == 1 ? 'Sí' : 'No' }}</span>

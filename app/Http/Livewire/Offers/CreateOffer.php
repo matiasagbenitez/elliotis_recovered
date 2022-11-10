@@ -61,8 +61,8 @@ class CreateOffer extends Component
             ]);
         }
 
-        if ($hash->answered){
-            abort(403);
+        if ($hash->answered || !$hash->is_active){
+            abort(404);
         }
     }
 

@@ -21,6 +21,19 @@
         </div>
     </x-slot>
 
+    @if (!$tender->is_active)
+        <div
+            class="flex items-center p-4 mb-4 text-sm text-red-700 bg-red-100 rounded-lg dark:bg-red-200 dark:text-red-800 border-2 border-red-600">
+            <i class="fas fa-info-circle text-lg mr-2"></i>
+            <div>
+                <span class="font-bold uppercase">Atención!</span>
+                Este concurso fue anulado por {{ $user_who_cancelled }} el día {{ Date::parse($tender->cancelled_at)->format('d-m-Y') }}.
+                <span class="font-bold">Motivo:</span>
+                {{ $tender->cancel_reason }}
+            </div>
+        </div>
+    @endif
+
     {{-- Purchase detail --}}
     <div class="px-6 py-3 bg-white rounded-lg shadow">
         <span class="font-bold">Concurso #{{ $tender->id }}</span>
@@ -52,9 +65,17 @@
                         <li class="text-xs">{{ $product->name }} (x{{ $product->pivot->quantity }})</li>
                     @endforeach
                 </ul>
-                <p class="text-sm my-1 font-bold">Subtotal estimado:
-                    <span class="font-normal">${{ number_format($tender->subtotal, 2, ',', '.') }}</span>
-                </p>
+                <div class="flex justify-between">
+                    <p class="text-sm my-1 font-bold">Subtotal estimado:
+                        <span class="font-normal">${{ number_format($tender->subtotal, 2, ',', '.') }}</span>
+                    </p>
+                    <p class="text-sm my-1 font-bold">IVA estimado:
+                        <span class="font-normal">${{ number_format($tender->iva, 2, ',', '.') }}</span>
+                    </p>
+                    <p class="text-sm my-1 font-bold">Total estimado:
+                        <span class="font-normal">${{ number_format($tender->total, 2, ',', '.') }}</span>
+                    </p>
+                </div>
                 <p class="text-sm my-1 font-bold">Concurso analizado:
                     <span class="font-normal">{{ $tender->is_analyzed == 1 ? 'Sí' : 'No' }}</span>
                 </p>
@@ -62,26 +83,6 @@
                     <span class="font-normal">{{ $tender->is_approved == 1 ? 'Sí' : 'No' }}</span>
                 </p>
             </div>
-
-            {{-- DIV DERECHA --}}
-            @if (!$tender->is_active)
-                <div class="flex items-center justify-center text-red-700">
-                    <div class="border border-red-700 p-3 flex items-center rounded-lg">
-                        <i class="fas fa-ban text-5xl mr-3"></i>
-                        <div>
-                            <p class="text-sm font-bold uppercase">Concurso anulado</p>
-                            <p class="text-sm">
-                                El concurso fue anulado por {{ $user_who_cancelled }}
-                                el día {{ Date::parse($tender->cancelled_at)->format('d-m-Y') }}.
-                            </p>
-                            <p class="text-sm font-bold uppercase mt-2">Motivo</p>
-                            <p class="text-sm">
-                                {{ $tender->cancel_reason }}
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            @endif
 
         </div>
     </div>
@@ -127,7 +128,7 @@
                                     </p>
                                 </td>
                                 <td class="px-6 py-2 text-center">
-                                    <p class="text-sm uppercase">
+                                    <p class="text-sm uppercase {{ $hash->cancelled ? 'line-through' : '' }}">
                                         {{ $hash->supplier->business_name }}
                                     </p>
                                 </td>
@@ -151,7 +152,8 @@
                                     @endswitch
                                 </td>
                                 <td class="px-6 py-2">
-                                    <p class="text-sm uppercase text-center">
+                                    <p
+                                        class="text-sm uppercase text-center {{ $hash->cancelled ? 'line-through' : '' }}">
                                         {{ $hash->seen_at ? Date::parse($hash->seen_at)->format('d-m-Y H:i') : 'N/A' }}
                                     </p>
                                 </td>
@@ -175,7 +177,8 @@
                                     @endswitch
                                 </td>
                                 <td class="px-6 py-2">
-                                    <p class="text-sm uppercase text-center">
+                                    <p
+                                        class="text-sm uppercase text-center {{ $hash->cancelled ? 'line-through' : '' }}">
                                         {{ $hash->answered_at ? Date::parse($hash->answered_at)->format('d-m-Y H:i') : 'N/A' }}
                                     </p>
                                 </td>

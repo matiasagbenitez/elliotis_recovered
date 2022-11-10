@@ -5,6 +5,10 @@ namespace App\Http\Livewire\Tenderings;
 use Livewire\Component;
 use App\Models\Tendering;
 use Livewire\WithPagination;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\TenderingCreatedMailable;
+use App\Mail\TenderingDeletedMailable;
+use Termwind\Components\Dd;
 
 class IndexTenderings extends Component
 {
@@ -26,10 +30,21 @@ class IndexTenderings extends Component
             $tendering->cancelled_by = auth()->user()->id;
             $tendering->cancelled_at = now();
             $tendering->cancel_reason = $reason;
+
+            $tendering->hashes()->update([
+                'is_active' => false,
+            ]);
+
             $tendering->save();
+
+            $tendering->hashes()->each(function ($hash) {
+                Mail::to($hash->supplier->email)->send(new TenderingDeletedMailable($hash->supplier, $hash->tendering));
+            });
+
             $this->emit('success', 'Concurso anulado correctamente.');
         } catch (\Exception $e) {
-            $this->emit('error', 'Error al desactivar el concurso.');
+            // $this->emit('error', 'Error al desactivar el concurso.');
+            $this->emit('error', $e);
         }
     }
 

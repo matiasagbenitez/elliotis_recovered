@@ -17,6 +17,11 @@ class OfferSentSuccesfully extends Component
 
     public function mount(Hash $hash)
     {
+        if (!$hash->is_active) {
+            // Abort
+            abort(404, 'Hash no válido');
+        }
+
         $this->supplier_business_name = $hash->supplier->business_name;
         $this->answered_at = $hash->answered_at;
         $this->tendering_end_date = $hash->tendering->end_date;

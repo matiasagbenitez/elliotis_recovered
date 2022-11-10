@@ -32,7 +32,7 @@ Route::middleware([
     })->name('dashboard');
 });
 
-Route::get('/offer/{hash:hash}', CreateOffer::class)->name('offer.create');
+Route::get('/offer/{hash:hash}/create', CreateOffer::class)->name('offer.create');
 Route::get('/offer/{hash:hash}/edit', EditOffer::class)->name('offer.edit');
 Route::get('/offer/{hash:hash}/sent-successfully', OfferSentSuccesfully::class)->name('offer.sent-successfully');
 Route::get('/offer/{hash:hash}/updated-successfully', OfferUpdatedSuccessfully::class)->name('offer.updated-successfully');

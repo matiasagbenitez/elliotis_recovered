@@ -31,6 +31,11 @@ class EditOffer extends Component
 
     public function mount(Hash $hash)
     {
+        if (!$hash->is_active) {
+            // Abort with message
+            abort(404, 'Hash no válido');
+        }
+
         $this->hash = $hash;
         $this->offer = $hash->offer;
         $this->supplier = $hash->supplier;
@@ -128,6 +133,7 @@ class EditOffer extends Component
     {
         try {
             $offer->hash->update([
+                'is_active' => false,
                 'cancelled' => true,
                 'cancelled_at' => now(),
             ]);

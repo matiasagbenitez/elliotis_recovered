@@ -15,6 +15,11 @@ class OfferDeletedSuccessfully extends Component
 
     public function mount(Hash $hash)
     {
+        // if (!$hash->is_active) {
+        //     // Abort
+        //     abort(404, 'Hash no válido');
+        // }
+
         $this->hash = $hash;
         $this->supplier_business_name = $hash->supplier->business_name;
         $this->sendConfirmationEmail();

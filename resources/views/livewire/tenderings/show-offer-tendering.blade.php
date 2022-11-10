@@ -21,6 +21,20 @@
         </div>
     </x-slot>
 
+    @if ($offer->hash->cancelled)
+        <div
+            class="flex items-center p-4 mb-4 text-sm text-red-700 bg-red-100 rounded-lg dark:bg-red-200 dark:text-red-800 border-2 border-red-600">
+            <i class="fas fa-info-circle text-lg mr-2"></i>
+            <div>
+                <span class="font-bold uppercase">Atención!</span>
+                Esta oferta fue cancelada por el proveedor el día
+                {{ Date::parse($offer->hash->canceled_at)->format('d-m-Y') }}
+                a las
+                {{ Date::parse($offer->hash->canceled_at)->format('H:i') }}.
+            </div>
+        </div>
+    @endif
+
     {{-- DETALLE DE HASHES --}}
     <div class="px-6 py-3 bg-white rounded-lg shadow mt-4">
         <p class="font-bold my-1">Oferta de {{ $supplier->business_name }}</p>
@@ -54,36 +68,10 @@
                         @endif
                     </span>
                 </p>
-                {{-- <p class="text-sm font-bold my-1">Fecha de cancelación:
-                    <span class="font-normal">
-                        @if ($offer->hash->cancelled)
-                            {{ Date::parse($offer->hash->canceled_at)->format('d-m-Y H:i') }}
-                        @else
-                            No cancelado
-                        @endif
-                    </span>
-                </p> --}}
                 <p class="text-sm font-bold my-1">Hash:
                     <span class="font-normal">{{ $offer->hash->hash }}</span>
                 </p>
             </div>
-
-            @if ($offer->hash->cancelled)
-                <div class="flex justify-center items-center">
-                    <div class="border-2 border-red-600 rounded px-5 py-1 flex items-center gap-3 w-3/4">
-                        <i class="fas fa-ban text-red-600 text-3xl"></i>
-                        <div>
-                            <p class="text-red-600 uppercase font-bold text-sm">
-                                Oferta cancelada por el proveedor el día
-                                {{ Date::parse($offer->hash->canceled_at)->format('d-m-Y') }}
-                                a las
-                                {{ Date::parse($offer->hash->canceled_at)->format('H:i') }}
-                                .
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            @endif
         </div>
 
         <p class="font-bold mt-2">Detalle última oferta</p>
