@@ -88,17 +88,28 @@ class TenderingSeeder extends Seeder
                     ]);
 
                     // Associate products of the tendering to the offer
-                    $randomBoolean2 = true;
+                    $allProducts = true;
+                    $allQuantities = false;
                     foreach ($tendering->products as $product) {
-                        if ($randomBoolean2) {
-                            $hash->offer->products()->attach($product->id, [
-                                'quantity' => $quantity = rand($product->pivot->quantity - 5, $product->pivot->quantity),
-                                // 'quantity' => $product->pivot->quantity,
-                                'price' => $price =  rand($product->pivot->price - 50, $product->pivot->price + 50),
-                                'subtotal' => $quantity * $price
-                            ]);
-                            $randomBoolean2 = rand(0, 1);
+
+                        if ($allProducts) {
+                            if ($allQuantities) {
+                                $hash->offer->products()->attach($product->id, [
+                                    'quantity' => $quantity = rand($product->pivot->quantity - 5, $product->pivot->quantity),
+                                    'price' => $price =  rand($product->pivot->price - 50, $product->pivot->price + 50),
+                                    'subtotal' => $quantity * $price
+                                ]);
+                            } else {
+                                $hash->offer->products()->attach($product->id, [
+                                    'quantity' => $product->pivot->quantity,
+                                    'price' => $price =  rand($product->pivot->price - 50, $product->pivot->price + 50),
+                                    'subtotal' => $product->pivot->quantity * $price
+                                ]);
+                            }
                         }
+
+                        $allQuantities = rand(0, 1);
+                        $allProducts = rand(0, 1);
                     }
 
                     // Subtotal
@@ -129,18 +140,6 @@ class TenderingSeeder extends Seeder
                     // If the offer has the same products as the tendering, then $products_ok = true
                     $hash->offer->products_ok = $tenderingProductsId == $offerProductsId;
 
-                    // If quantity of each product of the offer is equal than the quantity of the same product in the tendering, then $hash->offer->quantities_ok = true
-
-
-                    // foreach ($tendering->products as $product) {
-                    //     $pivot = $hash->offer->products->where('id', $product->id)->first()->pivot;
-                    //     if ($pivot->quantity == $product->pivot->quantity) {
-                    //         $hash->offer->quantities_ok = true;
-                    //     } else {
-                    //         $hash->offer->quantities_ok = false;
-                    //         break;
-                    //     }
-                    // }
 
                     $hasAllProducts = false;
                     foreach ($hash->offer->products as $product) {

@@ -2,15 +2,21 @@
 
 namespace App\Http\Livewire\Tenderings;
 
+use App\Models\Offer;
 use App\Models\Tendering;
 use Livewire\Component;
+use Termwind\Components\Dd;
 
 class ShowFinishedTendering extends Component
 {
-    public $tender, $hashes = [];
+    public $tender, $hashes;
 
     public $requestedSuppliers, $seenRequests, $answeredRequests, $cancelledOffers;
     public $title = 'Solicitudes enviadas', $suppliers;
+    public $offerTitle = 'Todas las ofertas recibidas', $offers, $offersList = [];
+
+    // All offers
+    public $totalOffers;
 
     // Productos OK y cantidades OK
     public $productsOkQuantitiesOk;
@@ -29,25 +35,38 @@ class ShowFinishedTendering extends Component
         if ($tendering->is_finished) {
             $this->tender = $tendering;
             $this->hashes = $tendering->hashes;
-            $this->offers = $tendering->offers;
+
+            $this->suppliers = $tendering->hashes->pluck('supplier')->unique();
 
             $this->requestedSuppliers = $tendering->hashes->count();
             $this->seenRequests = $tendering->hashes->where('seen', true)->count();
             $this->answeredRequests = $tendering->hashes->where('answered', true)->where('cancelled', false)->count();
             $this->cancelledOffers = $tendering->hashes->where('cancelled', true)->count();
 
-            $this->verifyProductsAndQuantities();
+            // Collection of offers from the tendering related with the hashes
+            $this->offers = Offer::whereHas('hash', function ($query) use ($tendering) {
+                $query->where('tendering_id', $tendering->id);
+            })->get();
 
-            $this->suppliers = $tendering->hashes->pluck('supplier')->unique();
+            $this->offersList = $this->offers;
+
+            $this->totalOffers = $this->offers->count();
+
+            // Products OK and quantities OK
+            $this->productsOkQuantitiesOk = $this->offers->where('products_ok', true)->where('quantities_ok', true)->count();
+
+            // Products OK and quantities NO
+            $this->productsOkQuantitiesNo = $this->offers->where('products_ok', true)->where('quantities_ok', false)->count();
+
+            // Products NO and quantities OK
+            $this->productsNoQuantitiesOk = $this->offers->where('products_ok', false)->where('quantities_ok', true)->count();
+
+            // Products NO and quantities NO
+            $this->productsNoQuantitiesNo = $this->offers->where('products_ok', false)->where('quantities_ok', false)->count();
+
         } else {
             abort(404);
         }
-
-        $this->bestOffer();
-    }
-
-    public function verifyProductsAndQuantities()
-    {
     }
 
     public function filter($parameter)
@@ -73,38 +92,30 @@ class ShowFinishedTendering extends Component
         }
     }
 
-    public function filterOffers($parameter)
+    public function filterOffers($par)
     {
-
-    }
-
-    public function bestOffer()
-    {
-        $hashes = $this->tender->hashes->where('answered', true)->where('cancelled', false);
-        $offers = [];
-
-        foreach ($hashes as $hash) {
-            $offers[] = $hash->offer;
-        }
-
-        $cheapest = $offers[0];
-        foreach ($offers as $offer) {
-            if ($offer->total < $cheapest->total) {
-                $cheapest = $offer;
-            }
-        }
-
-        $hasAllProducts = false;
-        foreach ($cheapest->products as $product) {
-            if ($product->pivot->quantity == $this->tender->products->where('id', $product->id)->first()->pivot->quantity) {
-                $hasAllProducts = true;
-            } else {
-                $hasAllProducts = false;
+        switch ($par) {
+            case 'all':
+                $this->offerTitle = 'Todas las ofertas recibidas';
+                $this->offersList = $this->offers;
                 break;
-            }
+            case 'productsOkQuantitiesOk':
+                $this->offerTitle = 'Productos OK y cantidades OK';
+                $this->offersList = $this->offers->where('products_ok', true)->where('quantities_ok', true);
+                break;
+            case 'productsOkQuantitiesNo':
+                $this->offerTitle = 'Productos OK y cantidades NO';
+                $this->offersList = $this->offers->where('products_ok', true)->where('quantities_ok', false);
+                break;
+            case 'productsNoQuantitiesOk':
+                $this->offerTitle = 'Productos NO y cantidades OK';
+                $this->offersList = $this->offers->where('products_ok', false)->where('quantities_ok', true);
+                break;
+            case 'productsNoQuantitiesNo':
+                $this->offerTitle = 'Productos NO y cantidades NO';
+                $this->offersList = $this->offers->where('products_ok', false)->where('quantities_ok', false);
+                break;
         }
-
-        // dd($hasAllProducts);
     }
 
     public function render()
