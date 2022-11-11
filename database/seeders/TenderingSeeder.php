@@ -7,6 +7,7 @@ use App\Models\Supplier;
 use App\Models\Tendering;
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use verifyProducts;
 
 class TenderingSeeder extends Seeder
 {
@@ -87,14 +88,16 @@ class TenderingSeeder extends Seeder
                     ]);
 
                     // Associate products of the tendering to the offer
+                    $randomBoolean2 = true;
                     foreach ($tendering->products as $product) {
-
-                        if ($randomBoolean) {
+                        if ($randomBoolean2) {
                             $hash->offer->products()->attach($product->id, [
                                 'quantity' => $quantity = rand($product->pivot->quantity - 5, $product->pivot->quantity),
+                                // 'quantity' => $product->pivot->quantity,
                                 'price' => $price =  rand($product->pivot->price - 50, $product->pivot->price + 50),
                                 'subtotal' => $quantity * $price
                             ]);
+                            $randomBoolean2 = rand(0, 1);
                         }
                     }
 
@@ -113,8 +116,46 @@ class TenderingSeeder extends Seeder
                     ]);
 
                     $hash->offer->save();
+                    // -------------------------- FIN CREACIÓN DE HASHES Y OFERTAS ----------------------------- //
+
+                    // Array of product_id of the tendering
+                    $tenderingProductsId = $tendering->products->pluck('id')->toArray();
+                    sort($tenderingProductsId);
+
+                    // Array of product_id of the offer
+                    $offerProductsId = $hash->offer->products->pluck('id')->toArray();
+                    sort($offerProductsId);
+
+                    // If the offer has the same products as the tendering, then $products_ok = true
+                    $hash->offer->products_ok = $tenderingProductsId == $offerProductsId;
+
+                    // If quantity of each product of the offer is equal than the quantity of the same product in the tendering, then $hash->offer->quantities_ok = true
+
+
+                    // foreach ($tendering->products as $product) {
+                    //     $pivot = $hash->offer->products->where('id', $product->id)->first()->pivot;
+                    //     if ($pivot->quantity == $product->pivot->quantity) {
+                    //         $hash->offer->quantities_ok = true;
+                    //     } else {
+                    //         $hash->offer->quantities_ok = false;
+                    //         break;
+                    //     }
+                    // }
+
+                    $hasAllProducts = false;
+                    foreach ($hash->offer->products as $product) {
+                        if ($product->pivot->quantity == $tendering->products->where('id', $product->id)->first()->pivot->quantity) {
+                            $hasAllProducts = true;
+                        } else {
+                            $hasAllProducts = false;
+                            break;
+                        }
+                    }
+
+                    $hash->offer->quantities_ok = $hasAllProducts;
+
+                    $hash->offer->save();
                 }
-                // -------------------------- FIN CREACIÓN DE HASHES Y OFERTAS ----------------------------- //
             }
 
             // ------------------------------ HASHES VISTOS SIN OFERTAS -------------------------------- //
@@ -139,6 +180,7 @@ class TenderingSeeder extends Seeder
                 'cancelled_at' => now()->subMinutes(rand(0, 10))->subSeconds(rand(1, 59)),
             ]);
             // ------------------------------- FIN UN HASH CANCELADO ------------------------------- //
+
         });
     }
 }

@@ -20,6 +20,9 @@ return new class extends Migration
 
             $table->datetime('delivery_date')->nullable();
 
+            $table->boolean('products_ok')->default(false);
+            $table->boolean('quantities_ok')->default(false);
+
             $table->text('observations')->nullable();
 
             $table->timestamps();

@@ -85,9 +85,61 @@
         <ul class="list-disc list-inside ml-4">
             @foreach ($suppliers as $supplier)
                 <li class="text-sm">
-                    {{$supplier->business_name}}
+                    {{ $supplier->business_name }}
                 </li>
             @endforeach
         </ul>
+    </div>
+
+    <div class="px-6 py-6 mt-6 bg-white rounded-lg shadow">
+
+        {{-- ESTADÍSTICAS --}}
+        <div class="grid grid-cols-4 gap-4">
+
+            {{-- Solicitudes enviadas --}}
+            <div class="bg-slate-200 rounded-lg p-6 hover:cursor-pointer" wire:click="">
+                <p class="text-center text-xl">
+                    0
+                </p>
+                <p class="text-center uppercase font-bold">Solicitudes enviadas</p>
+                <p class="text-center text-xl mt-2 uppercase">
+                    <i class="fas fa-business-time"></i>
+                </p>
+            </div>
+
+            {{-- Solicitudes vistas --}}
+            <div class="bg-slate-300 rounded-lg p-6 hover:cursor-pointer" wire:click="">
+                <p class="text-center text-xl">
+                    0
+                </p>
+                <p class="text-center uppercase font-bold">Solicitudes vistas</p>
+                <p class="text-center text-xl mt-2 uppercase">
+                    <i class="fas fa-eye"></i>
+                </p>
+            </div>
+
+            {{-- Ofertas enviadas --}}
+            <div class="bg-slate-300 rounded-lg p-6 hover:cursor-pointer" wire:click="">
+                <p class="text-center text-xl">
+                    0
+                </p>
+                <p class="text-center uppercase font-bold">Ofertas válidas</p>
+                <p class="text-center text-xl mt-2 uppercase">
+                    <i class="fas fa-check-circle"></i>
+                </p>
+            </div>
+
+            {{-- Ofertas canceladas --}}
+            <div class="bg-slate-400 rounded-lg p-6 hover:cursor-pointer" wire:click="">
+                <p class="text-center text-xl">
+                    0
+                </p>
+                <p class="text-center uppercase font-bold">Ofertas canceladas</p>
+                <p class="text-center text-xl mt-2 uppercase">
+                    <i class="fas fa-ban"></i>
+                </p>
+            </div>
+
+        </div>
     </div>
 </div>

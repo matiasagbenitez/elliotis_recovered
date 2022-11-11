@@ -12,6 +12,18 @@ class ShowFinishedTendering extends Component
     public $requestedSuppliers, $seenRequests, $answeredRequests, $cancelledOffers;
     public $title = 'Solicitudes enviadas', $suppliers;
 
+    // Productos OK y cantidades OK
+    public $productsOkQuantitiesOk;
+
+    // Productos OK y cantidades NO
+    public $productsOkQuantitiesNo;
+
+    // Productos NO y cantidades OK
+    public $productsNoQuantitiesOk;
+
+    // Productos NO y cantidades NO
+    public $productsNoQuantitiesNo;
+
     public function mount(Tendering $tendering)
     {
         if ($tendering->is_finished) {
@@ -24,6 +36,7 @@ class ShowFinishedTendering extends Component
             $this->answeredRequests = $tendering->hashes->where('answered', true)->where('cancelled', false)->count();
             $this->cancelledOffers = $tendering->hashes->where('cancelled', true)->count();
 
+            $this->verifyProductsAndQuantities();
 
             $this->suppliers = $tendering->hashes->pluck('supplier')->unique();
         } else {
@@ -31,6 +44,10 @@ class ShowFinishedTendering extends Component
         }
 
         $this->bestOffer();
+    }
+
+    public function verifyProductsAndQuantities()
+    {
     }
 
     public function filter($parameter)
@@ -54,6 +71,11 @@ class ShowFinishedTendering extends Component
                 $this->suppliers = $this->tender->hashes->where('cancelled', true)->pluck('supplier')->unique();
                 break;
         }
+    }
+
+    public function filterOffers($parameter)
+    {
+
     }
 
     public function bestOffer()
