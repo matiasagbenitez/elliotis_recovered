@@ -52,21 +52,93 @@ class TenderingSeeder extends Seeder
             // Total
             $tendering->save();
 
-            // -------------------------- CREACIÓN DE HASHES ----------------------------- //
+            // -------------------------- CREACIÓN DE HASHES Y OFERTAS ----------------------------- //
             $suppliers = Supplier::where('active', true)->get();
 
             // Create a unique hash on hashes table for each supplier, so they can access the tendering
             foreach ($suppliers as $supplier) {
+
+                $supplierHash = md5($supplier->id . $tendering->id . time());
+
                 $supplier->hashes()->create([
                     'tendering_id' => $tendering->id,
-                    'hash' => md5($supplier->id . $tendering->id . time()),
+                    'hash' => $supplierHash,
                     'sent_at' => now(),
                     'seen_at' => null,
                     'answered' => false,
                 ]);
+
+                $randomBoolean = rand(0, 1);
+                if ($randomBoolean) {
+
+                    $hash = $supplier->hashes()->where('hash', $supplierHash)->first();
+
+                    $hash->update([
+                        'seen' => true,
+                        'seen_at' => now()->subMinutes(rand(10, 20))->subSeconds(rand(1, 59)),
+                    ]);
+
+                    $hash->offer()->create([
+                        'subtotal' => 0,
+                        'iva' => 0,
+                        'total' => 0,
+                        'delivery_date' => now(),
+                        'observations' => '',
+                    ]);
+
+                    // Associate products of the tendering to the offer
+                    foreach ($tendering->products as $product) {
+
+                        if ($randomBoolean) {
+                            $hash->offer->products()->attach($product->id, [
+                                'quantity' => $quantity = rand($product->pivot->quantity - 5, $product->pivot->quantity),
+                                'price' => $price =  rand($product->pivot->price - 50, $product->pivot->price + 50),
+                                'subtotal' => $quantity * $price
+                            ]);
+                        }
+                    }
+
+                    // Subtotal
+                    $subtotal = $hash->offer->products->sum(function ($product) {
+                        return $product->pivot->quantity * $product->pivot->price;
+                    });
+
+                    $hash->offer->subtotal = $subtotal;
+                    $hash->offer->iva = $subtotal * 0.21;
+                    $hash->offer->total = $hash->offer->subtotal + $hash->offer->iva;
+
+                    $hash->update([
+                        'answered' => true,
+                        'answered_at' => now()->subMinutes(rand(0, 10))->subSeconds(rand(1, 59)),
+                    ]);
+
+                    $hash->offer->save();
+                }
+                // -------------------------- FIN CREACIÓN DE HASHES Y OFERTAS ----------------------------- //
             }
 
-            // -------------------------- FIN CREACIÓN DE HASHES ----------------------------- //
+            // ------------------------------ HASHES VISTOS SIN OFERTAS -------------------------------- //
+            $unSeenHashes = $tendering->hashes()->where('seen', false)->get();
+
+            foreach ($unSeenHashes as $unSeenHash) {
+                $randomBoolean = rand(0, 1);
+                if ($randomBoolean) {
+                    $unSeenHash->update([
+                        'seen' => true,
+                        'seen_at' => now()->subMinutes(rand(10, 20))->subSeconds(rand(1, 59)),
+                    ]);
+                }
+            }
+            // --------------------------- FIN HASHES VISTOS SIN OFERTAS ------------------------------ //
+
+            // --------------------------------- UN HASH CANCELADO --------------------------------- //
+            $answeredHashes = $tendering->hashes()->where('answered', true)->get();
+
+            $answeredHashes->random()->update([
+                'cancelled' => true,
+                'cancelled_at' => now()->subMinutes(rand(0, 10))->subSeconds(rand(1, 59)),
+            ]);
+            // ------------------------------- FIN UN HASH CANCELADO ------------------------------- //
         });
     }
 }

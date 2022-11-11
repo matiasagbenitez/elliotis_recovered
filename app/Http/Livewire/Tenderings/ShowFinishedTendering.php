@@ -21,7 +21,7 @@ class ShowFinishedTendering extends Component
 
             $this->requestedSuppliers = $tendering->hashes->count();
             $this->seenRequests = $tendering->hashes->where('seen', true)->count();
-            $this->answeredRequests = $tendering->hashes->where('answered', true)->count();
+            $this->answeredRequests = $tendering->hashes->where('answered', true)->where('cancelled', false)->count();
             $this->cancelledOffers = $tendering->hashes->where('cancelled', true)->count();
 
 
@@ -29,6 +29,8 @@ class ShowFinishedTendering extends Component
         } else {
             abort(404);
         }
+
+        $this->bestOffer();
     }
 
     public function filter($parameter)
@@ -44,14 +46,43 @@ class ShowFinishedTendering extends Component
 
                 break;
             case 'answered':
-                $this->title = 'Ofertas recibidas';
-                $this->suppliers = $this->tender->hashes->where('answered', true)->pluck('supplier')->unique();
+                $this->title = 'Ofertas válidas';
+                $this->suppliers = $this->tender->hashes->where('answered', true)->where('cancelled', false)->pluck('supplier')->unique();
                 break;
             case 'cancelled':
                 $this->title = 'Ofertas canceladas';
                 $this->suppliers = $this->tender->hashes->where('cancelled', true)->pluck('supplier')->unique();
                 break;
         }
+    }
+
+    public function bestOffer()
+    {
+        $hashes = $this->tender->hashes->where('answered', true)->where('cancelled', false);
+        $offers = [];
+
+        foreach ($hashes as $hash) {
+            $offers[] = $hash->offer;
+        }
+
+        $cheapest = $offers[0];
+        foreach ($offers as $offer) {
+            if ($offer->total < $cheapest->total) {
+                $cheapest = $offer;
+            }
+        }
+
+        $hasAllProducts = false;
+        foreach ($cheapest->products as $product) {
+            if ($product->pivot->quantity == $this->tender->products->where('id', $product->id)->first()->pivot->quantity) {
+                $hasAllProducts = true;
+            } else {
+                $hasAllProducts = false;
+                break;
+            }
+        }
+
+        // dd($hasAllProducts);
     }
 
     public function render()

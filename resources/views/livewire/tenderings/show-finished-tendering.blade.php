@@ -58,7 +58,7 @@
                 <p class="text-center text-xl">
                     {{ $answeredRequests }}
                 </p>
-                <p class="text-center uppercase font-bold">Ofertas recibidas</p>
+                <p class="text-center uppercase font-bold">Ofertas válidas</p>
                 <p class="text-center text-xl mt-2 uppercase">
                     <i class="fas fa-check-circle"></i>
                 </p>
