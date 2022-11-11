@@ -175,7 +175,14 @@
                         </p>
                         <p>
                             <span class="font-bold">Hash: </span>
-                            {{ $offer->hash->hash }}
+                            @php
+                                $hash = $offer->hash->hash;
+                                $tendering = $offer->hash->tendering->id;
+                            @endphp
+                            <a href="{{ route('admin.tenderings.show-offer-detail', ['tendering' => $offer->hash->tendering->id, 'hash' => $offer->hash]) }}" class="hover:text-blue-500 hover:underline">
+
+                                {{ $offer->hash->hash }}
+                            </a>
                         </p>
                     </div>
                     <x-responsive-table>
