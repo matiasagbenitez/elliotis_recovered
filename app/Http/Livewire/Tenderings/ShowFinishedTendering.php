@@ -41,13 +41,14 @@ class ShowFinishedTendering extends Component
             case 'seen':
                 $this->title = 'Solicitudes vistas';
                 $this->suppliers = $this->tender->hashes->where('seen', true)->pluck('supplier')->unique();
+
                 break;
             case 'answered':
-                $this->title = 'Solicitudes contestadas';
+                $this->title = 'Ofertas recibidas';
                 $this->suppliers = $this->tender->hashes->where('answered', true)->pluck('supplier')->unique();
                 break;
             case 'cancelled':
-                $this->title = 'Solicitudes canceladas';
+                $this->title = 'Ofertas canceladas';
                 $this->suppliers = $this->tender->hashes->where('cancelled', true)->pluck('supplier')->unique();
                 break;
         }

@@ -2,6 +2,14 @@
     <x-slot name="header">
         <div class="flex items-center justify-between">
 
+            {{-- GO BACK BUTTON --}}
+            <a href="{{ route('admin.tenderings.show-detail', $tender->id) }}">
+                <x-jet-button>
+                    <i class="fas fa-arrow-left mr-2"></i>
+                    Volver
+                </x-jet-button>
+            </a>
+
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                 Detalle de
                 <span class="font-bold">Concurso #{{ $tender->id }}</span>
@@ -76,7 +84,9 @@
         <hr class="my-1">
         <ul class="list-disc list-inside ml-4">
             @foreach ($suppliers as $supplier)
-                <li class="text-sm">{{$supplier->business_name}}</li>
+                <li class="text-sm">
+                    {{$supplier->business_name}}
+                </li>
             @endforeach
         </ul>
     </div>
