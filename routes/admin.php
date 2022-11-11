@@ -30,15 +30,16 @@ use App\Http\Livewire\SaleOrders\SaleOrdersIndex;
 use App\Http\Livewire\Tenderings\CreateTendering;
 use App\Http\Livewire\Tenderings\IndexTenderings;
 use App\Http\Livewire\Products\AddProductsComponent;
+use App\Http\Livewire\Tenderings\ShowOfferTendering;
 use App\Http\Livewire\ProductNames\IndexProductNames;
 use App\Http\Livewire\ProductTypes\IndexProductTypes;
 use App\Http\Livewire\TaskStatuses\IndexTaskStatuses;
 use App\Http\Livewire\IvaConditions\IndexIvaConditions;
 use App\Http\Livewire\PurchaseOrders\ShowPurchaseOrder;
+use App\Http\Livewire\Tenderings\ShowFinishedTendering;
 use App\Http\Livewire\PurchaseOrders\CreatePurchaseOrder;
 use App\Http\Livewire\PurchaseOrders\PurchaseOrdersIndex;
 use App\Http\Livewire\PucharseParameters\IndexPucharseParameters;
-use App\Http\Livewire\Tenderings\ShowOfferTendering;
 
 Route::get('/countries', IndexCountries::class)->name('admin.countries.index');
 Route::get('/provinces', IndexProvinces::class)->name('admin.provinces.index');
@@ -89,3 +90,4 @@ Route::get('/tenderings', IndexTenderings::class)->name('admin.tenderings.index'
 Route::get('/tendering/create', CreateTendering::class)->name('admin.tenderings.create');
 Route::get('/tendering/{tendering}/detail', ShowTendering::class)->name('admin.tenderings.show-detail');
 Route::get('/tendering/{tendering}/hash/{hash:hash}/detail', ShowOfferTendering::class)->name('admin.tenderings.show-offer-detail');
+Route::get('/tendering/{tendering}/finished', ShowFinishedTendering::class)->name('admin.tenderings.show-finished-tendering');

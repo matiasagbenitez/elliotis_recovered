@@ -23,6 +23,11 @@ return new class extends Migration
             $table->text('observations')->nullable();
 
             $table->boolean('is_active')->default(true);
+            $table->boolean('is_finished')->default(false);
+            $table->datetime('finished_at')->nullable();
+            $table->unsignedBigInteger('finished_by')->nullable();
+            $table->foreign('finished_by')->references('id')->on('users');
+
             $table->boolean('is_analyzed')->default(false);
             $table->boolean('is_approved')->default(false);
 
