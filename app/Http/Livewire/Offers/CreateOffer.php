@@ -118,9 +118,20 @@ class CreateOffer extends Component
             'createForm.observations' => 'nullable|string',
             'orderProducts' => 'required|array',
             'orderProducts.*.product_id' => 'required|exists:products,id',
-            'orderProducts.*.quantity' => 'required|numeric|min:1',
+            'orderProducts.*.quantity' => 'required|integer|min:1',
             'orderProducts.*.price' => 'required|numeric|min:0',
         ]);
+
+        // Verify that quantity is not greater than the quantity of the tendering
+        foreach ($this->orderProducts as $product) {
+            $productTendering = ProductTendering::where('tendering_id', $this->tender->id)->where('product_id', $product['product_id'])->first();
+            if ($product['quantity'] > $productTendering->quantity) {
+                // Get product name
+                $productName = Product::find($product['product_id'])->name;
+                $this->emit('error', 'La cantidad del producto ' . $productName . ' no puede ser mayor a la cantidad solicitada en la licitación');
+                return;
+            }
+        }
 
         // Find hash or fail
         $hash = Hash::where('hash', $this->hash)->firstOrFail();
@@ -137,6 +148,27 @@ class CreateOffer extends Component
             'answered' => true,
             'answered_at' => now()
         ]);
+
+        // Products OK
+        $tenderingProductsId = $hash->tendering->products->pluck('id')->toArray();
+        sort($tenderingProductsId);
+        $offerProductsId = $hash->offer->products->pluck('id')->toArray();
+        sort($offerProductsId);
+        $hash->offer->products_ok = $tenderingProductsId == $offerProductsId;
+
+        // Quantities OK
+        $hasAllProducts = false;
+        foreach($hash->offer->products as $product) {
+            if ($product->pivot->quantity == $hash->tendering->products->where('id', $product->id)->first()->pivot->quantity) {
+                $hasAllProducts = true;
+            } else {
+                $hasAllProducts = false;
+                break;
+            }
+        }
+        $hash->offer->quantities_ok = $hasAllProducts;
+
+        $hash->offer->save();
 
         return redirect()->route('offer.sent-successfully', $hash->hash);
     }

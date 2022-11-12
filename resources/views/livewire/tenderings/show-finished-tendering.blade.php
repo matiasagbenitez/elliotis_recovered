@@ -94,64 +94,78 @@
     <div class="px-6 py-6 mt-6 bg-white rounded-lg shadow">
 
         {{-- ESTADÍSTICAS --}}
-        <div class="grid grid-cols-5 gap-4">
+        <div class="grid grid-cols-5 gap-4 text-sm ">
 
             {{-- Todas las oferas --}}
-            <div class="bg-slate-200 rounded-lg p-6 hover:cursor-pointer" wire:click="filterOffers('all')">
-                <p class="text-center text-xl">
+            <div class="bg-slate-200 rounded-lg p-6 hover:cursor-pointer flex flex-col justify-center"
+                wire:click="filterOffers('all')">
+                <p class="text-center text-xl mb-5">
                     {{ $totalOffers }}
                 </p>
-                <p class="text-center uppercase font-bold">Todas las ofertas</p>
-                <p class="text-center text-xl mt-2 uppercase">
-                    <i class="fas fa-business-time"></i>
-                </p>
+                <p class="text-center uppercase font-bold">Todas las ofertas recibidas</p>
             </div>
 
             {{-- Solicitudes enviadas --}}
-            <div class="bg-slate-300 rounded-lg p-6 hover:cursor-pointer"
+            <div class="bg-slate-300 rounded-lg p-6 hover:cursor-pointer flex flex-col justify-center"
                 wire:click="filterOffers('productsOkQuantitiesOk')">
-                <p class="text-center text-xl">
+                <p class="text-center text-xl mb-5">
                     {{ $productsOkQuantitiesOk }}
                 </p>
-                <p class="text-center uppercase font-bold">Productos OK cantidades OK</p>
-                <p class="text-center text-xl mt-2 uppercase">
-                    <i class="fas fa-business-time"></i>
+                <p class="text-center uppercase font-bold">
+                    Productos
+                    <i class="fas fa-check ml-1"></i>
+                </p>
+                <p class="text-center uppercase font-bold">
+                    Cantidades
+                    <i class="fas fa-check ml-1"></i>
                 </p>
             </div>
 
             {{-- Solicitudes vistas --}}
-            <div class="bg-slate-400 rounded-lg p-6 hover:cursor-pointer"
+            <div class="bg-slate-400 rounded-lg p-6 hover:cursor-pointer flex flex-col justify-center"
                 wire:click="filterOffers('productsOkQuantitiesNo')">
-                <p class="text-center text-xl">
+                <p class="text-center text-xl mb-5">
                     {{ $productsOkQuantitiesNo }}
                 </p>
-                <p class="text-center uppercase font-bold">Productos OK cantidades NO</p>
-                <p class="text-center text-xl mt-2 uppercase">
-                    <i class="fas fa-eye"></i>
+                <p class="text-center uppercase font-bold">
+                    Productos
+                    <i class="fas fa-check ml-1"></i>
+                </p>
+                <p class="text-center uppercase font-bold">
+                    Cantidades
+                    <i class="fas fa-times ml-1"></i>
                 </p>
             </div>
 
             {{-- Ofertas enviadas --}}
-            <div class="bg-slate-500 rounded-lg p-6 hover:cursor-pointer"
+            <div class="bg-slate-500 rounded-lg p-6 hover:cursor-pointer flex flex-col justify-center"
                 wire:click="filterOffers('productsNoQuantitiesOk')">
-                <p class="text-center text-xl">
+                <p class="text-center text-xl mb-5">
                     {{ $productsNoQuantitiesOk }}
                 </p>
-                <p class="text-center uppercase font-bold">Productos NO cantidades OK</p>
-                <p class="text-center text-xl mt-2 uppercase">
-                    <i class="fas fa-check-circle"></i>
+                <p class="text-center uppercase font-bold">
+                    Productos
+                    <i class="fas fa-times ml-1"></i>
+                </p>
+                <p class="text-center uppercase font-bold">
+                    Cantidades
+                    <i class="fas fa-check ml-1"></i>
                 </p>
             </div>
 
             {{-- Ofertas canceladas --}}
-            <div class="bg-slate-600 rounded-lg p-6 hover:cursor-pointer"
+            <div class="bg-slate-600 rounded-lg p-6 hover:cursor-pointer flex flex-col justify-center"
                 wire:click="filterOffers('productsNoQuantitiesNo')">
-                <p class="text-center text-xl">
+                <p class="text-center text-xl mb-5">
                     {{ $productsNoQuantitiesNo }}
                 </p>
-                <p class="text-center uppercase font-bold">Productos NO cantidades NO</p>
-                <p class="text-center text-xl mt-2 uppercase">
-                    <i class="fas fa-ban"></i>
+                <p class="text-center uppercase font-bold">
+                    Productos
+                    <i class="fas fa-times ml-1"></i>
+                </p>
+                <p class="text-center uppercase font-bold">
+                    Cantidades
+                    <i class="fas fa-times ml-1"></i>
                 </p>
             </div>
 

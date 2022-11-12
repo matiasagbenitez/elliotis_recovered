@@ -4,9 +4,10 @@ namespace App\Http\Livewire\Offers;
 
 use App\Models\Hash;
 use App\Models\Offer;
-use App\Models\OfferProduct;
 use App\Models\Product;
 use Livewire\Component;
+use App\Models\OfferProduct;
+use App\Models\ProductTendering;
 use App\View\Components\GuestLayout;
 
 class EditOffer extends Component
@@ -14,6 +15,7 @@ class EditOffer extends Component
     public $hash;
     public $offer;
     public $supplier;
+    public $tendering;
 
     protected $listeners = ['delete'];
 
@@ -38,6 +40,7 @@ class EditOffer extends Component
 
         $this->hash = $hash;
         $this->offer = $hash->offer;
+        $this->tendering = $hash->tendering;
         $this->supplier = $hash->supplier;
         $this->allProducts = Product::where('is_buyable', true)->whereHas('tenderings', function ($query) use ($hash) {
             $query->where('tendering_id', $hash->tendering->id);
@@ -104,6 +107,17 @@ class EditOffer extends Component
             'orderProducts.*.price' => 'required|numeric|min:0',
         ]);
 
+        // Verify that quantity is not greater than the quantity of the tendering
+        foreach ($this->orderProducts as $product) {
+            $productTendering = ProductTendering::where('tendering_id', $this->hash->tendering->id)->where('product_id', $product['product_id'])->first();
+            if ($product['quantity'] > $productTendering->quantity) {
+                // Get product name
+                $productName = Product::find($product['product_id'])->name;
+                $this->emit('error', 'La cantidad del producto ' . $productName . ' no puede ser mayor a la cantidad solicitada en la licitación');
+                return;
+            }
+        }
+
         $this->offer->update([
             'subtotal' => $this->editForm['subtotal'],
             'iva' => $this->editForm['iva'],
@@ -124,6 +138,39 @@ class EditOffer extends Component
                 'subtotal' => $product['subtotal'],
             ]);
         }
+
+        $editHash = $this->offer->hash;
+
+        // Products OK
+        $tenderingProductsId = $editHash->tendering->products->pluck('id')->toArray();
+        sort($tenderingProductsId);
+        $offerProductsId = $editHash->offer->products->pluck('id')->toArray();
+        sort($offerProductsId);
+
+        $editHash->offer->products_ok = $tenderingProductsId == $offerProductsId;
+        if($tenderingProductsId == $offerProductsId) {
+            $this->offer->update([
+                'products_ok' => true,
+            ]);
+        } else {
+            $this->offer->update([
+                'products_ok' => false,
+            ]);
+        }
+
+        // Quantities OK
+        $hasAllProducts = false;
+        foreach($editHash->offer->products as $product) {
+            if ($product->pivot->quantity == $editHash->tendering->products->where('id', $product->id)->first()->pivot->quantity) {
+                $hasAllProducts = true;
+            } else {
+                $hasAllProducts = false;
+                break;
+            }
+        }
+        $this->offer->quantities_ok = $hasAllProducts;
+
+        $this->offer->save();
 
         // session()->flash('success', 'Oferta actualizada correctamente.');
         return redirect()->route('offer.updated-successfully', $this->hash->hash);

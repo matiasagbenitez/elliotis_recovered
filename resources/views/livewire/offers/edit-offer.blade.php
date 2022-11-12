@@ -24,7 +24,7 @@
                 <h2 class="font-bold mb-1">Detalle de lo requerido</h2>
                 {{-- Products of offer --}}
                 <ul class="list-disc list-inside ml-4">
-                    @foreach ($offer->products as $product)
+                    @foreach ($tendering->products as $product)
                         <li class="text-sm italic">{{ $product->name }} (x {{ $product->pivot->quantity }})</li>
                     @endforeach
                 </ul>
@@ -221,45 +221,57 @@
 @push('script')
     <script>
         Livewire.on('disableOffer', offerId => {
-                Swal.fire({
-                    title: '¿Estás seguro?',
-                    text: "¡No podrás revertir esta acción!",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#1f2937',
-                    cancelButtonColor: '#dc2626',
-                    confirmButtonText: 'Sí, eliminar oferta',
-                    cancelButtonText: 'Cancelar'
-                }).then((result) => {
-                    if (result.isConfirmed) {
+            Swal.fire({
+                title: '¿Estás seguro?',
+                text: "¡No podrás revertir esta acción!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#1f2937',
+                cancelButtonColor: '#dc2626',
+                confirmButtonText: 'Sí, eliminar oferta',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
 
-                        Livewire.emitTo('offers.edit-offer', 'delete', offerId);
+                    Livewire.emitTo('offers.edit-offer', 'delete', offerId);
 
-                        Livewire.on('success', message => {
-                            const Toast = Swal.mixin({
-                                toast: true,
-                                position: 'top-end',
-                                showConfirmButton: false,
-                                timer: 3000,
-                                timerProgressBar: true,
-                            });
-                            Toast.fire({
-                                icon: 'success',
-                                title: message
-                            });
+                    Livewire.on('success', message => {
+                        const Toast = Swal.mixin({
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 3000,
+                            timerProgressBar: true,
                         });
-
-                        Livewire.on('error', message => {
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Oops...',
-                                text: message,
-                                showConfirmButton: true,
-                                confirmButtonColor: '#1f2937',
-                            });
+                        Toast.fire({
+                            icon: 'success',
+                            title: message
                         });
-                    }
-                })
+                    });
+
+                    Livewire.on('error', message => {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: message,
+                            showConfirmButton: true,
+                            confirmButtonColor: '#1f2937',
+                        });
+                    });
+                }
+            })
+        });
+    </script>
+
+    <script>
+        Livewire.on('error', message => {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: message,
+                showConfirmButton: true,
+                confirmButtonColor: '#1f2937',
             });
+        });
     </script>
 @endpush

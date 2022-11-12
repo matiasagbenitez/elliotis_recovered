@@ -100,19 +100,19 @@ class ShowFinishedTendering extends Component
                 $this->offersList = $this->offers;
                 break;
             case 'productsOkQuantitiesOk':
-                $this->offerTitle = 'Productos OK y cantidades OK';
+                $this->offerTitle = 'Productos completos y cantidades correctas';
                 $this->offersList = $this->offers->where('products_ok', true)->where('quantities_ok', true);
                 break;
             case 'productsOkQuantitiesNo':
-                $this->offerTitle = 'Productos OK y cantidades NO';
+                $this->offerTitle = 'Productos completos y cantidades incorrectas';
                 $this->offersList = $this->offers->where('products_ok', true)->where('quantities_ok', false);
                 break;
             case 'productsNoQuantitiesOk':
-                $this->offerTitle = 'Productos NO y cantidades OK';
+                $this->offerTitle = 'Productos incompletos y cantidades correctas';
                 $this->offersList = $this->offers->where('products_ok', false)->where('quantities_ok', true);
                 break;
             case 'productsNoQuantitiesNo':
-                $this->offerTitle = 'Productos NO y cantidades NO';
+                $this->offerTitle = 'Productos incompletos y cantidades incorrectas';
                 $this->offersList = $this->offers->where('products_ok', false)->where('quantities_ok', false);
                 break;
         }
