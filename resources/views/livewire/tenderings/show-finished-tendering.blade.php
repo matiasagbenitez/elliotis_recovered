@@ -26,6 +26,11 @@
         </div>
     </x-slot>
 
+
+    <div class="px-6 py-6 mb-6 bg-white rounded-lg shadow">
+        @livewire('ranking.prueba-ranking', ['tendering' => $tender])
+    </div>
+
     <div class="px-6 py-6 bg-white rounded-lg shadow">
 
         {{-- ESTADÍSTICAS --}}

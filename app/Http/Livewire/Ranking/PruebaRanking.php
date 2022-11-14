@@ -10,6 +10,11 @@ use Illuminate\Support\Facades\Date;
 class PruebaRanking extends Component
 {
     public $tendering, $answeredHashes, $offers;
+    public $bestFinalOffer;
+    public $bestFinalOfferHash;
+
+    // Messages
+    public $offerTypeOffer, $equalTotalsMessage, $equalPurchasesCountMessage, $equalDeliveryDateMessage, $equalCreatedAtMessage, $randomMessage;
 
     // Tipos de ofertas
     public $productsOkQuantitiesOk = [];
@@ -23,7 +28,9 @@ class PruebaRanking extends Component
         $this->answeredHashes = $tendering->hashes->where('answered', true);
 
         foreach ($this->answeredHashes as $hash) {
+
             $this->offers[] = $hash->offer;
+
         }
 
         $this->clasificacion();
@@ -32,13 +39,13 @@ class PruebaRanking extends Component
     public function clasificacion()
     {
         foreach ($this->offers as $offer) {
-            if ($offer->products_ok && $offer->quantities_ok) {
+            if ($offer->products_ok && $offer->quantities_ok && !$offer->hash->cancelled) {
                 $this->productsOkQuantitiesOk[] = $offer;
-            } elseif ($offer->products_ok && !$offer->quantities_ok) {
+            } elseif ($offer->products_ok && !$offer->quantities_ok && !$offer->hash->cancelled) {
                 $this->productsOkQuantitiesNotOk[] = $offer;
-            } elseif (!$offer->products_ok && $offer->quantities_ok) {
+            } elseif (!$offer->products_ok && $offer->quantities_ok && !$offer->hash->cancelled) {
                 $this->productsNotOkQuantitiesOk[] = $offer;
-            } elseif (!$offer->products_ok && !$offer->quantities_ok) {
+            } elseif (!$offer->products_ok && !$offer->quantities_ok && !$offer->hash->cancelled) {
                 $this->productsNotOkQuantitiesNotOk[] = $offer;
             }
         }
@@ -141,16 +148,16 @@ class PruebaRanking extends Component
             // Tipo de oferta
             switch ($i) {
                 case 0:
-                    $offerType = 'Productos completos y cantidades correctas';
+                    $this->offerTypeMessage = 'Productos completos y cantidades correctas';
                     break;
                 case 1:
-                    $offerType = 'Productos completos y cantidades incorrectas';
+                    $this->offerTypeMessage = 'Productos completos y cantidades incorrectas';
                     break;
                 case 2:
-                    $offerType = 'Productos incompletos y cantidades correctas';
+                    $this->offerTypeMessage = 'Productos incompletos y cantidades correctas';
                     break;
                 case 3:
-                    $offerType = 'Productos incompletos y cantidades incorrectas';
+                    $this->offerTypeMessage = 'Productos incompletos y cantidades incorrectas';
                     break;
             }
 
@@ -240,49 +247,56 @@ class PruebaRanking extends Component
                 }
             }
 
+            $this->bestFinalOffer = $bestOffer;
+            if ($bestOffer) {
+                $this->bestFinalOfferHash = $bestOffer->hash->hash;
+            }
+
             if ($bestOffer != null) {
 
-                if (isset($bestOffer)) {
-                    echo('ID #' . $bestOffer->id . '<br>');
-                    echo('La oferta pertenece a la categoría: ' . $offerType . '<br>');
-                } else {
-                    echo('No hay ofertas para evaluar <br>');
-                }
+                // if (isset($bestOffer)) {
+                //     echo('ID #' . $bestOffer->id . '<br>');
+                //     echo('La oferta pertenece a la categoría: ' . $offerType . '<br>');
+                // } else {
+                //     echo('No hay ofertas para evaluar <br>');
+                // }
 
                 if (isset($equalTotals)) {
                     if ($equalTotals) {
-                        echo('Hay empate en totales<br>');
+                        $this->equalTotalsMessage = 'Hubo empate en el total de las ofertas.';
                     } else {
-                        echo('No hay empate en totales<br>');
+                        $this->equalTotalsMessage = 'El proveedor ganó por ofrecer el mejor precio.';
                     }
                 }
 
                 if (isset($equalPurchasesCount)) {
                     if ($equalPurchasesCount) {
-                        echo('Hay empate en cantidad de compras<br>');
+                        $this->equalPurchasesCountMessage = 'Hubo empate en la cantidad de compras del proveedor.';
                     } else {
-                        echo('No hay empate en cantidad de compras<br>');
+                        $this->equalPurchasesCountMessage = 'El proveedor ganó por tener más compras realizadas a su favor.';
                     }
                 }
 
                 if (isset($equalDeliveryDate)) {
                     if ($equalDeliveryDate) {
-                        echo('Hay empate en fecha de entrega<br>');
+                        $this->equalDeliveryDateMessage = 'Hubo empate en la fecha de entrega.';
                     } else {
-                        echo('No hay empate en fecha de entrega<br>');
+                        $this->equalDeliveryDateMessage = 'El proveedor ganó por ofrecer una fecha de entrega más cercana.';
                     }
                 }
 
                 if (isset($equalCreatedAt)) {
                     if ($equalCreatedAt) {
-                        echo('Hay empate en fecha de creación<br>');
+                        $this->equalCreatedAtMessage = 'Hubo empate en la fecha de respuesta.';
                     } else {
-                        echo('No hay empate en fecha de creación<br>');
+                        $this->equalCreatedAtMessage = 'El proveedor ganó por ser el primero en responder.';
                     }
                 }
 
                 if (isset($random)) {
-                    echo('Se eligió aleatoriamente<br>');
+                    if ($random) {
+                        $this->randomMessage = 'La oferta se eligió aleatoriamente.';
+                    }
                 }
 
                 break;
@@ -295,6 +309,6 @@ class PruebaRanking extends Component
     public function render()
     {
         // return view('livewire.ranking.prueba-ranking');
-        return view('livewire.ranking.prueba-ranking')->layout(GuestLayout::class);
+        return view('livewire.ranking.prueba-ranking')->layout('layouts.guest');
     }
 }

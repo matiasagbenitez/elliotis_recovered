@@ -69,7 +69,7 @@ class TenderingSeeder extends Seeder
                     'answered' => false,
                 ]);
 
-                $randomBoolean = 1;
+                $randomBoolean = rand(0, 1);
                 if ($randomBoolean) {
 
                     $hash = $supplier->hashes()->where('hash', $supplierHash)->first();
