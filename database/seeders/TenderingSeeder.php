@@ -69,7 +69,7 @@ class TenderingSeeder extends Seeder
                     'answered' => false,
                 ]);
 
-                $randomBoolean = rand(0, 1);
+                $randomBoolean = 1;
                 if ($randomBoolean) {
 
                     $hash = $supplier->hashes()->where('hash', $supplierHash)->first();
@@ -83,7 +83,8 @@ class TenderingSeeder extends Seeder
                         'subtotal' => 0,
                         'iva' => 0,
                         'total' => 0,
-                        'delivery_date' => now(),
+                        'delivery_date' => now()->addDays(rand(1, 2))->addHours(rand(1, 23))->addMinutes(rand(1, 59)),
+                        // 'delivery_date' => now()->addDays(rand(5, 10)),
                         'observations' => '',
                     ]);
 
