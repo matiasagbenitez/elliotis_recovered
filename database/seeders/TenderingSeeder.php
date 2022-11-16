@@ -14,7 +14,7 @@ class TenderingSeeder extends Seeder
 
     public function run()
     {
-        Tendering::factory(1)->create();
+        Tendering::factory(5)->create();
 
         // Associate random products to each tendering
         Tendering::all()->each(function ($tendering) {

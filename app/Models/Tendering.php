@@ -28,4 +28,10 @@ class Tendering extends Model
     {
         return $this->hasMany(Hash::class);
     }
+
+    // Relationship with BestOffer
+    public function bestOffer()
+    {
+        return $this->hasOne(BestOffer::class);
+    }
 }

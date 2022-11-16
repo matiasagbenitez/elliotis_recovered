@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Ranking;
 
 use Livewire\Component;
 use App\Models\Tendering;
+use App\Models\PurchaseOrder;
 use App\View\Components\GuestLayout;
 use Illuminate\Support\Facades\Date;
 
@@ -15,6 +16,7 @@ class PruebaRanking extends Component
 
     // Messages
     public $offerTypeOffer, $equalTotalsMessage, $equalPurchasesCountMessage, $equalDeliveryDateMessage, $equalCreatedAtMessage, $randomMessage;
+    public $hasPurchaseOrderCreated;
 
     // Tipos de ofertas
     public $productsOkQuantitiesOk = [];
@@ -32,6 +34,8 @@ class PruebaRanking extends Component
             $this->offers[] = $hash->offer;
 
         }
+
+        $this->hasPurchaseOrderCreated = $tendering->is_approved ? true : false;
 
         $this->clasificacion();
     }
@@ -250,16 +254,18 @@ class PruebaRanking extends Component
             $this->bestFinalOffer = $bestOffer;
             if ($bestOffer) {
                 $this->bestFinalOfferHash = $bestOffer->hash->hash;
+                $this->tendering->update([
+                    'is_analyzed' => true,
+                ]);
+
+                // Create a best offer for the tendering
+                $this->tendering->bestOffer()->create([
+                    'tendering_id' => $this->tendering->id,
+                    'offer_id' => $bestOffer->id,
+                ]);
             }
 
             if ($bestOffer != null) {
-
-                // if (isset($bestOffer)) {
-                //     echo('ID #' . $bestOffer->id . '<br>');
-                //     echo('La oferta pertenece a la categoría: ' . $offerType . '<br>');
-                // } else {
-                //     echo('No hay ofertas para evaluar <br>');
-                // }
 
                 if (isset($equalTotals)) {
                     if ($equalTotals) {
@@ -303,6 +309,41 @@ class PruebaRanking extends Component
             }
         }
 
+    }
+
+    public function createPurchaseOrder()
+    {
+        try {
+            $purchaseOrder = PurchaseOrder::create([
+                'user_id' => auth()->user()->id,
+                'supplier_id' => $this->bestFinalOffer->hash->supplier->id,
+                'registration_date' => now(),
+                'subtotal' => $this->bestFinalOffer->subtotal,
+                'iva' => $this->bestFinalOffer->iva,
+                'total' => $this->bestFinalOffer->total,
+                'observations' => $this->bestFinalOffer->observations
+            ]);
+
+            // Create a purchase order detail for each item in best offer
+            foreach ($this->bestFinalOffer->products as $product) {
+                $purchaseOrder->products()->attach($product->id, [
+                    'quantity' => $product->pivot->quantity,
+                    'price' => $product->pivot->price,
+                    'subtotal' => $product->pivot->subtotal
+                ]);
+            }
+
+            // Save
+            $purchaseOrder->save();
+
+            $this->tendering->update([
+                'is_approved' => true,
+            ]);
+
+            $this->emit('success', 'Orden de compra creada correctamente.');
+        } catch (\Exception $e) {
+            $this->emit('error', 'Ocurrió un error al crear la orden de compra.');
+        }
     }
 
 

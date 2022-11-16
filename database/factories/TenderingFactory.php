@@ -11,7 +11,7 @@ class TenderingFactory extends Factory
     {
         $user_id = User::inRandomOrder()->first()->id;
         $start_date = $this->faker->dateTimeBetween('-3 day', 'now');
-        $end_date = $this->faker->dateTimeBetween($start_date, '+3 day');
+        $end_date = $this->faker->dateTimeBetween('now', '+3 day');
 
         return [
             'user_id' => $user_id,

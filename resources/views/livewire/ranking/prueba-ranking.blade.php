@@ -45,16 +45,18 @@
         @endisset
 
         <div class="flex justify-end gap-3">
-            <a href="{{ route('admin.tenderings.show-offer-detail', ['tendering' => $tendering, 'hash' => $bestFinalOfferHash]) }}">
+            <a
+                href="{{ route('admin.tenderings.show-offer-detail', ['tendering' => $tendering, 'hash' => $bestFinalOfferHash]) }}">
                 <x-jet-secondary-button>
                     {{ __('Ver detalle') }}
                 </x-jet-secondary-button>
             </a>
-            <x-jet-button wire:click="">
+            @if (!$hasPurchaseOrderCreated)
+            <x-jet-button wire:click="createPurchaseOrder">
                 {{ __('Aceptar y crear orden de compra') }}
             </x-jet-button>
+            @endif
         </div>
-
     @else
         <p class="text-sm">No hay ofertas recibidas.</p>
     @endisset
@@ -62,3 +64,31 @@
 
 
 </div>
+
+
+@push('script')
+    <script>
+        Livewire.on('success', message => {
+            const Toast = Swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+            });
+            Toast.fire({
+                icon: 'success',
+                title: message
+            });
+        });
+        Livewire.on('error', message => {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: message,
+                showConfirmButton: true,
+                confirmButtonColor: '#1f2937',
+            });
+        });
+    </script>
+@endpush

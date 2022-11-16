@@ -101,7 +101,7 @@
                             <span class="font-normal">{{ $tender->is_analyzed == 1 ? 'Sí' : 'No' }}</span>
                         </p>
                         @if ($tender->is_active)
-                            @if ($tender->end_date > now())
+                            @if ($tender->end_date > now() && $tender->is_analyzed == 0)
                                 <button wire:click="$emit('disableTender', '{{ $tender->id }}')">
                                     <span class="text-sm hover:font-bold cursor-pointer">
                                         <i class="fas fa-ban mr-1 text-gray-800"></i>

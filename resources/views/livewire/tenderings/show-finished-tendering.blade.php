@@ -31,6 +31,16 @@
         @livewire('ranking.prueba-ranking', ['tendering' => $tender])
     </div>
 
+    {{-- @if (!$hasBestOffer)
+        <div class="px-6 py-6 mb-6 bg-white rounded-lg shadow">
+            @livewire('ranking.prueba-ranking', ['tendering' => $tender])
+        </div>
+    @else
+        <div class="px-6 py-6 mb-6 bg-white rounded-lg shadow">
+            tiene mejor oferta
+        </div>
+    @endif --}}
+
     <div class="px-6 py-6 bg-white rounded-lg shadow">
 
         {{-- ESTADÍSTICAS --}}
@@ -198,7 +208,8 @@
                                 $hash = $offer->hash->hash;
                                 $tendering = $offer->hash->tendering->id;
                             @endphp
-                            <a href="{{ route('admin.tenderings.show-offer-detail', ['tendering' => $offer->hash->tendering->id, 'hash' => $offer->hash]) }}" class="hover:text-blue-500 hover:underline">
+                            <a href="{{ route('admin.tenderings.show-offer-detail', ['tendering' => $offer->hash->tendering->id, 'hash' => $offer->hash]) }}"
+                                class="hover:text-blue-500 hover:underline">
 
                                 {{ $offer->hash->hash }}
                             </a>

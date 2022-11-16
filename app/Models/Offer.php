@@ -22,4 +22,10 @@ class Offer extends Model
     {
         return $this->belongsToMany(Product::class)->withPivot('quantity', 'price', 'subtotal')->withTimestamps();
     }
+
+    // Relationship with BestOffer
+    public function bestOffer()
+    {
+        return $this->hasOne(BestOffer::class);
+    }
 }

@@ -15,6 +15,8 @@ class ShowFinishedTendering extends Component
     public $title = 'Solicitudes enviadas', $suppliers;
     public $offerTitle = 'Todas las ofertas recibidas', $offers, $offersList = [];
 
+    public $hasBestOffer;
+
     // All offers
     public $totalOffers;
 
@@ -51,6 +53,10 @@ class ShowFinishedTendering extends Component
             $this->offersList = $this->offers;
 
             $this->totalOffers = $this->offers->count();
+
+            // Test if the tendering has a best offer
+            $this->hasBestOffer = $tendering->bestOffer ? true : false;
+            $this->hasPurchaseOrderCreated = $tendering->is_analyzed ? true : false;
 
             // Products OK and quantities OK
             $this->productsOkQuantitiesOk = $this->offers->where('products_ok', true)->where('quantities_ok', true)->count();

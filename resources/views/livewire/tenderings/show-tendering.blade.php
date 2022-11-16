@@ -59,7 +59,8 @@
         <div class="px-6 py-3 bg-white rounded-lg shadow">
             <span class="font-bold">Concurso #{{ $tender->id }}</span>
             <hr class="mt-1">
-            <div @if (!$tender->is_active) class="grid grid-cols-2" @endif>
+            {{-- <div @if (!$tender->is_active) class="grid grid-cols-2" @endif> --}}
+            <div class="grid">
 
                 {{-- DIV IZQUIERDA --}}
                 <div>
@@ -224,16 +225,19 @@
         </div>
     </div>
 
-    @if (!$tender->is_finished)
-    <div class="bg-white p-3">
-        <div class="flex justify-center">
-            <x-jet-button wire:click="$emit('finishTender', '{{ $tender->id }}')">
-                <i class="fas fa-flag mr-2"></i>
-                Finalizar concurso
-            </x-jet-button>
-        </div>
-    </div>
+    @if ($tender->is_active)
+        @if (!$tender->is_finished)
+            <div class="bg-white p-3">
+                <div class="flex justify-center">
+                    <x-jet-button wire:click="$emit('finishTender', '{{ $tender->id }}')">
+                        <i class="fas fa-flag mr-2"></i>
+                        Finalizar concurso
+                    </x-jet-button>
+                </div>
+            </div>
+        @endif
     @endif
+
 </div>
 
 @push('script')
