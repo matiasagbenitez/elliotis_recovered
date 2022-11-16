@@ -90,16 +90,20 @@ class IndexSales extends Component
                 ]);
 
                 $saleOrder = SaleOrder::find($sale->client_order_id);
-                if ($disableOrder) {
-                    $saleOrder->update([
-                        'is_active' => false
-                    ]);
-                    $this->emit('success', '¡La venta y la orden se han anulado correctamente!');
+                if ($saleOrder) {
+                    if ($disableOrder) {
+                        $saleOrder->update([
+                            'is_active' => false
+                        ]);
+                        $this->emit('success', '¡La venta y la orden se han anulado correctamente!');
+                    } else {
+                        $saleOrder->update([
+                            'is_active' => true,
+                            'its_done' => null
+                        ]);
+                        $this->emit('success', '¡La venta se ha anulado correctamente!');
+                    }
                 } else {
-                    $saleOrder->update([
-                        'is_active' => true,
-                        'its_done' => null
-                    ]);
                     $this->emit('success', '¡La venta se ha anulado correctamente!');
                 }
 

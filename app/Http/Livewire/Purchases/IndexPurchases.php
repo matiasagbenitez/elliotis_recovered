@@ -90,16 +90,21 @@ class IndexPurchases extends Component
                 ]);
 
                 $purchaseOrder = PurchaseOrder::find($purchase->supplier_order_id);
-                if ($disableOrder) {
-                    $purchaseOrder->update([
-                        'is_active' => false
-                    ]);
-                    $this->emit('success', '¡La compra y la orden se han anulado correctamente!');
+
+                if ($purchaseOrder) {
+                    if ($disableOrder) {
+                        $purchaseOrder->update([
+                            'is_active' => false
+                        ]);
+                        $this->emit('success', '¡La compra y la orden se han anulado correctamente!');
+                    } else {
+                        $purchaseOrder->update([
+                            'is_active' => true,
+                            'its_done' => null
+                        ]);
+                        $this->emit('success', '¡La compra se ha anulado correctamente!');
+                    }
                 } else {
-                    $purchaseOrder->update([
-                        'is_active' => true,
-                        'its_done' => null
-                    ]);
                     $this->emit('success', '¡La compra se ha anulado correctamente!');
                 }
 
