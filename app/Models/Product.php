@@ -71,4 +71,10 @@ class Product extends Model
         return $this->belongsToMany(Offer::class);
     }
 
+    // Relationship with Phase
+    public function phases()
+    {
+        return $this->belongsTo(Phase::class);
+    }
+
 }

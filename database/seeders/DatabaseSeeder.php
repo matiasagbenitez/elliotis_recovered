@@ -29,6 +29,7 @@ class DatabaseSeeder extends Seeder
         $this->call(TaskTypeSeeder::class);
         $this->call(TaskStatusSeeder::class);
         $this->call(AreaSeeder::class);
+        $this->call(PhaseSeeder::class);
 
         $this->call(WoodTypeSeeder::class);
         $this->call(ProductSeeder::class);
@@ -37,5 +38,6 @@ class DatabaseSeeder extends Seeder
         $this->call(SaleOrderSeeder::class);
         $this->call(PurchaseOrderSeeder::class);
         $this->call(TenderingSeeder::class);
+
     }
 }
