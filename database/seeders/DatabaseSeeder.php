@@ -25,9 +25,11 @@ class DatabaseSeeder extends Seeder
         $this->call(UnitySeeder::class);
         $this->call(ProductNameSeeder::class);
         $this->call(ProductTypeSeeder::class);
+
         $this->call(TaskTypeSeeder::class);
         $this->call(TaskStatusSeeder::class);
         $this->call(AreaSeeder::class);
+
         $this->call(WoodTypeSeeder::class);
         $this->call(ProductSeeder::class);
         $this->call(PurchaseSeeder::class);

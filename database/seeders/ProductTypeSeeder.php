@@ -12,80 +12,103 @@ class ProductTypeSeeder extends Seeder
     public function run()
     {
         $productTypes = [
+
+            // 1) ROLLO 10
             [
                 'product_name_id' => 1,
                 'measure_id' => 25,
                 'unity_id' => 1,
             ],
-            [
-                'product_name_id' => 2,
-                'measure_id' => 21,
-                'unity_id' => 1,
-            ],
-            [
-                'product_name_id' => 3,
-                'measure_id' => 21,
-                'unity_id' => 1,
-            ],
-            [
-                'product_name_id' => 4,
-                'measure_id' => 21,
-                'unity_id' => 1,
-            ],
-            [
-                'product_name_id' => 5,
-                'measure_id' => 21,
-                'unity_id' => 3,
-            ],
-            [
-                'product_name_id' => 1,
-                'measure_id' => 27,
-                'unity_id' => 1,
-            ],
-            [
-                'product_name_id' => 2,
-                'measure_id' => 23,
-                'unity_id' => 1,
-            ],
-            [
-                'product_name_id' => 3,
-                'measure_id' => 23,
-                'unity_id' => 1,
-            ],
-            [
-                'product_name_id' => 4,
-                'measure_id' => 23,
-                'unity_id' => 1,
-            ],
-            [
-                'product_name_id' => 5,
-                'measure_id' => 23,
-                'unity_id' => 3,
-            ],
 
-            // Rollos 11 y 13
-
+            // 2) ROLLO 11
             [
                 'product_name_id' => 1,
                 'measure_id' => 26,
                 'unity_id' => 1,
             ],
+
+            // 3) ROLLO 12
+            [
+                'product_name_id' => 1,
+                'measure_id' => 27,
+                'unity_id' => 1,
+            ],
+
+            // 4) ROLLO 13
             [
                 'product_name_id' => 1,
                 'measure_id' => 28,
                 'unity_id' => 1,
             ],
 
-            // PAQUETES GRANDES MACHIMBRADOS DE 11' Y 13'
+            // 5) FAJA HÚMEDA 1/2 X 4 X 10
+            [
+                'product_name_id' => 2,
+                'measure_id' => 21,
+                'unity_id' => 1,
+            ],
+
+            // 6) FAJA SECA 1/2 X 4 X 10
+            [
+                'product_name_id' => 3,
+                'measure_id' => 21,
+                'unity_id' => 1,
+            ],
+
+            // 7) FAJA MACHIMBRADA 1/2 X 4 X 10
+            [
+                'product_name_id' => 4,
+                'measure_id' => 21,
+                'unity_id' => 1,
+            ],
+
+            // 8) PAQUETE GRANDE MACHIMBRADO 1/2 X 4 X 10
+            [
+                'product_name_id' => 5,
+                'measure_id' => 21,
+                'unity_id' => 1,
+            ],
+
+            // 9) PAQUETE GRANDE MACHIMBRADO 1/2 X 4 X 11
             [
                 'product_name_id' => 5,
                 'measure_id' => 22,
-                'unity_id' => 3,
+                'unity_id' => 1,
             ],
+
+            // 10) FAJA HÚMEDA 1/2 X 4 X 12
+            [
+                'product_name_id' => 2,
+                'measure_id' => 23,
+                'unity_id' => 1,
+            ],
+
+            // 11) FAJA SECA 1/2 X 4 X 12
+            [
+                'product_name_id' => 3,
+                'measure_id' => 23,
+                'unity_id' => 1,
+            ],
+
+            // 12) FAJA MACHIMBRADA 1/2 X 4 X 12
+            [
+                'product_name_id' => 4,
+                'measure_id' => 23,
+                'unity_id' => 1,
+            ],
+
+            // 13) PAQUETE GRANDE MACHIMBRADO 1/2 X 4 X 12
+            [
+                'product_name_id' => 5,
+                'measure_id' => 23,
+                'unity_id' => 1,
+            ],
+
+            // 14) PAQUETE GRANDE MACHIMBRADO 1/2 X 4 X 13
             [
                 'product_name_id' => 5,
                 'measure_id' => 24,
-                'unity_id' => 3,
+                'unity_id' => 1,
             ],
 
         ];
