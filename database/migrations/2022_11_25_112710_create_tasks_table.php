@@ -18,10 +18,10 @@ return new class extends Migration
             $table->foreign('task_status_id')->references('id')->on('task_statuses');
 
             $table->integer('started_by')->nullable();
-            $table->dateTime('started_at');
+            $table->dateTime('started_at')->nullable();
 
             $table->integer('finished_by')->nullable();
-            $table->dateTime('finished_at');
+            $table->dateTime('finished_at')->nullable();
 
             $table->timestamps();
         });
