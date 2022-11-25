@@ -77,4 +77,10 @@ class Product extends Model
         return $this->belongsTo(Phase::class);
     }
 
+    // Relationship with TrunkLot
+    public function trunkLots()
+    {
+        return $this->hasMany(TrunkLot::class);
+    }
+
 }

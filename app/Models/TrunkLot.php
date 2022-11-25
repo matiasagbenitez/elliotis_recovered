@@ -16,4 +16,10 @@ class TrunkLot extends Model
     {
         return $this->belongsTo(TrunkPurchase::class);
     }
+
+    // Relationship with Product
+    public function product()
+    {
+        return $this->belongsTo(Product::class);
+    }
 }

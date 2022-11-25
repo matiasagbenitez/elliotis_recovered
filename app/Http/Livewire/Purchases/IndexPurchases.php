@@ -120,14 +120,14 @@ class IndexPurchases extends Component
 
             $trunkPurchase = TrunkPurchase::create([
                 'purchase_id' => $purchase->id,
-                'code' => 'C-' . $purchase->id
+                'code' => 'LR-' . $purchase->id
             ]);
 
             $trunkPurchase->trunk_lots()->createMany(
                 $purchase->products->map(function ($product) {
                     return [
                         'product_id' => $product->id,
-                        'code' => 'LR-' . rand(1000, 9999),
+                        'code' => 'SLR-' . rand(1000, 9999),
                         'initial_quantity' => $product->pivot->quantity,
                         'actual_quantity' => $product->pivot->quantity,
                     ];

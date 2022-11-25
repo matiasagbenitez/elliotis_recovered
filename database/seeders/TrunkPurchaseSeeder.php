@@ -19,7 +19,7 @@ class TrunkPurchaseSeeder extends Seeder
             if ($purchase->id <= 3) {
                 $trunkPurchase = TrunkPurchase::create([
                     'purchase_id' => $purchase->id,
-                    'code' => 'C-' . $i++,
+                    'code' => 'LR-' . $i++,
                 ]);
 
                 // Associate the same products of the puchase to the trunk purchase
@@ -29,7 +29,7 @@ class TrunkPurchaseSeeder extends Seeder
                         return [
                             'product_id' => $product->id,
                             // Random code integer
-                            'code' => 'LR-' . rand(1000, 9999),
+                            'code' => 'SLR-' . rand(1000, 9999),
                             'initial_quantity' => $product->pivot->quantity,
                             'actual_quantity' => $product->pivot->quantity,
                         ];

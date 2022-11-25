@@ -9,6 +9,7 @@ use App\Http\Livewire\Clients\EditClient;
 use App\Http\Livewire\Clients\CreateClient;
 use App\Http\Livewire\Clients\IndexClients;
 use App\Http\Livewire\Unities\IndexUnities;
+use App\Http\Livewire\Ranking\PruebaRanking;
 use App\Http\Livewire\IvaTypes\IndexIvaTypes;
 use App\Http\Livewire\Measures\IndexMeasures;
 use App\Http\Livewire\Products\IndexProducts;
@@ -23,6 +24,7 @@ use App\Http\Livewire\Suppliers\CreateSupplier;
 use App\Http\Livewire\Suppliers\IndexSuppliers;
 use App\Http\Livewire\TaskTypes\IndexTaskTypes;
 use App\Http\Livewire\Tenderings\ShowTendering;
+use App\Http\Livewire\TrunkLots\IndexTrunkLots;
 use App\Http\Livewire\WoodTypes\IndexWoodTypes;
 use App\Http\Livewire\Localities\IndexLocalities;
 use App\Http\Livewire\SaleOrders\CreateSaleOrder;
@@ -40,7 +42,6 @@ use App\Http\Livewire\Tenderings\ShowFinishedTendering;
 use App\Http\Livewire\PurchaseOrders\CreatePurchaseOrder;
 use App\Http\Livewire\PurchaseOrders\PurchaseOrdersIndex;
 use App\Http\Livewire\PucharseParameters\IndexPucharseParameters;
-use App\Http\Livewire\Ranking\PruebaRanking;
 
 Route::get('/countries', IndexCountries::class)->name('admin.countries.index');
 Route::get('/provinces', IndexProvinces::class)->name('admin.provinces.index');
@@ -95,3 +96,5 @@ Route::get('/tendering/{tendering}/finished', ShowFinishedTendering::class)->nam
 
 
 Route::get('/ranking/{tendering}', PruebaRanking::class)->name('admin.ranking.index');
+
+Route::get('/trunk-lots', IndexTrunkLots::class)->name('admin.trunk-lots.index');
