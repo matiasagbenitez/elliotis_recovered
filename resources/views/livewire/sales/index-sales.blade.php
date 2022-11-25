@@ -80,9 +80,6 @@
                             <i class="fas fa-sort mr-2"></i>
                             Monto total
                         </th>
-                        {{-- <th scope="col" class="w-1/4 py-2 px-4">
-                            Pedido asociado
-                        </th> --}}
                         <th scope="col" class="w-1/4 py-2 px-4">
                             Estado
                         </th>
@@ -115,21 +112,6 @@
                                     ${{ number_format($sale->total, 2, ',', '.') }}
                                 </p>
                             </td>
-                            {{-- <td class="px-6 py-2 whitespace-nowrap text-center">
-                                <p class="text-sm uppercase">
-                                    @if ($purchase->supplier_order_if)
-                                        <span
-                                            class="px-6 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                                            POSEE
-                                        </span>
-                                    @else
-                                        <span
-                                            class="px-6 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
-                                            NO POSEE
-                                        </span>
-                                    @endif
-                                </p>
-                            </td> --}}
                             <td class="px-6 py-2 whitespace-nowrap text-center">
                                 <p class="text-sm uppercase">
                                     @if ($sale->is_active == 1)
@@ -148,10 +130,10 @@
                             <td class="px-6 py-2 whitespace-nowrap text-sm font-medium">
                                 <div class="flex items-center justify-end gap-2">
                                     @if ($sale->is_active)
-                                        <button title="Anular venta"
+                                        <x-jet-danger-button title="Anular venta"
                                             wire:click="$emit('disableSale', '{{ $sale->id }}')">
-                                            <i class="fas fa-ban mr-1"></i>
-                                        </button>
+                                            <i class="fas fa-trash"></i>
+                                        </x-jet-danger-button>
                                     @endif
                                     <a title="Ver detalle" href="{{ route('admin.sales.show-detail', $sale) }}">
                                         <x-jet-secondary-button>

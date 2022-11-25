@@ -19,6 +19,7 @@ class TaskStatusSeeder extends Seeder
             ],
             [
                 'name' => 'Finalizado',
+                'is_finished' => true,
             ],
         ];
 

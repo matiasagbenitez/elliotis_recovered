@@ -265,12 +265,12 @@ class CreatePurchase extends Component
         }
 
         // Actualizamos el stock de los productos
-        foreach ($purchase->products as $product) {
-            $p = Product::find($product->id);
-            $p->update([
-                'real_stock' => $p->real_stock + $product->pivot->quantity
-            ]);
-        }
+        // foreach ($purchase->products as $product) {
+        //     $p = Product::find($product->id);
+        //     $p->update([
+        //         'real_stock' => $p->real_stock + $product->pivot->quantity
+        //     ]);
+        // }
 
         // Actualizamos la orden de compra
         if ($this->createForm['supplier_order_id'] != null) {

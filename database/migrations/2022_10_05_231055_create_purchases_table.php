@@ -22,6 +22,10 @@ return new class extends Migration
 
             $table->integer('supplier_order_id')->nullable();
 
+            $table->float('subtotal', 10, 2)->required();
+            $table->float('iva', 10, 2)->required();
+            $table->float('total', 10, 2)->required();
+
             $table->unsignedBigInteger('payment_condition_id')->required();
             $table->foreign('payment_condition_id')->references('id')->on('payment_conditions');
 
@@ -30,17 +34,16 @@ return new class extends Migration
 
             $table->unsignedBigInteger('voucher_type_id')->required();
             $table->foreign('voucher_type_id')->references('id')->on('voucher_types');
-
             $table->integer('voucher_number')->required()->unique();
-
-            $table->float('subtotal', 10, 2)->required();
-            $table->float('iva', 10, 2)->required();
-            $table->float('total', 10, 2)->required();
 
             $table->decimal('weight', 10, 2)->required();
             $table->string('weight_voucher')->nullable();
 
             $table->text('observations')->nullable();
+
+            $table->boolean('is_confirmed')->default(false);
+            $table->integer('confirmed_by')->nullable();
+            $table->date('confirmed_at')->nullable();
 
             $table->boolean('is_active')->default(true);
             $table->integer('cancelled_by')->nullable();

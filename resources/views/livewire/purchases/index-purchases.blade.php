@@ -69,22 +69,22 @@
                             <i class="fas fa-sort mr-2"></i>
                             ID
                         </th>
-                        <th scope="col" wire:click="order('date')" class="w-1/4 px-4 py-2 cursor-pointer">
+                        <th scope="col" wire:click="order('date')" class="w-1/5 px-4 py-2 cursor-pointer">
                             <i class="fas fa-sort mr-2"></i>
                             Alta sistema
                         </th>
-                        <th scope="col" class="w-1/4 px-4 py-2 cursor-pointer">
+                        <th scope="col" class="w-1/5 px-4 py-2 cursor-pointer">
                             Proveedor
                         </th>
-                        <th scope="col" wire:click="order('total')" class="w-1/4 px-4 py-2 cursor-pointer">
+                        <th scope="col" wire:click="order('total')" class="w-1/5 px-4 py-2 cursor-pointer">
                             <i class="fas fa-sort mr-2"></i>
                             Monto total
                         </th>
-                        {{-- <th scope="col" class="w-1/4 py-2 px-4">
-                            Pedido asociado
-                        </th> --}}
-                        <th scope="col" class="w-1/4 py-2 px-4">
-                            Estado
+                        <th scope="col" class="w-1/5 py-2 px-4">
+                            Registro
+                        </th>
+                        <th scope="col" class="w-1/5 py-2 px-4">
+                            Confirmación
                         </th>
                         <th scope="col" class="py-2 px-4">
                             Acción
@@ -101,7 +101,6 @@
                             </td>
                             <td class="px-6 py-2 whitespace-nowrap text-center">
                                 <p class="text-sm uppercase">
-                                    {{-- Format date to Y-m-d --}}
                                     {{ Date::parse($purchase->created_at)->format('d-m-Y') }}
                                 </p>
                             </td>
@@ -115,21 +114,6 @@
                                     ${{ number_format($purchase->total, 2, ',', '.') }}
                                 </p>
                             </td>
-                            {{-- <td class="px-6 py-2 whitespace-nowrap text-center">
-                                <p class="text-sm uppercase">
-                                    @if ($purchase->supplier_order_if)
-                                        <span
-                                            class="px-6 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                                            POSEE
-                                        </span>
-                                    @else
-                                        <span
-                                            class="px-6 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
-                                            NO POSEE
-                                        </span>
-                                    @endif
-                                </p>
-                            </td> --}}
                             <td class="px-6 py-2 whitespace-nowrap text-center">
                                 <p class="text-sm uppercase">
                                     @if ($purchase->is_active == 1)
@@ -145,13 +129,34 @@
                                     @endif
                                 </p>
                             </td>
+                            <td class="px-6 py-2 whitespace-nowrap text-center">
+                                <p class="text-sm uppercase">
+                                    @if ($purchase->is_confirmed == 1)
+                                        <span
+                                            class="px-6 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                            CONFIRMADO
+                                        </span>
+                                    @else
+                                        <span
+                                            class="px-6 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
+                                            PENDIENTE
+                                        </span>
+                                    @endif
+                                </p>
+                            </td>
                             <td class="px-6 py-2 whitespace-nowrap text-sm font-medium">
                                 <div class="flex items-center justify-end gap-2">
-                                    @if ($purchase->is_active)
-                                        <button title="Anular compra"
+                                    @if (!$purchase->is_confirmed && $purchase->is_active)
+                                        <x-jet-button title="Confirmar compra"
+                                            wire:click="$emit('confirmPurchase', '{{ $purchase->id }}')">
+                                            <i class="fas fa-check"></i>
+                                        </x-jet-button>
+                                    @endif
+                                    @if ($purchase->is_active && !$purchase->is_confirmed)
+                                        <x-jet-danger-button title="Anular compra"
                                             wire:click="$emit('disablePurchase', '{{ $purchase->id }}')">
-                                            <i class="fas fa-ban mr-1 hover:text-red-600"></i>
-                                        </button>
+                                            <i class="fas fa-trash"></i>
+                                        </x-jet-danger-button>
                                     @endif
                                     <a title="Ver detalle"
                                         href="{{ route('admin.purchases.show-detail', $purchase) }}">
@@ -218,7 +223,8 @@
 
                         if (result.isConfirmed) {
 
-                            Livewire.emitTo('purchases.index-purchases', 'disable', purchaseId, reason, disableOrder = true);
+                            Livewire.emitTo('purchases.index-purchases', 'disable', purchaseId, reason,
+                                disableOrder = true);
                             Livewire.on('success', message => {
                                 const Toast = Swal.mixin({
                                     toast: true,
@@ -245,7 +251,8 @@
 
                         } else if (result.isDenied) {
 
-                            Livewire.emitTo('purchases.index-purchases', 'disable', purchaseId, reason, disableOrder = false);
+                            Livewire.emitTo('purchases.index-purchases', 'disable', purchaseId, reason,
+                                disableOrder = false);
                             Livewire.on('success', message => {
                                 const Toast = Swal.mixin({
                                     toast: true,
@@ -274,6 +281,51 @@
                 }
             });
         </script>
+
+<script>
+    Livewire.on('confirmPurchase', purchaseId => {
+        Swal.fire({
+            title: '¿Dar de alta para producción?',
+            text: "Si confirmas, todos los productos de esta compra estarán disponibles para producción. ¡No podrás anular la orden posteriormente!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#1f2937',
+            cancelButtonColor: '#dc2626',
+            confirmButtonText: 'Sí, dar de alta',
+            cancelButtonText: 'Cancelar'
+        }).then((result) => {
+            if (result.isConfirmed) {
+
+                Livewire.emitTo('purchases.index-purchases', 'confirm', purchaseId);
+
+                Livewire.on('success', message => {
+                    const Toast = Swal.mixin({
+                        toast: true,
+                        position: 'top-end',
+                        showConfirmButton: false,
+                        timer: 3000,
+                        timerProgressBar: true,
+                    });
+
+                    Toast.fire({
+                        icon: 'success',
+                        title: message
+                    });
+                });
+
+                Livewire.on('error', message => {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: message,
+                        showConfirmButton: true,
+                        confirmButtonColor: '#1f2937',
+                    });
+                });
+            }
+        })
+    });
+</script>
     @endpush
 
 </div>

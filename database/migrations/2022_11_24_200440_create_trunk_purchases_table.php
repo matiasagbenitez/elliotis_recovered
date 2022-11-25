@@ -8,11 +8,13 @@ return new class extends Migration
 {
     public function up()
     {
-        Schema::create('task_statuses', function (Blueprint $table) {
+        Schema::create('trunk_purchases', function (Blueprint $table) {
             $table->id();
 
-            $table->string('name')->required()->unique();
-            $table->boolean('is_finished')->default(false);
+            $table->unsignedBigInteger('purchase_id');
+            $table->foreign('purchase_id')->references('id')->on('purchases');
+
+            $table->string('code')->unique();
 
             $table->timestamps();
         });
@@ -20,6 +22,6 @@ return new class extends Migration
 
     public function down()
     {
-        Schema::dropIfExists('task_statuses');
+        Schema::dropIfExists('trunk_purchases');
     }
 };

@@ -39,5 +39,8 @@ class DatabaseSeeder extends Seeder
         $this->call(PurchaseOrderSeeder::class);
         $this->call(TenderingSeeder::class);
 
+        // Producción
+        $this->call(TrunkPurchaseSeeder::class);
+
     }
 }

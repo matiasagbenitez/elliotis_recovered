@@ -21,6 +21,22 @@
         </div>
     </x-slot>
 
+    @if (!$sale->is_active)
+        <div
+            class="max-w-5xl mx-auto flex items-center p-4 mb-4 text-sm text-red-700 bg-red-100 rounded-lg dark:bg-red-200 dark:text-red-800 border-2 border-red-600">
+            <i class="fas fa-info-circle text-lg mr-2"></i>
+            <div>
+                <span class="font-bold uppercase">Atención!</span>
+                El detalle de esta venta no es válida ya que la misma fue cancelada por
+                {{ $user_who_cancelled }}
+                el día
+                {{ Date::parse($sale->canceled_at)->format('d-m-Y') }}
+                a las
+                {{ Date::parse($sale->canceled_at)->format('H:i') }}.
+            </div>
+        </div>
+    @endif
+
     {{-- Purchase detail --}}
     <div class="max-w-5xl mx-auto bg-white p-10 rounded-lg border-2">
         <h2 class=" font-mono font-semibold text-2xl text-gray-800 leading-tight mb-4 uppercase text-center">
@@ -46,30 +62,6 @@
                         <span class="font-normal">{{ $sale->client->iva_condition->name }}</span>
                     </p>
                 </div>
-                {{-- <div class="w-1/2 space-y-2">
-                    <p class="text-sm font-mono font-bold">Dirección: <span class=" font-mono font-normal">{{ $purchase->supplier->adress }}, {{ $purchase->supplier->locality->name }}</span></p>
-                    <p class="text-sm font-mono font-bold">Teléfono de contacto: <span class=" font-mono font-normal">{{ $purchase->supplier->phone }}</span></p>
-                    <p class="text-sm font-mono font-bold">Correo electrónico: <span class=" font-mono font-normal">{{ $purchase->supplier->email }}</span></p>
-                </div> --}}
-                @if (!$sale->is_active)
-                    <div class="w-1/2 flex justify-center items-center border border-red-700 text-red-700 px-4 py-3 rounded relative gap-4"
-                        role="alert">
-                        {{-- <div> --}}
-                        <i class="fas fa-ban text-5xl"></i>
-                        {{-- </div> --}}
-                        <div class="flex flex-col">
-                            <p class="font-bold font-mono uppercase">Venta anulada</p>
-                            <p class="font-mono text-sm">
-                                La presente venta no es válida ya que fue anulada por {{ $user_who_cancelled }}
-                                el día {{ $sale->updated_at->format('d-m-Y') }} a las {{ $sale->updated_at->format('H:i:s') }} hs
-                            </p>
-                            <p class="font-bold font-mono uppercase mt-2">Motivo</p>
-                            <p class="font-mono text-sm">
-                                {{ $sale->cancel_reason }}
-                            </p>
-                        </div>
-                    </div>
-                @endif
             </div>
         </div>
 

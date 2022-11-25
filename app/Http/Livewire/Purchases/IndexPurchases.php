@@ -2,15 +2,16 @@
 
 namespace App\Http\Livewire\Purchases;
 
+use Carbon\Carbon;
 use App\Models\Product;
 use Livewire\Component;
 use App\Models\Purchase;
-use App\Models\PurchaseOrder;
 use App\Models\Supplier;
-use App\Models\VoucherTypes;
-use Carbon\Carbon;
-use Livewire\WithPagination;
 use Termwind\Components\Dd;
+use App\Models\VoucherTypes;
+use Livewire\WithPagination;
+use App\Models\PurchaseOrder;
+use App\Models\TrunkPurchase;
 
 class IndexPurchases extends Component
 {
@@ -27,7 +28,7 @@ class IndexPurchases extends Component
         'toDate' => '',
     ];
 
-    protected $listeners = ['refresh' => 'render', 'disable'];
+    protected $listeners = ['refresh' => 'render', 'disable', 'confirm'];
 
     public function mount()
     {
@@ -48,11 +49,6 @@ class IndexPurchases extends Component
             $this->direction = 'desc';
         }
     }
-
-    // public function updatedFilters()
-    // {
-    //     $this->total_purchases = Purchase::filter($this->filters)->where('is_active', true)->sum('total');
-    // }
 
     public function resetFilters()
     {
@@ -77,12 +73,12 @@ class IndexPurchases extends Component
                 $purchase->cancel_reason = $reason;
                 $purchase->save();
 
-                foreach ($purchase->products as $product) {
-                    $p = Product::find($product->id);
-                    $p->update([
-                        'real_stock' => $p->real_stock - $product->pivot->quantity
-                    ]);
-                }
+                // foreach ($purchase->products as $product) {
+                //     $p = Product::find($product->id);
+                //     $p->update([
+                //         'real_stock' => $p->real_stock - $product->pivot->quantity
+                //     ]);
+                // }
 
                 $supplier = Supplier::find($purchase->supplier_id);
                 $supplier->update([
@@ -114,6 +110,47 @@ class IndexPurchases extends Component
             }
         } else {
             $this->emit('error', 'No es posible anular una compra del mes pasado.');
+        }
+    }
+
+    public function confirm($id)
+    {
+        try {
+            $purchase = Purchase::find($id);
+
+            $trunkPurchase = TrunkPurchase::create([
+                'purchase_id' => $purchase->id,
+                'code' => 'C-' . $purchase->id
+            ]);
+
+            $trunkPurchase->trunk_lots()->createMany(
+                $purchase->products->map(function ($product) {
+                    return [
+                        'product_id' => $product->id,
+                        'code' => 'LR-' . rand(1000, 9999),
+                        'initial_quantity' => $product->pivot->quantity,
+                        'actual_quantity' => $product->pivot->quantity,
+                    ];
+                })
+            );
+
+            $purchase->update([
+                'is_confirmed' => true,
+                'confirmed_at' => now(),
+                'confirmed_by' => auth()->user()->id
+            ]);
+
+            // Actualizamos el stock de los productos
+            foreach ($purchase->products as $product) {
+                $p = Product::find($product->id);
+                $p->update([
+                    'real_stock' => $p->real_stock + $product->pivot->quantity
+                ]);
+            }
+
+            $this->emit('success', '¡La compra se ha confirmado correctamente! Lotes registrados para producción.');
+        } catch (\Exception $e) {
+            $this->emit('error', 'No es posible confirmar la compra.');
         }
     }
 

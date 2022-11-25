@@ -53,6 +53,14 @@ class PurchaseSeeder extends Seeder
             }
             $purchase->total = $purchase->subtotal + $purchase->iva;
 
+            if ($purchase->id <= 3) {
+                $purchase->update([
+                    'is_confirmed' => true,
+                    'confirmed_by' => 1,
+                    'confirmed_at' => now(),
+                ]);
+            }
+
             // Total
             $purchase->save();
 

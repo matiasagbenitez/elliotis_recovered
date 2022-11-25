@@ -66,14 +66,14 @@ class ProductTypeSeeder extends Seeder
             [
                 'product_name_id' => 5,
                 'measure_id' => 21,
-                'unity_id' => 1,
+                'unity_id' => 3,
             ],
 
             // 9) PAQUETE GRANDE MACHIMBRADO 1/2 X 4 X 11
             [
                 'product_name_id' => 5,
                 'measure_id' => 22,
-                'unity_id' => 1,
+                'unity_id' => 3,
             ],
 
             // 10) FAJA HÚMEDA 1/2 X 4 X 12
@@ -101,14 +101,14 @@ class ProductTypeSeeder extends Seeder
             [
                 'product_name_id' => 5,
                 'measure_id' => 23,
-                'unity_id' => 1,
+                'unity_id' => 3,
             ],
 
             // 14) PAQUETE GRANDE MACHIMBRADO 1/2 X 4 X 13
             [
                 'product_name_id' => 5,
                 'measure_id' => 24,
-                'unity_id' => 1,
+                'unity_id' => 3,
             ],
 
         ];

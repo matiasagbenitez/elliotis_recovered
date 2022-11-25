@@ -56,4 +56,10 @@ class Purchase extends Model
     {
         return $this->belongsToMany(Product::class)->withPivot('quantity', 'price', 'subtotal')->withTimestamps();
     }
+
+    // Has one TrunkPurchase
+    public function trunk_purchase()
+    {
+        return $this->hasOne(TrunkPurchase::class);
+    }
 }

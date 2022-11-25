@@ -108,7 +108,7 @@
                                 </p>
                             </td>
                             <td class="px-6 py-3 whitespace-nowrap">
-                                <p class="font-bold text-sm uppercase">
+                                <p class="text-sm uppercase">
                                     {{ $product->name }}
                                 </p>
                             </td>
