@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Livewire\Areas\IndexAreas;
 use App\Http\Livewire\Sales\CreateSale;
 use App\Http\Livewire\Sales\IndexSales;
+use App\Http\Livewire\Tasks\IndexTasks;
 use App\Http\Livewire\Clients\EditClient;
 use App\Http\Livewire\Clients\CreateClient;
 use App\Http\Livewire\Clients\IndexClients;
@@ -97,4 +98,6 @@ Route::get('/tendering/{tendering}/finished', ShowFinishedTendering::class)->nam
 
 Route::get('/ranking/{tendering}', PruebaRanking::class)->name('admin.ranking.index');
 
+// Producción
 Route::get('/trunk-lots', IndexTrunkLots::class)->name('admin.trunk-lots.index');
+Route::get('/tasks', IndexTasks::class)->name('admin.tasks.index');
