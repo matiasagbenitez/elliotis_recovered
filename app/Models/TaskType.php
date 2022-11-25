@@ -10,4 +10,10 @@ class TaskType extends Model
     use HasFactory;
 
     protected $guarded = ['id', 'created_at', 'updated_at'];
+
+    // Relationship with Task
+    public function tasks()
+    {
+        return $this->hasMany(Task::class);
+    }
 }

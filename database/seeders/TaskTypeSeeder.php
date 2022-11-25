@@ -12,13 +12,24 @@ class TaskTypeSeeder extends Seeder
     {
         $tasks = [
             [
-                'name' => 'Corte de rollos'
+                'name' => 'Corte de rollos',
+                'area_id' => 1,
+                'initial_phase_id' => 1,
+                'final_phase_id' => 2,
+                'initial_task' => true,
             ],
             [
-                'name' => 'Machimbrado'
+                'name' => 'Machimbrado',
+                'area_id' => 4,
+                'initial_phase_id' => 3,
+                'final_phase_id' => 4,
             ],
             [
-                'name' => 'Empaquetado'
+                'name' => 'Empaquetado',
+                'area_id' => 6,
+                'initial_phase_id' => 4,
+                'final_phase_id' => 5,
+                'final_task' => true
             ]
         ];
 

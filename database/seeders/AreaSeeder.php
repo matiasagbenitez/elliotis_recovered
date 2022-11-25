@@ -15,7 +15,9 @@ class AreaSeeder extends Seeder
             'Área de secado',
             'Depósito de fajas secas',
             'Machimbradora',
-            'Depósito de fajas machimbradas'
+            'Depósito de fajas machimbradas',
+            'Empaquetadora',
+            'Depósito de paquetes machimbrados',
         ];
 
         foreach ($areas as $area) {

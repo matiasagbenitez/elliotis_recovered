@@ -22,4 +22,10 @@ class TrunkLot extends Model
     {
         return $this->belongsTo(Product::class);
     }
+
+    // Relationship with tasks
+    public function tasks()
+    {
+        return $this->belongsToMany(Task::class)->withPivot('id', 'task_id', 'trunk_lot_id', 'consumed_quantity')->withTimestamps();
+    }
 }

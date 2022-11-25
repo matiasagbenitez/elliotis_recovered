@@ -11,4 +11,10 @@ class TaskStatus extends Model
 
     protected $guarded = ['id', 'created_at', 'updated_at'];
 
+    // Relationship with Task
+    public function tasks()
+    {
+        return $this->hasMany(Task::class);
+    }
+
 }
