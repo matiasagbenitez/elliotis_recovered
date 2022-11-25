@@ -25,6 +25,7 @@ class IndexTrunkLots extends Component
         ->select('products.name as product_name', 'trunk_lots.product_id')
         ->selectRaw('product_id, sum(actual_quantity) as actual_quantity')
         ->selectRaw('product_id, count(product_id) as lots_count')
+        ->where('available', true)
         ->orderBy('product_id', 'asc')->get();
 
         return view('livewire.trunk-lots.index-trunk-lots');

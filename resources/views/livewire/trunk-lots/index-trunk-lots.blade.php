@@ -10,7 +10,7 @@
         <div class="px-6 py-4 bg-white rounded-lg shadow mb-5">
             <button wire:click='toggleResumeView'
                 class="font-semibold text-lg text-gray-800 leading-tight hover:font-bold">
-                Ver resumen
+                Resumen de disponibilidad
             </button>
             <hr class="mt-1">
             @if ($resume_view)
@@ -24,7 +24,7 @@
                                         Producto
                                     </th>
                                     <th scope="col" class="w-1/3 px-4 py-2">
-                                        Cantidad de sublotes
+                                        Cantidad de sublotes disponibles
                                     </th>
                                     <th scope="col" class="w-1/3 px-4 py-2">
                                         Cantidad total actual
@@ -58,7 +58,7 @@
             @endif
         </div>
 
-        <h1 class="font-semibold text-lg text-gray-800 leading-tight text-center uppercase mb-3">Listado de lotes</h1>
+        <h1 class="font-semibold text-lg text-gray-800 leading-tight text-center uppercase mb-3">Listado de lotes existentes</h1>
 
         @foreach ($trunk_purchases as $trunk_purchase)
             <div class="px-6 py-4 bg-white rounded-lg shadow mb-5">
@@ -89,17 +89,20 @@
                                 <th scope="col" class="px-4 py-2 whitespace-nowrap">
                                     ID sublote
                                 </th>
-                                <th scope="col" class="w-1/4 px-4 py-2">
+                                <th scope="col" class="w-1/6 px-4 py-2">
                                     Código sublote
                                 </th>
-                                <th scope="col" class="w-1/4 px-4 py-2">
+                                <th scope="col" class="w-2/6 px-4 py-2">
                                     Producto
                                 </th>
-                                <th scope="col" class="w-1/4 px-4 py-2">
-                                    Cantidad original
+                                <th scope="col" class="w-1/6 px-4 py-2">
+                                    Cantidad inicial
                                 </th>
-                                <th scope="col" class="w-1/4 px-4 py-2">
+                                <th scope="col" class="w-1/6 px-4 py-2">
                                     Cantidad actual
+                                </th>
+                                <th scope="col" class="w-1/6 px-4 py-2">
+                                    Disponibilidad
                                 </th>
                             </tr>
                         </thead>
@@ -131,6 +134,21 @@
                                             {{ $lot->actual_quantity }}
                                         </p>
                                     </td>
+                                    <td class="px-6 py-2 text-center">
+                                        <p class="text-sm uppercase">
+                                            @if ($lot->available)
+                                                <span
+                                                    class="px-6 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                                    Disponible
+                                                </span>
+                                            @else
+                                                <span
+                                                    class="px-6 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
+                                                    Sin stock
+                                                </span>
+                                            @endif
+                                    </td>
+
                                 </tr>
                             @endforeach
                         </tbody>

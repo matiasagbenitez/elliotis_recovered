@@ -29,7 +29,7 @@ class PurchaseSeeder extends Seeder
 
                 // $product = Product::where('is_buyable', true)->inRandomOrder()->first();
 
-                $quantity = rand(20, 40);
+                $quantity = rand(40, 60);
                 $price = $product->cost;
 
                 $purchase->products()->attach($product->id, [

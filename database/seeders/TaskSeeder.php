@@ -26,7 +26,7 @@ class TaskSeeder extends Seeder
         $trunkLots->random(3)->each(function ($trunkLot) use ($task) {
 
             $task->trunkLots()->attach($trunkLot->id, [
-                'consumed_quantity' => rand(1, 10),
+                'consumed_quantity' => rand(20, $trunkLot->actual_quantity),
             ]);
 
         });
@@ -35,6 +35,7 @@ class TaskSeeder extends Seeder
         $task->trunkLots->each(function ($trunkLot) {
 
             $trunkLot->actual_quantity = $trunkLot->actual_quantity - $trunkLot->pivot->consumed_quantity;
+            $trunkLot->available = $trunkLot->actual_quantity ? true : false;
             $trunkLot->save();
 
         });

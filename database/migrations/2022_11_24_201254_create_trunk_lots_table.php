@@ -22,6 +22,8 @@ return new class extends Migration
             $table->integer('initial_quantity');
             $table->integer('actual_quantity');
 
+            $table->boolean('available')->default(true);
+
             $table->timestamps();
         });
     }
