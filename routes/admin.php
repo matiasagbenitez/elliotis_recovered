@@ -40,6 +40,7 @@ use App\Http\Livewire\ProductNames\IndexProductNames;
 use App\Http\Livewire\ProductTypes\IndexProductTypes;
 use App\Http\Livewire\TaskStatuses\IndexTaskStatuses;
 use App\Http\Livewire\IvaConditions\IndexIvaConditions;
+use App\Http\Livewire\Phases\IndexPhases;
 use App\Http\Livewire\PurchaseOrders\ShowPurchaseOrder;
 use App\Http\Livewire\Tenderings\ShowFinishedTendering;
 use App\Http\Livewire\PurchaseOrders\CreatePurchaseOrder;
@@ -67,6 +68,7 @@ Route::get('/unities', IndexUnities::class)->name('admin.unities.index');
 Route::get('/product-names', IndexProductNames::class)->name('admin.product-names.index');
 Route::get('/wood-types', IndexWoodTypes::class)->name('admin.wood-types.index');
 Route::get('/product-types', IndexProductTypes::class)->name('admin.product-types.index');
+Route::get('/phases', IndexPhases::class)->name('admin.phases.index');
 
 Route::get('/products', IndexProducts::class)->name('admin.products.index');
 Route::get('/add-products', AddProductsComponent::class)->name('admin.add-products.index');
