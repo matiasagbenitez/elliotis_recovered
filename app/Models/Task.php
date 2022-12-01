@@ -28,4 +28,10 @@ class Task extends Model
     {
         return $this->belongsToMany(TrunkLot::class)->withPivot('id', 'task_id', 'trunk_lot_id', 'consumed_quantity')->withTimestamps();
     }
+
+    // Has one Lot
+    public function lot()
+    {
+        return $this->hasOne(Lot::class);
+    }
 }
