@@ -16,27 +16,15 @@
         <hr class="my-2">
         <div class="grid grid-cols-3 gap-4">
 
-            <div class="hover:bg-gray-50 hover:shadow-lg rounded-lg p-2 hover:cursor-pointer">
-                <div class="flex justify-center">
-                    <img class="h-24 w-24" src="{{ asset('img/rollo.png') }}" alt="Imagen de rollos">
+            @foreach ($tasksTypes as $taskType)
+                <div class="hover:bg-gray-50 hover:shadow-lg rounded-lg p-2 hover:cursor-pointer">
+                    <div class="flex justify-center">
+                        <img class="h-40 w-40" src="{{ asset($taskType->icon) }}" alt="Ícono de la tarea">
+                    </div>
+                    <h2 class="uppercase font-bold text-center my-3">{{ $taskType->name }}</h2>
                 </div>
-                <h2 class="uppercase font-bold text-center my-3">Corte de rollos</h2>
-            </div>
+            @endforeach
 
-
-            <div class="hover:bg-gray-50 hover:shadow-lg rounded-lg p-2 hover:cursor-pointer">
-                <div class="flex justify-center">
-                    <img class="h-24 w-24" src="{{ asset('img/machimbres.png') }}" alt="Imagen de machimbres">
-                </div>
-                <h2 class="uppercase font-bold text-center my-3">Machimbrado</h2>
-            </div>
-
-            <div class="hover:bg-gray-50 hover:shadow-lg rounded-lg p-2 hover:cursor-pointer">
-                <div class="flex justify-center">
-                    <img class="h-24 w-24" src="{{ asset('img/paquetes.png') }}" alt="Imagen de paquetes">
-                </div>
-                <h2 class="uppercase font-bold text-center my-3">Empaquetado</h2>
-            </div>
         </div>
     </div>
 

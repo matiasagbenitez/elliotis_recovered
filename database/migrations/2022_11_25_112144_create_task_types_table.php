@@ -25,6 +25,8 @@ return new class extends Migration
             $table->boolean('initial_task')->default(false);
             $table->boolean('final_task')->default(false);
 
+            $table->string('icon')->nullable()->default('/img/default.png');
+
             $table->timestamps();
         });
     }
