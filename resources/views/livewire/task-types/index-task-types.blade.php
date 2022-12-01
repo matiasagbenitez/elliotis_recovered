@@ -16,17 +16,23 @@
         @if ($task_types->count())
             <table class="text-gray-600 min-w-full divide-y divide-gray-200">
                 <thead class="border-b border-gray-300 bg-gray-200">
-                    <tr>
-                        <th scope="col"
-                            class="px-4 py-2 text-center text-md font-bold text-gray-500 uppercase tracking-wider">
+                    <tr class="text-center text-sm font-bold text-gray-500 uppercase">
+                        <th class="px-4 py-2">
                             ID
                         </th>
-                        <th scope="col"
-                            class="px-4 py-2 text-center text-md font-bold text-gray-500 uppercase tracking-wider w-full">
-                            Nombre
+                        <th class="w-1/4 px-4 py-2">
+                            Nombre tarea
                         </th>
-                        <th scope="col"
-                            class="px-4 py-2 text-center text-md font-bold text-gray-500 uppercase tracking-wider">
+                        <th class="w-1/4 px-4 py-2">
+                            Área
+                        </th>
+                        <th class="w-1/4 px-4 py-2">
+                            Etapa inicial
+                        </th>
+                        <th class="w-1/4 px-4 py-2">
+                            Etapa final
+                        </th>
+                        <th class="px-4 py-2">
                             Acción
                         </th>
                     </tr>
@@ -40,8 +46,23 @@
                                 </p>
                             </td>
                             <td class="px-6 py-3 whitespace-nowrap text-center">
-                                <p class="font-bold text-sm uppercase">
+                                <p class="text-sm uppercase">
                                     {{ $task_type->name }}
+                                </p>
+                            </td>
+                            <td class="px-6 py-3 whitespace-nowrap text-center">
+                                <p class="text-sm uppercase">
+                                    {{ $task_type->area->name }}
+                                </p>
+                            </td>
+                            <td class="px-6 py-3 whitespace-nowrap text-center">
+                                <p class="text-sm uppercase">
+                                    {{ $task_type->initial_phase->name }}
+                                </p>
+                            </td>
+                            <td class="px-6 py-3 whitespace-nowrap text-center">
+                                <p class="text-sm uppercase">
+                                    {{ $task_type->final_phase->name }}
                                 </p>
                             </td>
                             <td class="px-6 py-3 whitespace-nowrap text-sm font-medium">
