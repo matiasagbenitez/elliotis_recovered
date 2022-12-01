@@ -29,6 +29,7 @@ use App\Http\Livewire\Tenderings\ShowTendering;
 use App\Http\Livewire\TrunkLots\IndexTrunkLots;
 use App\Http\Livewire\WoodTypes\IndexWoodTypes;
 use App\Http\Livewire\Localities\IndexLocalities;
+use App\Http\Livewire\Parameters\IndexParameters;
 use App\Http\Livewire\SaleOrders\CreateSaleOrder;
 use App\Http\Livewire\SaleOrders\SaleOrdersIndex;
 use App\Http\Livewire\Tenderings\CreateTendering;
@@ -99,7 +100,10 @@ Route::get('/tendering/{tendering}/finished', ShowFinishedTendering::class)->nam
 
 Route::get('/ranking/{tendering}', PruebaRanking::class)->name('admin.ranking.index');
 
+Route::get('/parameters', IndexParameters::class)->name('admin.parameters.index');
+
 // Producción
 Route::get('/trunk-lots', IndexTrunkLots::class)->name('admin.trunk-lots.index');
 Route::get('/tasks', IndexTasks::class)->name('admin.tasks.index');
 Route::get('/task/create', CreateTask::class)->name('admin.tasks.create');
+
