@@ -56,12 +56,12 @@ class Task extends Model
     // Output products
     public function outputProducts()
     {
-        return $this->belongsToMany(Product::class, 'product_task_output')->withPivot('id', 'task_id', 'product_id', 'produced_quantity')->withTimestamps();
+        return $this->belongsToMany(Product::class, 'product_task_output')->withPivot('id', 'task_id', 'lot_id', 'product_id', 'produced_quantity')->withTimestamps();
     }
 
     // Input products
     public function inputProducts()
     {
-        return $this->belongsToMany(Product::class, 'product_task_input')->withPivot('id', 'task_id', 'product_id', 'consumed_quantity')->withTimestamps();
+        return $this->belongsToMany(Product::class, 'product_task_input')->withPivot('id', 'task_id', 'sublot_id', 'product_id', 'consumed_quantity')->withTimestamps();
     }
 }

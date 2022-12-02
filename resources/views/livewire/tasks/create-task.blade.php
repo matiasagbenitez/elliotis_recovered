@@ -66,65 +66,129 @@
             </span>
         </div>
 
-        <div class="col-span-6">
+        {{-- PARA CORTE DE ROLLOS --}}
+        @if ($task_type_id == 1)
+            <div class="col-span-6">
+                @if ($taskInputProducts)
+                    <div class="grid grid-cols-6 w-full text-center text-sm uppercase font-bold text-gray-600">
+                        <div class="col-span-5 py-1">Detalle de sublotes a tomar de entrada</div>
+                        <div class="col-span-1 py-1">Cantidad</div>
+                    </div>
 
-            @if ($taskInputProducts)
-                <div class="grid grid-cols-6 w-full text-center text-sm uppercase font-bold text-gray-600">
-                    <div class="col-span-5 py-1">Detalle de sublotes a tomar de entrada</div>
-                    <div class="col-span-1 py-1">Cantidad</div>
-                </div>
+                    <div class="grid grid-cols-6 w-full text-center text-sm uppercase text-gray-600 gap-2 items-center">
+                        @foreach ($taskInputProducts as $index => $taskInputProduct)
+                            <div class="col-span-5 flex">
+                                <button type="button" wire:click.prevent="removeInputProduct({{ $index }})">
+                                    <i class="fas fa-trash mx-4 hover:text-red-600" title="Eliminar producto"></i>
+                                </button>
+                                <select name="taskInputProducts[{{ $index }}][trunk_lot_id]"
+                                    wire:model.lazy="taskInputProducts.{{ $index }}.trunk_lot_id"
+                                    class="input-control w-full p-1 pl-3">
+                                    <option disabled value="">Seleccione un producto</option>
+                                    @foreach ($allInputProducts as $lot)
+                                        <option value="{{ $lot->id }}""
+                                            {{ $this->isProductInInputOrder($lot->id) ? 'disabled' : '' }}>
+                                            x {{ $lot->actual_quantity }}
+                                            &ensp;
+                                            {{ $lot->product->name }}
+                                            &ensp;
+                                            Sublote: {{ $lot->code }}
+                                            &ensp;
+                                            Lote: {{ $lot->trunk_purchase->code }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col-span-1">
+                                <x-jet-input type="number" min="1" {{-- max="{{ $allInputProducts[$index]->actual_quantity }}" --}}
+                                    name="taskInputProducts[{{ $index }}][consumed_quantity]"
+                                    wire:model.lazy="taskInputProducts.{{ $index }}.consumed_quantity"
+                                    class="input-control w-full p-1 text-center" />
+                            </div>
+                        @endforeach
 
-                <div class="grid grid-cols-6 w-full text-center text-sm uppercase text-gray-600 gap-2 items-center">
-                    @foreach ($taskInputProducts as $index => $taskOutputProduct)
-                        <div class="col-span-5 flex">
-                            <button type="button" wire:click.prevent="removeInputProduct({{ $index }})">
-                                <i class="fas fa-trash mx-4 hover:text-red-600" title="Eliminar producto"></i>
-                            </button>
-                            <select name="taskInputProducts[{{ $index }}][trunk_lot_id]"
-                                wire:model.lazy="taskInputProducts.{{ $index }}.trunk_lot_id"
-                                class="input-control w-full p-1 pl-3">
-                                <option disabled value="">Seleccione un producto</option>
-                                @foreach ($allInputProducts as $lot)
-                                    <option value="{{ $lot->id }}""
-                                        {{ $this->isProductInInputOrder($lot->id) ? 'disabled' : '' }}>
-                                        x {{ $lot->actual_quantity }}
-                                        &ensp;
-                                        {{ $lot->product->name }}
-                                        &ensp;
-                                        Sublote: {{ $lot->code }}
-                                        &ensp;
-                                        Lote: {{ $lot->trunk_purchase->code }}
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="col-span-1">
-                            <x-jet-input type="number" min="1" {{-- max="{{ $allInputProducts[$index]->actual_quantity }}" --}}
-                                name="taskInputProducts[{{ $index }}][consumed_quantity]"
-                                wire:model.lazy="taskInputProducts.{{ $index }}.consumed_quantity"
-                                class="input-control w-full p-1 text-center" />
-                        </div>
-                    @endforeach
-
-                </div>
-                <x-jet-input-error for="taskInputProducts.*.trunk_lot_id" class="mt-2" />
-            @else
-                <p class="text-center">
-                    ¡No hay productos de entrada! Intenta agregar alguno con el botón
-                    <span class="font-bold">"Agregar producto"</span>.
-                </p>
-            @endif
-            {{-- BOTÓN AGREGAR PRODUCTOS --}}
-            <div
-                class="{{ $taskInputProducts ? 'col-span-4' : 'col-span-6' }}  mt-4 flex justify-center items-center gap-2">
-                <div>
-                    <x-jet-button type="button" wire:click.prevent="addInputProduct" class="px-3">
-                        <i class="fas fa-plus mr-2"></i>
-                        Agregar producto
-                    </x-jet-button>
+                    </div>
+                    <x-jet-input-error for="taskInputProducts.*.trunk_lot_id" class="mt-2" />
+                @else
+                    <p class="text-center">
+                        ¡No hay productos de entrada! Intenta agregar alguno con el botón
+                        <span class="font-bold">"Agregar producto"</span>.
+                    </p>
+                @endif
+                {{-- BOTÓN AGREGAR PRODUCTOS --}}
+                <div
+                    class="{{ $taskInputProducts ? 'col-span-4' : 'col-span-6' }}  mt-4 flex justify-center items-center gap-2">
+                    <div>
+                        <x-jet-button type="button" wire:click.prevent="addInputProduct" class="px-3">
+                            <i class="fas fa-plus mr-2"></i>
+                            Agregar producto
+                        </x-jet-button>
+                    </div>
                 </div>
             </div>
-        </div>
+
+        {{-- PARA EL RESTO DE TAREAS --}}
+        @else
+            <div class="col-span-6">
+                @if ($taskInputProducts)
+                    <div class="grid grid-cols-6 w-full text-center text-sm uppercase font-bold text-gray-600">
+                        <div class="col-span-5 py-1">Detalle de sublotes a tomar de entrada</div>
+                        <div class="col-span-1 py-1">Cantidad</div>
+                    </div>
+
+                    <div class="grid grid-cols-6 w-full text-center text-sm uppercase text-gray-600 gap-2 items-center">
+                        @foreach ($taskInputProducts as $index => $taskInputProduct)
+                            <div class="col-span-5 flex">
+                                <button type="button" wire:click.prevent="removeInputProduct({{ $index }})">
+                                    <i class="fas fa-trash mx-4 hover:text-red-600" title="Eliminar producto"></i>
+                                </button>
+                                <select name="taskInputProducts[{{ $index }}][sublot_id]"
+                                    wire:model.lazy="taskInputProducts.{{ $index }}.sublot_id"
+                                    class="input-control w-full p-1 pl-3">
+                                    <option disabled value="">Seleccione un producto</option>
+                                    @foreach ($allInputProducts as $sublot)
+
+                                        <option value="{{ $sublot['id'] }}""
+                                            {{ $this->isProductInInputOrder($sublot['id']) ? 'disabled' : '' }}>
+                                            x {{ $sublot['actual_quantity'] }}
+                                            &ensp;
+                                            {{ $sublot['product_name'] }}
+                                            &ensp;
+                                            Sublote: {{ $sublot['sublot_code'] }}
+                                            &ensp;
+                                            Lote: {{ $sublot['lot_code'] }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col-span-1">
+                                <x-jet-input type="number" min="1" {{-- max="{{ $allInputProducts[$index]->actual_quantity }}" --}}
+                                    name="taskInputProducts[{{ $index }}][consumed_quantity]"
+                                    wire:model.lazy="taskInputProducts.{{ $index }}.consumed_quantity"
+                                    class="input-control w-full p-1 text-center" />
+                            </div>
+                        @endforeach
+
+                    </div>
+                    <x-jet-input-error for="taskInputProducts.*.sublot_id" class="mt-2" />
+                @else
+                    <p class="text-center">
+                        ¡No hay productos de entrada! Intenta agregar alguno con el botón
+                        <span class="font-bold">"Agregar producto"</span>.
+                    </p>
+                @endif
+                {{-- BOTÓN AGREGAR PRODUCTOS --}}
+                <div
+                    class="{{ $taskInputProducts ? 'col-span-4' : 'col-span-6' }}  mt-4 flex justify-center items-center gap-2">
+                    <div>
+                        <x-jet-button type="button" wire:click.prevent="addInputProduct" class="px-3">
+                            <i class="fas fa-plus mr-2"></i>
+                            Agregar producto
+                        </x-jet-button>
+                    </div>
+                </div>
+            </div>
+        @endif
     </div>
 
     {{-- PRODUCTOS SALIDA --}}

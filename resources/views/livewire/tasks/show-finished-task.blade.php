@@ -112,12 +112,12 @@
                         <tr class="bg-gray-50">
                             <td class="px-6 py-2 text-center">
                                 <p class="text-sm uppercase">
-                                    {{ $product['id'] }}
+                                    {{ $product['lot_code'] }}
                                 </p>
                             </td>
                             <td class="px-6 py-2 text-center">
                                 <p class="text-sm uppercase">
-                                    {{ $product['code'] }}
+                                    {{ $product['sublot_code'] }}
                                 </p>
                             </td>
                             <td class="px-6 py-2 text-center">

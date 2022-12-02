@@ -51,8 +51,8 @@ class ShowFinishedTask extends Component
             case 1:
                 foreach ($task->trunkLots as $trunkLot) {
                     $inputProductsData[] = [
-                        'id' => $trunkLot->trunk_purchase->code,
-                        'code' => $trunkLot->code,
+                        'lot_code' => $trunkLot->trunk_purchase->code,
+                        'sublot_code' => $trunkLot->code,
                         'product_name' => $trunkLot->product->name,
                         'consumed_quantity' => $trunkLot->pivot->consumed_quantity,
                     ];
@@ -60,7 +60,16 @@ class ShowFinishedTask extends Component
                 break;
 
             default:
-                # code...
+                foreach ($task->inputProducts as $inputProduct) {
+                    $sublot = Sublot::find($inputProduct->pivot->sublot_id);
+                    $lot = $sublot->lot;
+                    $inputProductsData[] = [
+                        'lot_code' => $lot->code,
+                        'sublot_code' => $sublot->code,
+                        'product_name' => $inputProduct->name,
+                        'consumed_quantity' => $inputProduct->pivot->consumed_quantity,
+                    ];
+                }
                 break;
         }
         return $inputProductsData;
@@ -70,7 +79,6 @@ class ShowFinishedTask extends Component
     {
         $outputProductsData = [];
 
-        // dd($task->outputProducts->toArray());
         switch ($task->task_type_id) {
             case 1:
                 foreach ($task->outputProducts as $outputProduct) {
@@ -81,11 +89,17 @@ class ShowFinishedTask extends Component
                         'produced_quantity' => $outputProduct->pivot->produced_quantity,
                     ];
                 }
-                // dd($outputProductsData);
                 break;
 
             default:
-                # code...
+                foreach ($task->outputProducts as $outputProduct) {
+                    $outputProductsData[] = [
+                        'lot_code' => $task->lot->code,
+                        'sublot_code' => Sublot::where('lot_id', $task->lot->id)->where('product_id', $outputProduct->id)->first()->code,
+                        'product_name' => $outputProduct->name,
+                        'produced_quantity' => $outputProduct->pivot->produced_quantity,
+                    ];
+                }
                 break;
         }
         return $outputProductsData;

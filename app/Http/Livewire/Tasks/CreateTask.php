@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Tasks;
 
 use App\Models\Product;
+use App\Models\Sublot;
 use App\Models\Task;
 use App\Models\TaskStatus;
 use App\Models\User;
@@ -16,6 +17,8 @@ class CreateTask extends Component
     public $task_id, $task_type_id, $task_status_id, $task_type_name, $user_who_started, $started_at;
     public $initial_phase_name, $final_phase_name;
 
+    public $sublots;
+
     public $taskInputProducts = [];
     public $allInputProducts = [];
 
@@ -26,7 +29,7 @@ class CreateTask extends Component
 
     public $createForm = [
         'task_type_id' => '',
-        'task_status_id' => 2,
+        'task_status_id' => '',
         'started_at' => '',
         'started_by' => 1,
         'finished_at' => '',
@@ -47,6 +50,9 @@ class CreateTask extends Component
         $this->started_at = $task->started_at;
         $this->initial_phase_name = $task->taskType->initial_phase->name;
         $this->final_phase_name = $task->taskType->final_phase->name;
+
+        $this->sublots = Sublot::all();
+
         $this->filterInputProducts($task->taskType->id);
         $this->filterOutputProducts($task->taskType->id);
     }
@@ -62,10 +68,39 @@ class CreateTask extends Component
                 break;
 
             case 2:
-                // $this->allInputProducts = TrunkLot::where('available', true)->orderBy('id', 'asc')->get();
-                // $this->taskInputProducts = [
-                //     ['trunk_lot_id' => '', 'consumed_quantity' => 1]
-                // ];
+                foreach ($this->sublots as $sublot) {
+                    if ($sublot->product->phase_id == 2) {
+                        $this->allInputProducts[] = [
+                            'id' => $sublot->id,
+                            'actual_quantity' => $sublot->actual_quantity,
+                            'product_name' => $sublot->product->name,
+                            'sublot_code' => $sublot->code,
+                            'lot_code' => $sublot->lot->code,
+                        ];
+                    }
+                }
+
+                $this->taskInputProducts = [
+                    ['sublot_id' => '', 'consumed_quantity' => 1]
+                ];
+                break;
+
+            case 3:
+                foreach ($this->sublots as $sublot) {
+                    if ($sublot->product->phase_id == 3) {
+                        $this->allInputProducts[] = [
+                            'id' => $sublot->id,
+                            'actual_quantity' => $sublot->actual_quantity,
+                            'product_name' => $sublot->product->name,
+                            'sublot_code' => $sublot->code,
+                            'lot_code' => $sublot->lot->code,
+                        ];
+                    }
+                }
+
+                $this->taskInputProducts = [
+                    ['sublot_id' => '', 'consumed_quantity' => 1]
+                ];
                 break;
 
             default:
@@ -82,11 +117,25 @@ class CreateTask extends Component
                 $this->taskOutputProducts = [
                     ['product_id' => '', 'produced_quantity' => 1]
                 ];
+
                 break;
 
-            default:
-                $this->reset('allOutputProducts', 'taskOutputProducts');
+            case 2:
+                $this->allOutputProducts = Product::where('phase_id', 3)->orderBy('id', 'asc')->get();
+                $this->taskOutputProducts = [
+                    ['product_id' => '', 'produced_quantity' => 1]
+                ];
+
                 break;
+
+            case 3:
+                $this->allOutputProducts = Product::where('phase_id', 4)->orderBy('id', 'asc')->get();
+                $this->taskOutputProducts = [
+                    ['product_id' => '', 'produced_quantity' => 1]
+                ];
+
+                break;
+            default:
         }
     }
 
@@ -117,7 +166,13 @@ class CreateTask extends Component
                 break;
 
             default:
-                // code...
+                if (count($this->taskInputProducts) == count($this->allInputProducts)) {
+                    return;
+                }
+
+                if (!empty($this->taskInputProducts[count($this->taskInputProducts) - 1]['sublot_id']) || count($this->taskInputProducts) == 0) {
+                    $this->taskInputProducts[] = ['sublot_id' => '', 'consumed_quantity' => 1];
+                }
                 break;
         }
     }
@@ -137,7 +192,13 @@ class CreateTask extends Component
                 break;
 
             default:
-                // code...
+                if (count($this->taskOutputProducts) == count($this->allOutputProducts)) {
+                    return;
+                }
+
+                if (!empty($this->taskOutputProducts[count($this->taskOutputProducts) - 1]['product_id']) || count($this->taskOutputProducts) == 0) {
+                    $this->taskOutputProducts[] = ['product_id' => '', 'produced_quantity' => 1];
+                }
                 break;
         }
     }
@@ -156,7 +217,12 @@ class CreateTask extends Component
                 break;
 
             default:
-                // code...
+                foreach ($this->taskInputProducts as $sublot) {
+                    if ($sublot['sublot_id'] == $id) {
+                        return true;
+                    }
+                }
+                return false;
                 break;
         }
     }
@@ -164,20 +230,12 @@ class CreateTask extends Component
     // IS PRODUCT IN OUTPUT ORDER
     public function isProductInOutputOrder($id)
     {
-        switch ($this->task_type_id) {
-            case 1:
-                foreach ($this->taskOutputProducts as $product) {
-                    if ($product['product_id'] == $id) {
-                        return true;
-                    }
-                }
-                return false;
-                break;
-
-            default:
-                // code...
-                break;
+        foreach ($this->taskOutputProducts as $product) {
+            if ($product['product_id'] == $id) {
+                return true;
+            }
         }
+        return false;
     }
 
     // REMOVE INPUT PRODUCT
@@ -239,7 +297,7 @@ class CreateTask extends Component
 
                     // Create a lot
                     $task->lot()->create([
-                        'code' => Str::random(6),
+                        'code' => 'LFH-' . rand(1000, 9999),
                     ]);
 
                     // Output products detail
@@ -249,7 +307,7 @@ class CreateTask extends Component
                             'produced_quantity' => $product['produced_quantity'],
                         ]);
                         $task->lot->sublots()->create([
-                            'code' => Str::random(6),
+                            'code' => 'SFH-' . rand(1000, 9999),
                             'product_id' => $product['product_id'],
                             'initial_quantity' => $product['produced_quantity'],
                             'actual_quantity' => $product['produced_quantity'],
@@ -265,6 +323,138 @@ class CreateTask extends Component
                 }
 
                 break;
+
+            // MACHIMBRADO
+            case 2:
+                if ($status_id == 2) {
+
+                    // Verify input products quantities
+                    foreach ($this->taskInputProducts as $product) {
+                        $sublot = Sublot::find($product['sublot_id']);
+                        if ($product['consumed_quantity'] > $sublot->actual_quantity) {
+                            $this->emit('error', 'Lote #' . $sublot->code . ' ¡Cantidad ingresada no disponible!');
+                            return;
+                        }
+                    }
+
+                    // Update task
+                    $task = Task::find($this->task_id);
+                    $task->update([
+                        'task_status_id' => 3,
+                        'finished_at' => now(),
+                        'finished_by' => auth()->user()->id,
+                    ]);
+
+                    // Create a lot
+                    $task->lot()->create([
+                        'code' => 'LFM-' . rand(1000, 9999),
+                    ]);
+
+                    // dd($this->taskInputProducts);
+                    // Input products detail
+                    foreach ($this->taskInputProducts as $product) {
+                        $product_id = Sublot::find($product['sublot_id'])->product_id;
+                        $task->inputProducts()->attach($product_id, [
+                            'sublot_id' => $product['sublot_id'],
+                            'consumed_quantity' => $product['consumed_quantity'],
+                        ]);
+                    }
+
+                    // Update sublots
+                    $task->outputProducts->each(function ($sublot) {
+                        $sublot->actual_quantity = $sublot->actual_quantity - $sublot->pivot->consumed_quantity;
+                        $sublot->save();
+                    });
+
+                    // Output products detail
+                    foreach ($this->taskOutputProducts as $product) {
+                        $task->outputProducts()->attach($product['product_id'], [
+                            'lot_id' => $task->lot->id,
+                            'produced_quantity' => $product['produced_quantity'],
+                        ]);
+                        $task->lot->sublots()->create([
+                            'code' => 'SFM-' . rand(1000, 9999),
+                            'product_id' => $product['product_id'],
+                            'initial_quantity' => $product['produced_quantity'],
+                            'actual_quantity' => $product['produced_quantity'],
+                        ]);
+                    }
+                    // dd('ok');
+                    session()->flash('flash.banner', '¡Tarea finalizada correctamente!');
+                    return redirect()->route('admin.tasks.manage', ['taskType' => $this->task_type_id]);
+                } else {
+                    dd('not ok');
+                    session()->flash('flash.banner', '¡No puedes finalizar esta tare porque la misma ya se encuentra finalizada!');
+                    session()->flash('flash.bannerStyle', 'danger');
+                    return redirect()->route('admin.tasks.manage', ['taskType' => $this->task_type_id]);
+                }
+
+                break;
+
+            // EMBALAJE
+            case 3:
+                if ($status_id == 2) {
+
+                    // Verify input products quantities
+                    foreach ($this->taskInputProducts as $product) {
+                        $sublot = Sublot::find($product['sublot_id']);
+                        if ($product['consumed_quantity'] > $sublot->actual_quantity) {
+                            $this->emit('error', 'Lote #' . $sublot->code . ' ¡Cantidad ingresada no disponible!');
+                            return;
+                        }
+                    }
+
+                    // Update task
+                    $task = Task::find($this->task_id);
+                    $task->update([
+                        'task_status_id' => 3,
+                        'finished_at' => now(),
+                        'finished_by' => auth()->user()->id,
+                    ]);
+
+                    // Create a lot
+                    $task->lot()->create([
+                        'code' => 'LPGM-' . rand(1000, 9999),
+                    ]);
+
+                    // dd($this->taskInputProducts);
+                    // Input products detail
+                    foreach ($this->taskInputProducts as $product) {
+                        $product_id = Sublot::find($product['sublot_id'])->product_id;
+                        $task->inputProducts()->attach($product_id, [
+                            'sublot_id' => $product['sublot_id'],
+                            'consumed_quantity' => $product['consumed_quantity'],
+                        ]);
+                    }
+
+                    // Update sublots
+                    $task->outputProducts->each(function ($sublot) {
+                        $sublot->actual_quantity = $sublot->actual_quantity - $sublot->pivot->consumed_quantity;
+                        $sublot->save();
+                    });
+
+                    // Output products detail
+                    foreach ($this->taskOutputProducts as $product) {
+                        $task->outputProducts()->attach($product['product_id'], [
+                            'lot_id' => $task->lot->id,
+                            'produced_quantity' => $product['produced_quantity'],
+                        ]);
+                        $task->lot->sublots()->create([
+                            'code' => 'SPGM-' . rand(1000, 9999),
+                            'product_id' => $product['product_id'],
+                            'initial_quantity' => $product['produced_quantity'],
+                            'actual_quantity' => $product['produced_quantity'],
+                        ]);
+                    }
+                    // dd('ok');
+                    session()->flash('flash.banner', '¡Tarea finalizada correctamente!');
+                    return redirect()->route('admin.tasks.manage', ['taskType' => $this->task_type_id]);
+                } else {
+                    dd('not ok');
+                    session()->flash('flash.banner', '¡No puedes finalizar esta tare porque la misma ya se encuentra finalizada!');
+                    session()->flash('flash.bannerStyle', 'danger');
+                    return redirect()->route('admin.tasks.manage', ['taskType' => $this->task_type_id]);
+                }
 
             default:
                 # code...
