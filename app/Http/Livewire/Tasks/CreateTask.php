@@ -22,10 +22,10 @@ class CreateTask extends Component
     public $taskOutputProducts = [];
     public $allOutputProducts = [];
 
-    protected $listeners = ['testAlert' => 'testAlert'];
+    protected $listeners = ['save'];
 
     public $createForm = [
-        'task_type_id' => 1,
+        'task_type_id' => '',
         'task_status_id' => 2,
         'started_at' => '',
         'started_by' => 1,
@@ -200,7 +200,7 @@ class CreateTask extends Component
         $task = Task::find($this->task_id);
         $status_id = TaskStatus::find($task->task_status_id)->id;
 
-        switch ($this->createForm['task_type_id']) {
+        switch ($this->task_type_id) {
 
             // CORTE DE ROLLOS
             case 1:

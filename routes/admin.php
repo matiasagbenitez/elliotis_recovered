@@ -8,15 +8,18 @@ use App\Http\Livewire\Sales\IndexSales;
 use App\Http\Livewire\Tasks\CreateTask;
 use App\Http\Livewire\Tasks\IndexTasks;
 use App\Http\Livewire\Clients\EditClient;
+use App\Http\Livewire\Phases\IndexPhases;
 use App\Http\Livewire\Clients\CreateClient;
 use App\Http\Livewire\Clients\IndexClients;
 use App\Http\Livewire\Unities\IndexUnities;
 use App\Http\Livewire\Ranking\PruebaRanking;
+use App\Http\Livewire\Tasks\TasksManagement;
 use App\Http\Livewire\IvaTypes\IndexIvaTypes;
 use App\Http\Livewire\Measures\IndexMeasures;
 use App\Http\Livewire\Products\IndexProducts;
 use App\Http\Livewire\Purchases\ShowPurchase;
 use App\Http\Livewire\Suppliers\EditSupplier;
+use App\Http\Livewire\Tasks\ShowFinishedTask;
 use App\Http\Livewire\Countries\IndexCountries;
 use App\Http\Livewire\Provinces\IndexProvinces;
 use App\Http\Livewire\Purchases\CreatePurchase;
@@ -40,13 +43,11 @@ use App\Http\Livewire\ProductNames\IndexProductNames;
 use App\Http\Livewire\ProductTypes\IndexProductTypes;
 use App\Http\Livewire\TaskStatuses\IndexTaskStatuses;
 use App\Http\Livewire\IvaConditions\IndexIvaConditions;
-use App\Http\Livewire\Phases\IndexPhases;
 use App\Http\Livewire\PurchaseOrders\ShowPurchaseOrder;
 use App\Http\Livewire\Tenderings\ShowFinishedTendering;
 use App\Http\Livewire\PurchaseOrders\CreatePurchaseOrder;
 use App\Http\Livewire\PurchaseOrders\PurchaseOrdersIndex;
 use App\Http\Livewire\PucharseParameters\IndexPucharseParameters;
-use App\Http\Livewire\Tasks\TasksManagement;
 
 Route::get('/countries', IndexCountries::class)->name('admin.countries.index');
 Route::get('/provinces', IndexProvinces::class)->name('admin.provinces.index');
@@ -110,5 +111,6 @@ Route::get('/trunk-lots', IndexTrunkLots::class)->name('admin.trunk-lots.index')
 Route::get('/tasks', IndexTasks::class)->name('admin.tasks.index');
 Route::get('/tasks/manage/{taskType}', TasksManagement::class)->name('admin.tasks.manage');
 Route::get('/task/manage/{task}/register', CreateTask::class)->name('admin.tasks.register');
+Route::get('/tasks/manage/{task}/show', ShowFinishedTask::class)->name('admin.tasks.show');
 
 

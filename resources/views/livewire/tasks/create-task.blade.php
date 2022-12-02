@@ -197,7 +197,7 @@
     </div>
 
     {{-- BOTÓN GUARDAR --}}
-    <div class="flex justify-end mt-6" wire:click="save">
+    <div class="flex justify-end mt-6" wire:click="$emit('saveTask')">
         <x-jet-button class="px-6 col-span-2 bg-emerald-800">
             Registrar tarea
         </x-jet-button>
@@ -207,29 +207,47 @@
 
 @push('script')
     <script>
-        Livewire.on('success', message => {
-            const Toast = Swal.mixin({
-                toast: true,
-                position: 'top-end',
-                showConfirmButton: false,
-                timer: 3000,
-                timerProgressBar: true,
-            });
-
-            Toast.fire({
-                icon: 'success',
-                title: message
-            });
-        });
-
-        Livewire.on('error', message => {
+        Livewire.on('saveTask', () => {
             Swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                text: message,
-                showConfirmButton: true,
+                title: '¿Estás seguro?',
+                text: "¡No podrás revertir esto!",
+                icon: 'warning',
+                showCancelButton: true,
                 confirmButtonColor: '#1f2937',
-            });
+                cancelButtonColor: '#dc2626',
+                confirmButtonText: 'Sí, registrar tarea',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+
+                    Livewire.emitTo('tasks.create-task', 'save');
+
+                    Livewire.on('success', message => {
+                        const Toast = Swal.mixin({
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 3000,
+                            timerProgressBar: true,
+                        });
+
+                        Toast.fire({
+                            icon: 'success',
+                            title: message
+                        });
+                    });
+
+                    Livewire.on('error', message => {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: message,
+                            showConfirmButton: true,
+                            confirmButtonColor: '#1f2937',
+                        });
+                    });
+                }
+            })
         });
     </script>
 @endpush

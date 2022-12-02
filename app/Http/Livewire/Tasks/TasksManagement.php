@@ -108,10 +108,14 @@ class TasksManagement extends Component
         $this->render();
     }
 
-    public function showAlert($params)
+    public function showFinishedTask($id)
     {
-        dd('llego un alert');
-        $this->emit($params['type'], $params['message']);
+        try {
+            return redirect()->route('admin.tasks.show', ['task' => $id]);
+        } catch (\Throwable $th) {
+            $this->emit('error', '¡Error al mostrar la tarea de tipo: '. $this->task_type_name .'!');
+        }
+        $this->render();
     }
 
     public function render()
