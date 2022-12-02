@@ -109,5 +109,6 @@ Route::get('/parameters', IndexParameters::class)->name('admin.parameters.index'
 Route::get('/trunk-lots', IndexTrunkLots::class)->name('admin.trunk-lots.index');
 Route::get('/tasks', IndexTasks::class)->name('admin.tasks.index');
 Route::get('/tasks/manage/{taskType}', TasksManagement::class)->name('admin.tasks.manage');
-Route::get('/task/create', CreateTask::class)->name('admin.tasks.create');
+Route::get('/task/manage/{task}/register', CreateTask::class)->name('admin.tasks.register');
+
 

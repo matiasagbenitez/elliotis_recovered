@@ -3,20 +3,24 @@
 namespace App\Http\Livewire\Tasks;
 
 use App\Models\Task;
+use App\Models\TaskStatus;
+use App\Models\User;
 use Livewire\Component;
 use App\Models\TaskType;
 use App\Models\TrunkLot;
+use Illuminate\Support\Str;
 
 class CreateTask extends Component
 {
-    public $taskTypes;
+    public $task_id, $task_type_id, $task_status_id, $task_type_name, $user_who_started, $started_at;
 
-    // public $allInputProducts = [];
     public $taskInputProducts = [];
     public $allInputProducts = [];
 
+    protected $listeners = ['testAlert' => 'testAlert'];
+
     public $createForm = [
-        'task_type_id' => '',
+        'task_type_id' => 1,
         'task_status_id' => 2,
         'started_at' => '',
         'started_by' => 1,
@@ -24,14 +28,22 @@ class CreateTask extends Component
         'finished_by' => 1,
     ];
 
-    public function mount()
+    public function mount(Task $task)
     {
-        $this->taskTypes = TaskType::all();
-        // $this->updatedCreateFormTaskTypeId(1);
+        if ($task->task_status_id != 2) {
+            abort(404);
+        }
+
+        $this->task_id = $task->id;
+        $this->task_type_id = $task->task_type_id;
+        $this->task_status_id = $task->task_status_id;
+        $this->task_type_name = $task->taskType->name;
+        $this->user_who_started = User::find($task->started_by)->name;
+        $this->started_at = $task->started_at;
+        $this->filterInputProducts($task->taskType->id);
     }
 
-    // SELECCIONAR TIPO DE TAREA Y CARGAR PRODUCTOS
-    public function updatedCreateFormTaskTypeId($id)
+    public function filterInputProducts($id)
     {
         switch ($id) {
             case 1:
@@ -87,26 +99,61 @@ class CreateTask extends Component
 
     public function save()
     {
-        switch ($this->createForm['task_type_id']) {
-            case 1:
-                $task = Task::create([
-                    'task_type_id' => $this->createForm['task_type_id'],
-                    'task_status_id' => 2,
-                    'started_at' => $this->createForm['started_at'],
-                    'started_by' => 1,
-                ]);
+        // Check status
+        $task = Task::find($this->task_id);
+        $status_id = TaskStatus::find($task->task_status_id)->id;
 
-                foreach ($this->taskInputProducts as $product) {
-                    $task->trunkLots()->attach($product['trunk_lot_id'], [
-                        'consumed_quantity' => $product['consumed_quantity'],
+        switch ($this->createForm['task_type_id']) {
+
+            // CORTE DE ROLLOS
+            case 1:
+                if ($status_id == 2) {
+
+                    // Verify input products quantities
+                    foreach ($this->taskInputProducts as $product) {
+                        $trunk_lot = TrunkLot::find($product['trunk_lot_id']);
+                        if ($product['consumed_quantity'] > $trunk_lot->actual_quantity) {
+                            $this->emit('error', 'Lote #' . $trunk_lot->code . ' ¡Cantidad ingresada no disponible!');
+                            return;
+                        }
+                    }
+
+                    // Update task
+                    $task = Task::find($this->task_id);
+                    $task->update([
+                        'task_status_id' => 3,
+                        'finished_at' => now(),
+                        'finished_by' => auth()->user()->id,
                     ]);
+
+                    // Input products detail
+                    foreach ($this->taskInputProducts as $product) {
+                        $task->trunkLots()->attach($product['trunk_lot_id'], [
+                            'consumed_quantity' => $product['consumed_quantity'],
+                        ]);
+                    }
+
+                    // Update trunk lots
+                    $task->trunkLots->each(function ($trunkLot) {
+                        $trunkLot->actual_quantity = $trunkLot->actual_quantity - $trunkLot->pivot->consumed_quantity;
+                        $trunkLot->available = $trunkLot->actual_quantity ? true : false;
+                        $trunkLot->save();
+                    });
+
+                    // Create a lot
+                    $task->lot()->create([
+                        'code' => Str::random(6),
+                    ]);
+
+                    session()->flash('flash.banner', '¡Tarea finalizada correctamente!');
+                    return redirect()->route('admin.tasks.manage', ['taskType' => $this->task_type_id]);
+
+                } else {
+                    session()->flash('flash.banner', '¡No puedes finalizar esta tare porque la misma ya se encuentra finalizada!');
+                    session()->flash('flash.bannerStyle', 'danger');
+                    return redirect()->route('admin.tasks.manage', ['taskType' => $this->task_type_id]);
                 }
 
-                $task->trunkLots->each(function ($trunkLot) {
-                    $trunkLot->actual_quantity = $trunkLot->actual_quantity - $trunkLot->pivot->consumed_quantity;
-                    $trunkLot->available = $trunkLot->actual_quantity ? true : false;
-                    $trunkLot->save();
-                });
                 break;
 
             default:
@@ -118,7 +165,12 @@ class CreateTask extends Component
         $this->resetTaskInputProducts();
 
         return redirect()->route('admin.tasks.index');
+    }
 
+    public function testAlert()
+    {
+        dd('test');
+        // $this->emitTo('tasks.tasks-management', 'alert', ['type' => 'success', 'message' => '¡Tarea finalizada correctamente!']);
     }
 
     public function render()

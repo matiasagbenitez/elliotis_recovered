@@ -14,16 +14,14 @@
             </a>
 
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                Registrar nueva tarea
+                Finalizar tarea de <span class="uppercase font-bold">{{ $task_type_name }}</span>
             </h2>
 
             {{-- PDF BUTTON --}}
-            <a href="#">
-                <x-jet-secondary-button>
-                    <i class="fas fa-info-circle mr-2"></i>
-                    Ayuda
-                    </x-jet-seconda-button>
-            </a>
+            <x-jet-secondary-button>
+                <i class="fas fa-info-circle mr-2"></i>
+                Ayuda
+                </x-jet-seconda-button>
         </div>
     </x-slot>
 
@@ -31,40 +29,27 @@
 
         {{-- APARTADO TIPO DE TAREA --}}
         <div class="col-span-6">
-            <h1 class="font-bold text-lg">Detalle tipo de tarea</h1>
+            <h1 class="font-bold text-lg">Detalle de tarea #{{ $task_id }}</h1>
             <hr class="mt-1">
         </div>
 
-        <div class="col-span-3">
+        <div class="col-span-2">
             <x-jet-label class="mb-2" value="Tipo de tarea" />
-            <select class="input-control w-full" wire:model='createForm.task_type_id'>
-                <option value="">Seleccione un tipo de tarea</option>
-                @foreach ($taskTypes as $taskType)
-                    <option value="{{ $taskType->id }}">{{ $taskType->name }}</option>
-                @endforeach
-            </select>
+            <x-jet-input type="text" class="w-full text-gray-500" disabled value="{{ $task_type_name }}" />
             <x-jet-input-error for="createForm.task_type_id" class="mt-2" />
         </div>
 
-        <div class="col-span-3">
-            <x-jet-label class="mb-2" value="Usuario que registra" />
-            <x-jet-input type="text" class="w-full text-gray-500" disabled value="{{ auth()->user()->name }}" />
+        <div class="col-span-2">
+            <x-jet-label class="mb-2" value="Usuario que inició la tarea" />
+            <x-jet-input type="text" class="w-full text-gray-500" disabled value="{{ $user_who_started }}" />
             <x-jet-input-error for="createForm.date" class="mt-2" />
         </div>
 
-        <div class="col-span-3">
-            <x-jet-label class="mb-2" value="Fecha y hora inicio" />
-            <x-jet-input type="datetime-local" class="w-full" wire:model.defer="createForm.started_at" />
+        <div class="col-span-2">
+            <x-jet-label class="mb-2" value="Fecha y hora de inicio" />
+            <x-jet-input type="datetime-local" class="w-full text-gray-500" wire:model="started_at" />
             <x-jet-input-error for="createForm.started_at" class="mt-2" />
         </div>
-
-        <div class="col-span-3">
-            <x-jet-label class="mb-2" value="Fecha y hora fin" />
-            <x-jet-input type="datetime-local" class="w-full" wire:model.defer="createForm.finished_at" />
-            <x-jet-input-error for="createForm.finished_at" class="mt-2" />
-        </div>
-
-
 
         {{-- DETALLE PRODUCTOS DE ENTRADA --}}
         <div class="col-span-6">
@@ -76,7 +61,7 @@
 
             @if ($taskInputProducts)
                 <div class="grid grid-cols-6 w-full text-center text-sm uppercase font-bold text-gray-600">
-                    <div class="col-span-5 py-1">Detalle del sublote</div>
+                    <div class="col-span-5 py-1">Detalle de sublotes</div>
                     <div class="col-span-1 py-1">Cantidad</div>
                 </div>
 
@@ -141,3 +126,32 @@
     </div>
 
 </div>
+
+@push('script')
+    <script>
+        Livewire.on('success', message => {
+            const Toast = Swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+            });
+
+            Toast.fire({
+                icon: 'success',
+                title: message
+            });
+        });
+
+        Livewire.on('error', message => {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: message,
+                showConfirmButton: true,
+                confirmButtonColor: '#1f2937',
+            });
+        });
+    </script>
+@endpush
