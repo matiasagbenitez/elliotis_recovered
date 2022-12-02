@@ -50,4 +50,18 @@ class Task extends Model
     {
         return $this->hasOne(Lot::class);
     }
+
+    // RELACIONES JODIDAS
+
+    // Output products
+    public function outputProducts()
+    {
+        return $this->belongsToMany(Product::class, 'product_task_output')->withPivot('id', 'task_id', 'product_id', 'produced_quantity')->withTimestamps();
+    }
+
+    // Input products
+    public function inputProducts()
+    {
+        return $this->belongsToMany(Product::class, 'product_task_input')->withPivot('id', 'task_id', 'product_id', 'consumed_quantity')->withTimestamps();
+    }
 }

@@ -22,4 +22,11 @@ class Lot extends Model
     {
         return $this->hasMany(Sublot::class);
     }
+
+    // Relationship with outputProducts
+    public function outputProducts()
+    {
+        return $this->belongsToMany(Product::class, 'product_task_output')->withPivot('id', 'lot_id', 'product_id', 'produced_quantity')->withTimestamps();
+    }
+
 }

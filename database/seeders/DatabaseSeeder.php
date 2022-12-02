@@ -46,6 +46,6 @@ class DatabaseSeeder extends Seeder
         // Tareas
         $this->call(TaskSeeder::class);
         $this->call(TaskSeeder::class);
-        $this->call(TaskSeeder::class);
+        // $this->call(TaskSeeder::class);
     }
 }

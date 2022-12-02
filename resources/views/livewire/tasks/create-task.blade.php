@@ -1,12 +1,12 @@
 {{-- <div class="container py-6"> --}}
-<div class="max-w-5xl mx-auto bg-white px-6 py-4 my-6 rounded-lg">
+<div class="max-w-5xl mx-auto bg-white px-8 py-4 my-6 rounded-lg">
 
     {{-- HEADER --}}
     <x-slot name="header">
         <div class="flex items-center justify-between">
 
             {{-- GO BACK BUTTON --}}
-            <a href="{{ route('admin.tasks.index') }}">
+            <a href="{{ route('admin.tasks.manage', $task_type_id) }}">
                 <x-jet-button>
                     <i class="fas fa-arrow-left mr-2"></i>
                     Volver
@@ -25,9 +25,8 @@
         </div>
     </x-slot>
 
-    <div class="grid grid-cols-6 gap-4">
-
-        {{-- APARTADO TIPO DE TAREA --}}
+    {{-- DETALLE TAREA --}}
+    <div class="grid grid-cols-6 gap-4 mb-10">
         <div class="col-span-6">
             <h1 class="font-bold text-lg">Detalle de tarea #{{ $task_id }}</h1>
             <hr class="mt-1">
@@ -50,25 +49,35 @@
             <x-jet-input type="datetime-local" class="w-full text-gray-500" wire:model="started_at" />
             <x-jet-input-error for="createForm.started_at" class="mt-2" />
         </div>
+    </div>
 
-        {{-- DETALLE PRODUCTOS DE ENTRADA --}}
+    {{-- PRODUCTOS ENTRADA --}}
+    <div class="grid grid-cols-6 gap-4 mb-10">
+
         <div class="col-span-6">
             <h1 class="font-bold text-lg">Detalle productos de entrada</h1>
             <hr class="mt-1">
+            <span class="text-sm text-gray-500">
+                <i class="fas fa-info-circle mr-1"></i>
+                Dado que el tipo de tarea es
+                <span class="uppercase font-bold">{{ $task_type_name }}</span>,
+                los productos de entrada serán de tipo
+                <span class="uppercase font-bold">{{ $initial_phase_name }}</span>
+            </span>
         </div>
 
         <div class="col-span-6">
 
             @if ($taskInputProducts)
                 <div class="grid grid-cols-6 w-full text-center text-sm uppercase font-bold text-gray-600">
-                    <div class="col-span-5 py-1">Detalle de sublotes</div>
+                    <div class="col-span-5 py-1">Detalle de sublotes a tomar de entrada</div>
                     <div class="col-span-1 py-1">Cantidad</div>
                 </div>
 
                 <div class="grid grid-cols-6 w-full text-center text-sm uppercase text-gray-600 gap-2 items-center">
-                    @foreach ($taskInputProducts as $index => $taskInputProduct)
+                    @foreach ($taskInputProducts as $index => $taskOutputProduct)
                         <div class="col-span-5 flex">
-                            <button type="button" wire:click.prevent="removeProduct({{ $index }})">
+                            <button type="button" wire:click.prevent="removeInputProduct({{ $index }})">
                                 <i class="fas fa-trash mx-4 hover:text-red-600" title="Eliminar producto"></i>
                             </button>
                             <select name="taskInputProducts[{{ $index }}][trunk_lot_id]"
@@ -77,7 +86,7 @@
                                 <option disabled value="">Seleccione un producto</option>
                                 @foreach ($allInputProducts as $lot)
                                     <option value="{{ $lot->id }}""
-                                        {{ $this->isProductInOrder($lot->id) ? 'disabled' : '' }}>
+                                        {{ $this->isProductInInputOrder($lot->id) ? 'disabled' : '' }}>
                                         x {{ $lot->actual_quantity }}
                                         &ensp;
                                         {{ $lot->product->name }}
@@ -109,7 +118,76 @@
             <div
                 class="{{ $taskInputProducts ? 'col-span-4' : 'col-span-6' }}  mt-4 flex justify-center items-center gap-2">
                 <div>
-                    <x-jet-button type="button" wire:click.prevent="addProduct" class="px-3">
+                    <x-jet-button type="button" wire:click.prevent="addInputProduct" class="px-3">
+                        <i class="fas fa-plus mr-2"></i>
+                        Agregar producto
+                    </x-jet-button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{-- PRODUCTOS SALIDA --}}
+    <div class="grid grid-cols-6 gap-4 mb-10">
+        <div class="col-span-6">
+            <h1 class="font-bold text-lg">Detalle productos de salida</h1>
+            <hr class="my-1">
+            <span class="text-sm text-gray-500">
+                <i class="fas fa-info-circle mr-1"></i>
+                Dado que el tipo de tarea es
+                <span class="uppercase font-bold">{{ $task_type_name }}</span>,
+                los productos de salida serán de tipo
+                <span class="uppercase font-bold">{{ $final_phase_name }}</span>
+            </span>
+        </div>
+
+        <div class="col-span-6">
+
+            @if ($taskOutputProducts)
+                <div class="grid grid-cols-6 w-full text-center text-sm uppercase font-bold text-gray-600">
+                    <div class="col-span-5 py-1">Detalle de sublotes a generar de salida</div>
+                    <div class="col-span-1 py-1">Cantidad</div>
+                </div>
+
+                <div class="grid grid-cols-6 w-full text-center text-sm uppercase text-gray-600 gap-2 items-center">
+                    @foreach ($taskOutputProducts as $index => $taskInputProduct)
+                        <div class="col-span-5 flex">
+                            <button type="button" wire:click.prevent="removeOutputProduct({{ $index }})">
+                                <i class="fas fa-trash mx-4 hover:text-red-600" title="Eliminar producto"></i>
+                            </button>
+                            <select name="taskOutputProducts[{{ $index }}][product_id]"
+                                wire:model.lazy="taskOutputProducts.{{ $index }}.product_id"
+                                class="input-control w-full p-1 pl-3">
+                                <option disabled value="">Seleccione un producto</option>
+                                @foreach ($allOutputProducts as $product)
+                                    <option value="{{ $product->id }}""
+                                        {{ $this->isProductInOutputOrder($product->id) ? 'disabled' : '' }}>
+                                        {{ $product->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-span-1">
+                            <x-jet-input type="number" min="1" {{-- max="{{ $allOutputProducts[$index]->actual_quantity }}" --}}
+                                name="taskOutputProducts[{{ $index }}][produced_quantity]"
+                                wire:model.lazy="taskOutputProducts.{{ $index }}.produced_quantity"
+                                class="input-control w-full p-1 text-center" />
+                        </div>
+                    @endforeach
+
+                </div>
+                <x-jet-input-error for="taskOutputProducts.*.product_id" class="mt-2" />
+            @else
+                <p class="text-center">
+                    ¡No hay productos de entrada! Intenta agregar alguno con el botón
+                    <span class="font-bold">"Agregar producto"</span>.
+                </p>
+            @endif
+            {{-- BOTÓN AGREGAR PRODUCTOS --}}
+            <div
+                class="{{ $taskOutputProducts ? 'col-span-4' : 'col-span-6' }}  mt-4 flex justify-center items-center gap-2">
+                <div>
+                    <x-jet-button type="button" wire:click.prevent="addOutputProduct" class="px-3">
                         <i class="fas fa-plus mr-2"></i>
                         Agregar producto
                     </x-jet-button>
