@@ -28,7 +28,7 @@
     <div class="px-8 py-6 max-w-6xl mx-auto bg-white rounded-lg shadow">
 
         {{-- DETALLE DE TAREA --}}
-        <h1 class="font-bold text-lg">Detalle de tarea</h1>
+        <h1 class="font-bold text-lg uppercase">Detalle de tarea</h1>
         <hr class="my-1">
 
         <div class="grid grid-cols-8 gap-3 my-4">
@@ -83,7 +83,7 @@
         </div>
 
         {{-- DETALLE DE PRODUCCIÓN --}}
-        <h1 class="font-bold text-lg">Detalle de producción</h1>
+        <h1 class="font-bold text-lg uppercase">Detalle de producción</h1>
         <hr class="my-1">
 
         <h2 class="font-semibold text-md mt-4 mb-2">Productos de entrada</h2>

@@ -28,8 +28,7 @@ class TrunkPurchaseSeeder extends Seeder
                         // Code is consecutive in the same trunk purchase
                         return [
                             'product_id' => $product->id,
-                            // Random code integer
-                            'code' => 'SLR-' . rand(1000, 9999),
+                            'code' => 'SR-' . rand(1000, 9999),
                             'initial_quantity' => $product->pivot->quantity,
                             'actual_quantity' => $product->pivot->quantity,
                         ];
