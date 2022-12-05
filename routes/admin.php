@@ -21,6 +21,8 @@ use App\Http\Livewire\Purchases\ShowPurchase;
 use App\Http\Livewire\Suppliers\EditSupplier;
 use App\Http\Livewire\Tasks\ShowFinishedTask;
 use App\Http\Livewire\Countries\IndexCountries;
+use App\Http\Livewire\Movements\CreateMovement;
+use App\Http\Livewire\Movements\MovementsIndex;
 use App\Http\Livewire\Provinces\IndexProvinces;
 use App\Http\Livewire\Purchases\CreatePurchase;
 use App\Http\Livewire\Purchases\IndexPurchases;
@@ -37,8 +39,10 @@ use App\Http\Livewire\SaleOrders\CreateSaleOrder;
 use App\Http\Livewire\SaleOrders\SaleOrdersIndex;
 use App\Http\Livewire\Tenderings\CreateTendering;
 use App\Http\Livewire\Tenderings\IndexTenderings;
+use App\Http\Livewire\Movements\MovementsManagement;
 use App\Http\Livewire\Products\AddProductsComponent;
 use App\Http\Livewire\Tenderings\ShowOfferTendering;
+use App\Http\Livewire\Movements\ShowFinishedMovement;
 use App\Http\Livewire\ProductNames\IndexProductNames;
 use App\Http\Livewire\ProductTypes\IndexProductTypes;
 use App\Http\Livewire\TaskStatuses\IndexTaskStatuses;
@@ -47,8 +51,8 @@ use App\Http\Livewire\PurchaseOrders\ShowPurchaseOrder;
 use App\Http\Livewire\Tenderings\ShowFinishedTendering;
 use App\Http\Livewire\PurchaseOrders\CreatePurchaseOrder;
 use App\Http\Livewire\PurchaseOrders\PurchaseOrdersIndex;
-use App\Http\Livewire\PucharseParameters\IndexPucharseParameters;
 use App\Http\Livewire\TypesOfMovements\TypesOfMovementsIndex;
+use App\Http\Livewire\PucharseParameters\IndexPucharseParameters;
 
 Route::get('/countries', IndexCountries::class)->name('admin.countries.index');
 Route::get('/provinces', IndexProvinces::class)->name('admin.provinces.index');
@@ -116,3 +120,8 @@ Route::get('/task/manage/{task}/register', CreateTask::class)->name('admin.tasks
 Route::get('/tasks/manage/{task}/show', ShowFinishedTask::class)->name('admin.tasks.show');
 
 
+// Movimientso
+Route::get('/movements', MovementsIndex::class)->name('admin.movements.index');
+Route::get('/movements/manage/{movementType}', MovementsManagement::class)->name('admin.movements.manage');
+Route::get('/movement/manage/{movement}/register', CreateMovement::class)->name('admin.movements.register');
+Route::get('/movements/manage/{movement}/show', ShowFinishedMovement::class)->name('admin.movements.show');
