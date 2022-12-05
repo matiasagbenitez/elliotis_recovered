@@ -36,11 +36,11 @@
     @endif
 
     {{-- DETALLE DE HASHES --}}
-    <div class="px-6 py-3 bg-white rounded-lg shadow mt-4">
-        <p class="font-bold my-1">Oferta de {{ $supplier->business_name }}</p>
+    <div class="px-6 py-3 bg-white rounded-lg shadow mt-4 font-mono uppercase">
+        <p class="font-bold uppercase text-center text-2xl my-1">Oferta de {{ $supplier->business_name }}</p>
         <hr class="mt-1 mb-2">
         <div class="grid grid-cols-2">
-            <div>
+            <div class="space-y-3">
                 <p class="text-sm font-bold my-1">Concurso visto por primera vez el:
                     <span class="font-normal">
                         @if ($hash->seen)
@@ -74,14 +74,14 @@
             </div>
         </div>
 
-        <p class="font-bold mt-2">Detalle última oferta</p>
-        <hr class="mt-1 mb-2">
+        <p class="font-bold mt-5 mb-2">Detalle última oferta</p>
+        {{-- <hr class="mt-1 mb-2"> --}}
 
         {{-- DETALLE DE OFERTA --}}
-        <x-responsive-table>
-            <table class="text-gray-600 min-w-full divide-y divide-gray-200 table-fixed">
-                <thead class="text-sm text-center text-gray-500 uppercase border-b border-gray-300 bg-gray-200">
-                    <tr>
+        {{-- <x-responsive-table> --}}
+            <table class="min-w-full divide-y border">
+                <thead>
+                    <tr class="text-center text-gray-500 uppercase text-sm  font-mono font-thin">
                         <th scope="col" class="w-1/4 px-4 py-2">
                             Producto
                         </th>
@@ -98,7 +98,7 @@
                 </thead>
                 <tbody class="divide-y divide-gray-200">
                     @foreach ($offer->products as $product)
-                        <tr class="bg-gray-50">
+                    <tr class="uppercase text-sm font-mono">
                             <td class="px-6 py-2 text-center">
                                 <p class="text-sm uppercase">
                                     {{ $product->name }}
@@ -123,8 +123,8 @@
                     @endforeach
                 </tbody>
             </table>
-        </x-responsive-table>
-        <div class="mt-3">
+        {{-- </x-responsive-table> --}}
+        <div class="mt-5 space-y-3">
             <div>
                 <p class="text-sm font-bold my-1">Subtotal =
                     <span class="font-normal">${{ number_format($offer->subtotal, 2, ',', '.') }}</span>
