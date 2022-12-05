@@ -9,183 +9,179 @@
                 </x-jet-button>
             </a>
 
-            <h1 class="font-semibold text-xl text-gray-800 leading-tight">
-                Detalle de tarea #{{ $taskData['id'] }}
-                <span class="uppercase font-semibold text-md">
-                    ({{ $taskData['task_type_name'] }})
-                </span>
-            </h1>
-
             <a href="#">
-                <x-jet-secondary-button>
-                    <i class="fas fa-info-circle mr-2"></i>
-                    Ayuda
-                </x-jet-secondary-button>
+                <x-jet-danger-button>
+                    <i class="fas fa-file-pdf mr-2"></i>
+                    Descargar PDF
+                </x-jet-danger-button>
             </a>
         </div>
     </x-slot>
 
     <div class="px-8 py-6 max-w-6xl mx-auto bg-white rounded-lg shadow">
 
-        {{-- DETALLE DE TAREA --}}
-        <h1 class="font-bold text-lg uppercase">Detalle de tarea</h1>
+        <h1 class="font-mono font-bold text-2xl text-center mb-2 text-gray-800 leading-tight">
+            Detalle de tarea #{{ $taskData['id'] }}
+            <span class="uppercase font-semibold text-md">
+                ({{ $taskData['task_type_name'] }})
+            </span>
+        </h1>
+
         <hr class="my-1">
 
-        <div class="grid grid-cols-8 gap-3 my-4">
+        <div class="grid grid-cols-8 gap-8 my-8 font-mono">
             <div class="col-span-2">
                 <div class="flex flex-col gap-2">
-                    <x-jet-label value="Área" />
-                    <x-jet-input type="text" class="input-control" value="{{ $taskData['area'] }}" disabled />
+                    <x-jet-label class="font-bold" value="Área" />
+                    <p class="text-sm">{{ $taskData['area'] }}</p>
                 </div>
             </div>
             <div class="col-span-2">
                 <div class="flex flex-col gap-2">
-                    <x-jet-label value="Tipo de tarea" />
-                    <x-jet-input type="text" class="input-control" value="{{ $taskData['task_type_name'] }}" disabled />
+                    <x-jet-label class="font-bold" value="Tipo de tarea" />
+                    <p class="text-sm">{{ $taskData['task_type_name'] }}</p>
                 </div>
             </div>
             <div class="col-span-2">
                 <div class="flex flex-col gap-2">
-                    <x-jet-label value="ID de tarea" />
-                    <x-jet-input type="text" class="input-control" value="{{ $taskData['id'] }}" disabled />
+                    <x-jet-label class="font-bold" value="ID de tarea" />
+                    <p class="text-sm">{{ $taskData['id'] }}</p>
                 </div>
             </div>
             <div class="col-span-2">
                 <div class="flex flex-col gap-2">
-                    <x-jet-label value="Estado de la tarea" />
-                    <x-jet-input type="text" class="input-control" value="{{ $taskData['task_status_name'] }}" disabled />
+                    <x-jet-label class="font-bold" value="Estado de la tarea" />
+                    <p class="text-sm">{{ $taskData['task_status_name'] }}</p>
                 </div>
             </div>
             <div class="col-span-2">
                 <div class="flex flex-col gap-2">
-                    <x-jet-label value="Fecha de inicio" />
-                    <x-jet-input type="text" class="input-control" value="{{ $taskData['started_at'] }}" disabled />
+                    <x-jet-label class="font-bold" value="Fecha de inicio" />
+                    <p class="text-sm">{{ $taskData['started_at'] }}</p>
                 </div>
             </div>
             <div class="col-span-2">
                 <div class="flex flex-col gap-2">
-                    <x-jet-label value="Usuario que inició la tarea" />
-                    <x-jet-input type="text" class="input-control" value="{{ $taskData['started_by'] }}" disabled />
+                    <x-jet-label class="font-bold" value="Usuario que inició la tarea" />
+                    <p class="text-sm">{{ $taskData['started_by'] }}</p>
                 </div>
             </div>
             <div class="col-span-2">
                 <div class="flex flex-col gap-2">
-                    <x-jet-label value="Fecha de finalización" />
-                    <x-jet-input type="text" class="input-control" value="{{ $taskData['finished_at'] }}" disabled />
+                    <x-jet-label class="font-bold" value="Fecha de finalización" />
+                    <p class="text-sm">{{ $taskData['finished_at'] }}</p>
                 </div>
             </div>
             <div class="col-span-2">
                 <div class="flex flex-col gap-2">
-                    <x-jet-label value="Usuario que finalizó la tarea" />
-                    <x-jet-input type="text" class="input-control" value="{{ $taskData['finished_by'] }}" disabled />
+                    <x-jet-label class="font-bold" value="Usuario que finalizó la tarea" />
+                    <p class="text-sm">{{ $taskData['finished_by'] }}</p>
                 </div>
             </div>
         </div>
 
         {{-- DETALLE DE PRODUCCIÓN --}}
-        <h1 class="font-bold text-lg uppercase">Detalle de producción</h1>
+        <h1 class="font-mono font-bold text-lg uppercase">Detalle de producción</h1>
         <hr class="my-1">
 
-        <h2 class="font-semibold text-md mt-4 mb-2">Productos de entrada</h2>
+        <h2 class="font-semibold font-mono text-md mt-4 mb-2">Productos de entrada</h2>
 
-        <x-responsive-table>
-            <table class="text-gray-600 min-w-full divide-y divide-gray-200 table-fixed">
-                <thead
-                    class="text-sm text-center text-gray-500 uppercase border-b border-gray-300 bg-gray-200">
-                    <tr>
-                        <th scope="col" class="w-1/6 px-4 py-2">
-                            Lote
-                        </th>
-                        <th scope="col" class="w-1/6 px-4 py-2">
-                             Sublote
-                        </th>
-                        <th scope="col" class="w-1/3 px-4 py-2">
-                            Producto
-                        </th>
-                        <th scope="col" class="w-1/6 px-4 py-2">
-                            Cantidad consumida
-                        </th>
+        {{-- <x-responsive-table> --}}
+        <table class="min-w-full divide-y border">
+            <thead>
+                <tr class="text-center text-gray-500 uppercase text-sm  font-mono font-thin">
+                    <th scope="col" class="w-1/6 px-4 py-2">
+                        Lote
+                    </th>
+                    <th scope="col" class="w-1/6 px-4 py-2">
+                        Sublote
+                    </th>
+                    <th scope="col" class="w-1/3 px-4 py-2">
+                        Producto
+                    </th>
+                    <th scope="col" class="w-1/6 px-4 py-2">
+                        Cantidad consumida
+                    </th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-200">
+                @foreach ($inputProductsData as $product)
+                    <tr class="uppercase text-sm font-mono">
+                        <td class="px-6 py-2 text-center">
+                            <p class="text-sm uppercase">
+                                {{ $product['lot_code'] }}
+                            </p>
+                        </td>
+                        <td class="px-6 py-2 text-center">
+                            <p class="text-sm uppercase">
+                                {{ $product['sublot_code'] }}
+                            </p>
+                        </td>
+                        <td class="px-6 py-2 text-center">
+                            <p class="text-sm uppercase">
+                                {{ $product['product_name'] }}
+                            </p>
+                        </td>
+                        <td class="px-6 py-2 text-center">
+                            <p class="text-sm uppercase">
+                                {{ $product['consumed_quantity'] }}
+                            </p>
+                        </td>
                     </tr>
-                </thead>
-                <tbody class="divide-y divide-gray-200">
-                    @foreach ($inputProductsData as $product)
-                        <tr class="bg-gray-50">
-                            <td class="px-6 py-2 text-center">
-                                <p class="text-sm uppercase">
-                                    {{ $product['lot_code'] }}
-                                </p>
-                            </td>
-                            <td class="px-6 py-2 text-center">
-                                <p class="text-sm uppercase">
-                                    {{ $product['sublot_code'] }}
-                                </p>
-                            </td>
-                            <td class="px-6 py-2 text-center">
-                                <p class="text-sm uppercase">
-                                    {{ $product['product_name'] }}
-                                </p>
-                            </td>
-                            <td class="px-6 py-2 text-center">
-                                <p class="text-sm uppercase">
-                                    {{ $product['consumed_quantity'] }}
-                                </p>
-                            </td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        </x-responsive-table>
+                @endforeach
+            </tbody>
+        </table>
+        {{-- </x-responsive-table> --}}
 
         {{-- SALIDA --}}
-        <h2 class="font-semibold text-md mt-4 mb-2">Productos de salida</h2>
+        <h2 class="font-semibold font-mono  text-md mt-4 mb-2">Productos de salida</h2>
 
-        <x-responsive-table>
-            <table class="text-gray-600 min-w-full divide-y divide-gray-200 table-fixed">
-                <thead
-                    class="text-sm text-center text-gray-500 uppercase border-b border-gray-300 bg-gray-200">
-                    <tr>
-                        <th scope="col" class="w-1/6 px-4 py-2">
-                            Lote
-                        </th>
-                        <th scope="col" class="w-1/6 px-4 py-2">
-                             Sublote
-                        </th>
-                        <th scope="col" class="w-1/3 px-4 py-2">
-                            Producto
-                        </th>
-                        <th scope="col" class="w-1/6 px-4 py-2">
-                            Cantidad producida
-                        </th>
+        {{-- <x-responsive-table> --}}
+        <table class="min-w-full divide-y border">
+            <thead>
+                <tr class="text-center text-gray-500 uppercase text-sm  font-mono font-thin">
+                    <th scope="col" class="w-1/6 px-4 py-2">
+                        Lote
+                    </th>
+                    <th scope="col" class="w-1/6 px-4 py-2">
+                        Sublote
+                    </th>
+                    <th scope="col" class="w-1/3 px-4 py-2">
+                        Producto
+                    </th>
+                    <th scope="col" class="w-1/6 px-4 py-2">
+                        Cantidad producida
+                    </th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-200">
+                @foreach ($outputProductsData as $product)
+                <tr class="uppercase text-sm font-mono">
+                        <td class="px-6 py-2 text-center">
+                            <p class="text-sm uppercase">
+                                {{ $product['lot_code'] }}
+                            </p>
+                        </td>
+                        <td class="px-6 py-2 text-center">
+                            <p class="text-sm uppercase">
+                                {{ $product['sublot_code'] }}
+                            </p>
+                        </td>
+                        <td class="px-6 py-2 text-center">
+                            <p class="text-sm uppercase">
+                                {{ $product['product_name'] }}
+                            </p>
+                        </td>
+                        <td class="px-6 py-2 text-center">
+                            <p class="text-sm uppercase">
+                                {{ $product['produced_quantity'] }}
+                            </p>
+                        </td>
                     </tr>
-                </thead>
-                <tbody class="divide-y divide-gray-200">
-                    @foreach ($outputProductsData as $product)
-                        <tr class="bg-gray-50">
-                            <td class="px-6 py-2 text-center">
-                                <p class="text-sm uppercase">
-                                    {{ $product['lot_code'] }}
-                                </p>
-                            </td>
-                            <td class="px-6 py-2 text-center">
-                                <p class="text-sm uppercase">
-                                    {{ $product['sublot_code'] }}
-                                </p>
-                            </td>
-                            <td class="px-6 py-2 text-center">
-                                <p class="text-sm uppercase">
-                                    {{ $product['product_name'] }}
-                                </p>
-                            </td>
-                            <td class="px-6 py-2 text-center">
-                                <p class="text-sm uppercase">
-                                    {{ $product['produced_quantity'] }}
-                                </p>
-                            </td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        </x-responsive-table>
+                @endforeach
+            </tbody>
+        </table>
+        {{-- </x-responsive-table> --}}
 
     </div>
 
