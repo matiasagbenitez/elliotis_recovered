@@ -14,11 +14,13 @@ class TypeOfMovementSeeder extends Seeder
                 'name' => 'Movimiento de línea de corte a área de secado',
                 'origin_area_id' => 1,
                 'destination_area_id' => 2,
+                'icon' => '/img/forklift.png',
             ],
             [
                 'name' => 'Movimiento de secado a depósito de fajas secas',
                 'origin_area_id' => 2,
                 'destination_area_id' => 3,
+                'icon' => '/img/forklift.png',
             ]
         ];
 

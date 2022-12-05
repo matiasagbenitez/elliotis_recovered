@@ -19,6 +19,8 @@ return new class extends Migration
             $table->unsignedBigInteger('destination_area_id');
             $table->foreign('destination_area_id')->references('id')->on('areas');
 
+            $table->string('icon')->nullable();
+
             $table->timestamps();
         });
     }

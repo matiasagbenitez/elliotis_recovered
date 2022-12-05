@@ -43,6 +43,7 @@ class DatabaseSeeder extends Seeder
         $this->call(AreaSeeder::class);
         $this->call(TaskStatusSeeder::class);
         $this->call(TaskTypeSeeder::class);
+        $this->call(MovementStatusSeeder::class);
         $this->call(TypeOfMovementSeeder::class);
 
         // Tareas
