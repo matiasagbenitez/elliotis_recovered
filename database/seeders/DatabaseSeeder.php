@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\TypeOfMovement;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -42,6 +43,7 @@ class DatabaseSeeder extends Seeder
         $this->call(AreaSeeder::class);
         $this->call(TaskStatusSeeder::class);
         $this->call(TaskTypeSeeder::class);
+        $this->call(TypeOfMovementSeeder::class);
 
         // Tareas
         $this->call(TaskSeeder::class);

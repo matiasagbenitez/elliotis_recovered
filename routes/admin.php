@@ -48,6 +48,7 @@ use App\Http\Livewire\Tenderings\ShowFinishedTendering;
 use App\Http\Livewire\PurchaseOrders\CreatePurchaseOrder;
 use App\Http\Livewire\PurchaseOrders\PurchaseOrdersIndex;
 use App\Http\Livewire\PucharseParameters\IndexPucharseParameters;
+use App\Http\Livewire\TypesOfMovements\TypesOfMovementsIndex;
 
 Route::get('/countries', IndexCountries::class)->name('admin.countries.index');
 Route::get('/provinces', IndexProvinces::class)->name('admin.provinces.index');
@@ -71,6 +72,7 @@ Route::get('/product-names', IndexProductNames::class)->name('admin.product-name
 Route::get('/wood-types', IndexWoodTypes::class)->name('admin.wood-types.index');
 Route::get('/product-types', IndexProductTypes::class)->name('admin.product-types.index');
 Route::get('/phases', IndexPhases::class)->name('admin.phases.index');
+Route::get('/types-of-movements', TypesOfMovementsIndex::class)->name('admin.types-of-movements.index');
 
 Route::get('/products', IndexProducts::class)->name('admin.products.index');
 Route::get('/add-products', AddProductsComponent::class)->name('admin.add-products.index');
