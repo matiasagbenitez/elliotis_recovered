@@ -16,7 +16,7 @@
                 {{-- <a href=""> --}}
                     <div class="hover:bg-gray-50 hover:shadow-lg rounded-lg p-2 hover:cursor-pointer">
                         <div class="flex justify-center">
-                            <img class="h-40 w-40" src="{{ asset($stat['icon']) }}" alt="Ícono de la tarea">
+                            <img class="h-40 w-40" src="{{ asset($stat['icon']) ? asset($stat['icon']) : asset('img/default.png') }}" alt="Ícono de la tarea">
                         </div>
 
                         <h2 class="uppercase font-bold text-center my-3">{{ $stat['name'] }}</h2>

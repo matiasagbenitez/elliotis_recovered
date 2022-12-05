@@ -89,8 +89,8 @@ class MovementsManagement extends Component
             ];
 
             Movement::create($createForm);
-            $this->running_task = $this->getRunningMovement();
-            $this->tasks = $this->getMovements();
+            $this->running_movement = $this->getRunningMovement();
+            $this->movements = $this->getMovements();
             $this->emit('success', '¡Tarea de tipo: '. $this->movement_type_name .' iniciada correctamente!');
         } catch (\Throwable $th) {
             dd($th);
