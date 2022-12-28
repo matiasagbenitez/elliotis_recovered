@@ -14,8 +14,8 @@ return new class extends Migration
             $table->string('type', 255)->nullable();
             $table->string('name', 255)->unique();
 
-            // Just one can be true
-            $table->boolean('initial_task')->default(false)->unique();
+            // Just one 'initial_task' attribute can be true
+            $table->boolean('initial_task')->default(false);
 
             $table->boolean('movement')->default(false);
             $table->unsignedBigInteger('origin_area_id');

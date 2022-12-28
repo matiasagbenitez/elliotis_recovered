@@ -53,6 +53,7 @@ use App\Http\Livewire\Tenderings\ShowFinishedTendering;
 use App\Http\Livewire\PurchaseOrders\CreatePurchaseOrder;
 use App\Http\Livewire\PurchaseOrders\PurchaseOrdersIndex;
 use App\Http\Livewire\TypesOfMovements\TypesOfMovementsIndex;
+use App\Http\Livewire\FollowingProducts\IndexFollowingProducts;
 use App\Http\Livewire\PucharseParameters\IndexPucharseParameters;
 
 Route::get('/countries', IndexCountries::class)->name('admin.countries.index');
@@ -113,3 +114,4 @@ Route::get('/trunk-lots', IndexTrunkLots::class)->name('admin.trunk-lots.index')
 Route::get('/task-statuses', IndexTaskStatuses::class)->name('admin.task-statuses.index');
 Route::get('/phases', IndexPhases::class)->name('admin.phases.index');
 Route::get('/types-of-tasks', IndexTypesOfTasks::class)->name('admin.types-of-tasks.index');
+Route::get('/following-products', IndexFollowingProducts::class)->name('admin.following-products.index');

@@ -96,7 +96,7 @@ class ProductSeeder extends Seeder
                 'iva_type_id' => 2,
                 'cost' => 140,
                 'margin' => ProductType::find(6)->product_name->margin,
-                'selling_price' => 120 * ProductType::find(6)->product_name->margin,
+                'selling_price' => 140 * ProductType::find(6)->product_name->margin,
             ],
 
             // FAJA HÚMEDA DE 12
@@ -110,7 +110,7 @@ class ProductSeeder extends Seeder
                 'iva_type_id' => 2,
                 'cost' => 160,
                 'margin' => ProductType::find(7)->product_name->margin,
-                'selling_price' => 120 * ProductType::find(7)->product_name->margin,
+                'selling_price' => 160 * ProductType::find(7)->product_name->margin,
             ],
 
             // FAJA HÚMEDA DE 13
@@ -124,7 +124,7 @@ class ProductSeeder extends Seeder
                 'iva_type_id' => 2,
                 'cost' => 180,
                 'margin' => ProductType::find(8)->product_name->margin,
-                'selling_price' => 120 * ProductType::find(8)->product_name->margin,
+                'selling_price' => 180 * ProductType::find(8)->product_name->margin,
             ],
 
             // FAJA SECA DE 10
@@ -152,7 +152,7 @@ class ProductSeeder extends Seeder
                 'iva_type_id' => 2,
                 'cost' => 160,
                 'margin' => ProductType::find(10)->product_name->margin,
-                'selling_price' => 140 * ProductType::find(10)->product_name->margin,
+                'selling_price' => 160 * ProductType::find(10)->product_name->margin,
             ],
 
             // FAJA SECA DE 12
@@ -166,7 +166,7 @@ class ProductSeeder extends Seeder
                 'iva_type_id' => 2,
                 'cost' => 180,
                 'margin' => ProductType::find(11)->product_name->margin,
-                'selling_price' => 140 * ProductType::find(11)->product_name->margin,
+                'selling_price' => 180 * ProductType::find(11)->product_name->margin,
             ],
 
             // FAJA SECA DE 13
@@ -180,7 +180,7 @@ class ProductSeeder extends Seeder
                 'iva_type_id' => 2,
                 'cost' => 200,
                 'margin' => ProductType::find(12)->product_name->margin,
-                'selling_price' => 140 * ProductType::find(12)->product_name->margin,
+                'selling_price' => 200 * ProductType::find(12)->product_name->margin,
             ],
 
             // FAJA MACHIMBRADA DE 10
@@ -208,7 +208,7 @@ class ProductSeeder extends Seeder
                 'iva_type_id' => 2,
                 'cost' => 180,
                 'margin' => ProductType::find(14)->product_name->margin,
-                'selling_price' => 160 * ProductType::find(14)->product_name->margin,
+                'selling_price' => 180 * ProductType::find(14)->product_name->margin,
             ],
 
             // FAJA MACHIMBRADA DE 12
@@ -222,7 +222,7 @@ class ProductSeeder extends Seeder
                 'iva_type_id' => 2,
                 'cost' => 200,
                 'margin' => ProductType::find(15)->product_name->margin,
-                'selling_price' => 160 * ProductType::find(15)->product_name->margin,
+                'selling_price' => 200 * ProductType::find(15)->product_name->margin,
             ],
 
             // FAJA MACHIMBRADA DE 13
@@ -236,7 +236,7 @@ class ProductSeeder extends Seeder
                 'iva_type_id' => 2,
                 'cost' => 220,
                 'margin' => ProductType::find(16)->product_name->margin,
-                'selling_price' => 160 * ProductType::find(16)->product_name->margin,
+                'selling_price' => 220 * ProductType::find(16)->product_name->margin,
             ],
 
             // PAQUETE GRANDE MACHIMBRADO DE 10
@@ -251,7 +251,7 @@ class ProductSeeder extends Seeder
                 'iva_type_id' => 2,
                 'cost' => 150000,
                 'margin' => ProductType::find(17)->product_name->margin,
-                'selling_price' => 110000 * ProductType::find(17)->product_name->margin,
+                'selling_price' => 150000 * ProductType::find(17)->product_name->margin,
             ],
 
             // PAQUETE GRANDE MACHIMBRADO DE 11
@@ -266,7 +266,7 @@ class ProductSeeder extends Seeder
                 'iva_type_id' => 2,
                 'cost' => 160000,
                 'margin' => ProductType::find(18)->product_name->margin,
-                'selling_price' => 110000 * ProductType::find(18)->product_name->margin,
+                'selling_price' => 160000 * ProductType::find(18)->product_name->margin,
             ],
 
             // PAQUETE GRANDE MACHIMBRADO DE 12
@@ -281,7 +281,7 @@ class ProductSeeder extends Seeder
                 'iva_type_id' => 2,
                 'cost' => 170000,
                 'margin' => ProductType::find(19)->product_name->margin,
-                'selling_price' => 110000 * ProductType::find(19)->product_name->margin,
+                'selling_price' => 170000 * ProductType::find(19)->product_name->margin,
             ],
 
             // PAQUETE GRANDE MACHIMBRADO DE 13
@@ -296,7 +296,7 @@ class ProductSeeder extends Seeder
                 'iva_type_id' => 2,
                 'cost' => 180000,
                 'margin' => ProductType::find(20)->product_name->margin,
-                'selling_price' => 110000 * ProductType::find(20)->product_name->margin,
+                'selling_price' => 180000 * ProductType::find(20)->product_name->margin,
             ],
 
         ];

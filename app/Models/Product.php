@@ -77,4 +77,10 @@ class Product extends Model
         return $this->hasMany(TrunkSublot::class);
     }
 
+    // Relationship many with FollowingProduct
+    public function followingProducts()
+    {
+        return $this->belongsToMany(Product::class, 'following_products', 'base_product_id', 'following_product_id')->withPivot('final_product')->withTimestamps();
+    }
+
 }
