@@ -41,6 +41,7 @@ class DatabaseSeeder extends Seeder
         // Producción
         $this->call(TaskStatusSeeder::class);
         $this->call(PhaseSeeder::class);
+        $this->call(TypeOfTaskSeeder::class);
 
     }
 }
