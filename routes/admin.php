@@ -46,6 +46,7 @@ use App\Http\Livewire\Movements\ShowFinishedMovement;
 use App\Http\Livewire\ProductNames\IndexProductNames;
 use App\Http\Livewire\ProductTypes\IndexProductTypes;
 use App\Http\Livewire\TaskStatuses\IndexTaskStatuses;
+use App\Http\Livewire\TypesOfTasks\IndexTypesOfTasks;
 use App\Http\Livewire\IvaConditions\IndexIvaConditions;
 use App\Http\Livewire\PurchaseOrders\ShowPurchaseOrder;
 use App\Http\Livewire\Tenderings\ShowFinishedTendering;
@@ -111,3 +112,4 @@ Route::get('/parameters', IndexParameters::class)->name('admin.parameters.index'
 Route::get('/trunk-lots', IndexTrunkLots::class)->name('admin.trunk-lots.index');
 Route::get('/task-statuses', IndexTaskStatuses::class)->name('admin.task-statuses.index');
 Route::get('/phases', IndexPhases::class)->name('admin.phases.index');
+Route::get('/types-of-tasks', IndexTypesOfTasks::class)->name('admin.types-of-tasks.index');
