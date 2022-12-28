@@ -47,7 +47,7 @@
             <a href="{{ route('admin.product-names.index') }}"><p class="font-normal hover:font-bold">Nombres y denominaciones</p></a>
             <a href="{{ route('admin.measures.index') }}"><p class="font-normal hover:font-bold">Medidas</p></a>
             <a href="{{ route('admin.unities.index') }}"><p class="font-normal hover:font-bold">Unidades</p></a>
-            <a href="#"><p class="font-normal hover:font-bold">Etapas de productos en producción</p></a>
+            <a href="{{ route('admin.phases.index') }}"><p class="font-normal hover:font-bold">Etapas de productos en producción</p></a>
             <a href="{{ route('admin.product-types.index') }}"><p class="font-normal hover:font-bold">Tipos de productos</p></a>
             <a href="{{ route('admin.wood-types.index') }}"><p class="font-normal hover:font-bold">Tipos de madera</p></a>
         </div>

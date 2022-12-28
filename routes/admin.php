@@ -110,3 +110,4 @@ Route::get('/parameters', IndexParameters::class)->name('admin.parameters.index'
 
 Route::get('/trunk-lots', IndexTrunkLots::class)->name('admin.trunk-lots.index');
 Route::get('/task-statuses', IndexTaskStatuses::class)->name('admin.task-statuses.index');
+Route::get('/phases', IndexPhases::class)->name('admin.phases.index');
