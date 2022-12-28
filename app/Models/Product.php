@@ -83,4 +83,15 @@ class Product extends Model
         return $this->belongsToMany(Product::class, 'following_products', 'base_product_id', 'following_product_id')->withPivot('final_product')->withTimestamps();
     }
 
+    public function previousProduct()
+    {
+        return $this->hasOneThrough(
+            Product::class,
+            PreviousProduct::class,
+            'product_id',
+            'id',
+            'id',
+            'previous_product_id',
+        );
+    }
 }

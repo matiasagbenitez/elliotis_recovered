@@ -64,6 +64,8 @@
             <a href="{{ route('admin.task-statuses.index') }}"><p class="font-normal hover:font-bold">Estados de tareas</p></a>
             <a href="{{ route('admin.areas.index') }}"><p class="font-normal hover:font-bold">Áreas de la empresa</p></a>
             <a href="{{ route('admin.following-products.index') }}"><p class="font-normal hover:font-bold">Productos de salida</p></a>
+            <a href="{{ route('admin.previous-products.index') }}"><p class="font-normal hover:font-bold">Productos anteriores</p></a>
+
         </div>
 
     </div>
