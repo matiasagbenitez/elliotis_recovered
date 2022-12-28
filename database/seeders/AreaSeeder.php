@@ -11,6 +11,7 @@ class AreaSeeder extends Seeder
     public function run()
     {
         $areas = [
+            'Playa de rollos',
             'Línea de corte',
             'Área de secado',
             'Depósito de fajas secas',
