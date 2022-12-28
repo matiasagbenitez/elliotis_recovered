@@ -48,38 +48,38 @@ class ProductTypeSeeder extends Seeder
                 'unity_id' => 1,
             ],
 
-            // 6) FAJA SECA 1/2 X 4 X 10
+            // 6) FAJA HÚMEDA 1/2 X 4 X 11
+            [
+                'product_name_id' => 2,
+                'measure_id' => 22,
+                'unity_id' => 1,
+            ],
+
+            // 7) FAJA HÚMEDA 1/2 X 4 X 12
+            [
+                'product_name_id' => 2,
+                'measure_id' => 23,
+                'unity_id' => 1,
+            ],
+
+            // 8) FAJA HÚMEDA 1/2 X 4 X 13
+            [
+                'product_name_id' => 2,
+                'measure_id' => 24,
+                'unity_id' => 1,
+            ],
+
+            // 9) FAJA SECA 1/2 X 4 X 10
             [
                 'product_name_id' => 3,
                 'measure_id' => 21,
                 'unity_id' => 1,
             ],
 
-            // 7) FAJA MACHIMBRADA 1/2 X 4 X 10
+            // 10) FAJA SECA 1/2 X 4 X 11
             [
-                'product_name_id' => 4,
-                'measure_id' => 21,
-                'unity_id' => 1,
-            ],
-
-            // 8) PAQUETE GRANDE MACHIMBRADO 1/2 X 4 X 10
-            [
-                'product_name_id' => 5,
-                'measure_id' => 21,
-                'unity_id' => 3,
-            ],
-
-            // 9) PAQUETE GRANDE MACHIMBRADO 1/2 X 4 X 11
-            [
-                'product_name_id' => 5,
+                'product_name_id' => 3,
                 'measure_id' => 22,
-                'unity_id' => 3,
-            ],
-
-            // 10) FAJA HÚMEDA 1/2 X 4 X 12
-            [
-                'product_name_id' => 2,
-                'measure_id' => 23,
                 'unity_id' => 1,
             ],
 
@@ -90,21 +90,63 @@ class ProductTypeSeeder extends Seeder
                 'unity_id' => 1,
             ],
 
-            // 12) FAJA MACHIMBRADA 1/2 X 4 X 12
+            // 12) FAJA SECA 1/2 X 4 X 13
+            [
+                'product_name_id' => 3,
+                'measure_id' => 24,
+                'unity_id' => 1,
+            ],
+
+            // 13) FAJA MACHIMBRADA 1/2 X 4 X 10
+            [
+                'product_name_id' => 4,
+                'measure_id' => 21,
+                'unity_id' => 1,
+            ],
+
+            // 14) FAJA MACHIMBRADA 1/2 X 4 X 11
+            [
+                'product_name_id' => 4,
+                'measure_id' => 22,
+                'unity_id' => 1,
+            ],
+
+            // 15) FAJA MACHIMBRADA 1/2 X 4 X 12
             [
                 'product_name_id' => 4,
                 'measure_id' => 23,
                 'unity_id' => 1,
             ],
 
-            // 13) PAQUETE GRANDE MACHIMBRADO 1/2 X 4 X 12
+            // 16) FAJA MACHIMBRADA 1/2 X 4 X 13
+            [
+                'product_name_id' => 4,
+                'measure_id' => 24,
+                'unity_id' => 1,
+            ],
+
+            // 17) PAQUETE GRANDE MACHIMBRADO 1/2 X 4 X 10
+            [
+                'product_name_id' => 5,
+                'measure_id' => 21,
+                'unity_id' => 3,
+            ],
+
+            // 18) PAQUETE GRANDE MACHIMBRADO 1/2 X 4 X 11
+            [
+                'product_name_id' => 5,
+                'measure_id' => 22,
+                'unity_id' => 3,
+            ],
+
+            // 19) PAQUETE GRANDE MACHIMBRADO 1/2 X 4 X 12
             [
                 'product_name_id' => 5,
                 'measure_id' => 23,
                 'unity_id' => 3,
             ],
 
-            // 14) PAQUETE GRANDE MACHIMBRADO 1/2 X 4 X 13
+            // 20) PAQUETE GRANDE MACHIMBRADO 1/2 X 4 X 13
             [
                 'product_name_id' => 5,
                 'measure_id' => 24,
