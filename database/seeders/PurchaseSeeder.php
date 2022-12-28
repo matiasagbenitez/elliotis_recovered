@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Product;
 use App\Models\Purchase;
+use App\Models\TrunkLot;
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
@@ -54,6 +55,34 @@ class PurchaseSeeder extends Seeder
             $purchase->total = $purchase->subtotal + $purchase->iva;
 
             if ($purchase->id <= 3) {
+
+                // Last code
+                $lastCode = TrunkLot::latest('code')->first();
+
+                if ($lastCode) {
+                    $lastCode = $lastCode->code;
+                } else {
+                    $lastCode = 'LR-0000';
+                }
+
+                $codeNumber = (int) substr($lastCode, 3, 4);
+
+                $trunkLot = TrunkLot::create([
+                    'purchase_id' => $purchase->id,
+                    'code' => 'LR-' . str_pad($codeNumber + 1, 4, '0', STR_PAD_LEFT),
+                ]);
+
+                $trunkLot->sublots()->createMany(
+                    $purchase->products->map(function ($product) {
+                        return [
+                            'product_id' => $product->id,
+                            'area_id' => 1,
+                            'initial_quantity' => $product->pivot->quantity,
+                            'actual_quantity' => $product->pivot->quantity,
+                        ];
+                    })
+                );
+
                 $purchase->update([
                     'is_confirmed' => true,
                     'confirmed_by' => 1,

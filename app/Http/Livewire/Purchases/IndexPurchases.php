@@ -7,11 +7,10 @@ use App\Models\Product;
 use Livewire\Component;
 use App\Models\Purchase;
 use App\Models\Supplier;
-use Termwind\Components\Dd;
 use App\Models\VoucherTypes;
 use Livewire\WithPagination;
 use App\Models\PurchaseOrder;
-use App\Models\TrunkPurchase;
+use App\Models\TrunkLot;
 
 class IndexPurchases extends Component
 {
@@ -116,18 +115,30 @@ class IndexPurchases extends Component
     public function confirm($id)
     {
         try {
+
+            // Last code
+            $lastCode = TrunkLot::latest('code')->first();
+
+            if ($lastCode) {
+                $lastCode = $lastCode->code;
+            } else {
+                $lastCode = 'LR-0000';
+            }
+
+            $codeNumber = (int) substr($lastCode, 3, 4);
+
             $purchase = Purchase::find($id);
 
-            $trunkPurchase = TrunkPurchase::create([
+            $trunkLot = TrunkLot::create([
                 'purchase_id' => $purchase->id,
-                'code' => 'LR-' . $purchase->id
+                'code' => 'LR-' . str_pad($codeNumber + 1, 4, '0', STR_PAD_LEFT),
             ]);
 
-            $trunkPurchase->trunk_lots()->createMany(
+            $trunkLot->sublots()->createMany(
                 $purchase->products->map(function ($product) {
                     return [
                         'product_id' => $product->id,
-                        'code' => 'SLR-' . rand(1000, 9999),
+                        'area_id' => 1,
                         'initial_quantity' => $product->pivot->quantity,
                         'actual_quantity' => $product->pivot->quantity,
                     ];
@@ -150,6 +161,7 @@ class IndexPurchases extends Component
 
             $this->emit('success', '¡La compra se ha confirmado correctamente! Lotes registrados para producción.');
         } catch (\Exception $e) {
+            dd($e);
             $this->emit('error', 'No es posible confirmar la compra.');
         }
     }

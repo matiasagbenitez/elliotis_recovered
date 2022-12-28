@@ -71,5 +71,10 @@ class Product extends Model
         return $this->belongsToMany(Offer::class);
     }
 
+    // Relationship many with TrunkSublot
+    public function trunkSublots()
+    {
+        return $this->hasMany(TrunkSublot::class);
+    }
 
 }

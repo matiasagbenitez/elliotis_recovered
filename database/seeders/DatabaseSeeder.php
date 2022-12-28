@@ -28,6 +28,7 @@ class DatabaseSeeder extends Seeder
         $this->call(ProductTypeSeeder::class);
 
         // $this->call(PhaseSeeder::class);
+        $this->call(AreaSeeder::class);
 
         $this->call(WoodTypeSeeder::class);
         $this->call(ProductSeeder::class);
@@ -38,7 +39,6 @@ class DatabaseSeeder extends Seeder
         $this->call(TenderingSeeder::class);
 
         // Producción
-        $this->call(AreaSeeder::class);
 
     }
 }
