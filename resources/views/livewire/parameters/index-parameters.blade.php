@@ -61,7 +61,7 @@
             <hr class="my-2">
 
             <a href="#"><p class="font-normal hover:font-bold">Tipos de tareas</p></a>
-            <a href="#"><p class="font-normal hover:font-bold">Estados de tareas</p></a>
+            <a href="{{ route('admin.task-statuses.index') }}"><p class="font-normal hover:font-bold">Estados de tareas</p></a>
             <a href="{{ route('admin.areas.index') }}"><p class="font-normal hover:font-bold">Áreas de la empresa</p></a>
             <a href="#"><p class="font-normal hover:font-bold">Tipos de movimientos</p></a>
         </div>

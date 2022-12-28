@@ -39,6 +39,7 @@ class DatabaseSeeder extends Seeder
         $this->call(TenderingSeeder::class);
 
         // Producción
+        $this->call(TaskStatusSeeder::class);
 
     }
 }

@@ -109,3 +109,4 @@ Route::get('/ranking/{tendering}', PruebaRanking::class)->name('admin.ranking.in
 Route::get('/parameters', IndexParameters::class)->name('admin.parameters.index');
 
 Route::get('/trunk-lots', IndexTrunkLots::class)->name('admin.trunk-lots.index');
+Route::get('/task-statuses', IndexTaskStatuses::class)->name('admin.task-statuses.index');
