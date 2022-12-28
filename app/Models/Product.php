@@ -71,43 +71,5 @@ class Product extends Model
         return $this->belongsToMany(Offer::class);
     }
 
-    // Relationship with Phase
-    public function phases()
-    {
-        return $this->belongsTo(Phase::class);
-    }
-
-    // Relationship with TrunkLot
-    public function trunkLots()
-    {
-        return $this->hasMany(TrunkLot::class);
-    }
-
-    // Relationship with Sublot
-    public function sublots()
-    {
-        return $this->hasMany(Sublot::class);
-    }
-
-    // RELACIONES JODIDAS
-
-    // Relationship with outputTasks
-    public function outputTasks()
-    {
-        return $this->belongsToMany(Task::class, 'product_task_output')->withPivot('id', 'task_id', 'product_id', 'produced_quantity')->withTimestamps();
-    }
-
-    // Relationship with inputTasks
-    public function inputTasks()
-    {
-        return $this->belongsToMany(Task::class, 'product_task_input')->withPivot('id', 'task_id', 'product_id', 'consumed_quantity')->withTimestamps();
-    }
-
-    // Relationship with outputLots
-    public function outputLots()
-    {
-        return $this->belongsToMany(Lot::class, 'product_task_output')->withPivot('id', 'lot_id', 'product_id', 'produced_quantity')->withTimestamps();
-    }
-
 
 }

@@ -75,14 +75,10 @@ Route::get('/unities', IndexUnities::class)->name('admin.unities.index');
 Route::get('/product-names', IndexProductNames::class)->name('admin.product-names.index');
 Route::get('/wood-types', IndexWoodTypes::class)->name('admin.wood-types.index');
 Route::get('/product-types', IndexProductTypes::class)->name('admin.product-types.index');
-Route::get('/phases', IndexPhases::class)->name('admin.phases.index');
-Route::get('/types-of-movements', TypesOfMovementsIndex::class)->name('admin.types-of-movements.index');
 
 Route::get('/products', IndexProducts::class)->name('admin.products.index');
 Route::get('/add-products', AddProductsComponent::class)->name('admin.add-products.index');
 
-Route::get('/task-types', IndexTaskTypes::class)->name('admin.task-types.index');
-Route::get('/task-statuses', IndexTaskStatuses::class)->name('admin.task-statuses.index');
 Route::get('/areas', IndexAreas::class)->name('admin.areas.index');
 
 Route::get('/purchases', IndexPurchases::class)->name('admin.purchases.index');
@@ -111,17 +107,3 @@ Route::get('/tendering/{tendering}/finished', ShowFinishedTendering::class)->nam
 Route::get('/ranking/{tendering}', PruebaRanking::class)->name('admin.ranking.index');
 
 Route::get('/parameters', IndexParameters::class)->name('admin.parameters.index');
-
-// Producción
-Route::get('/trunk-lots', IndexTrunkLots::class)->name('admin.trunk-lots.index');
-Route::get('/tasks', IndexTasks::class)->name('admin.tasks.index');
-Route::get('/tasks/manage/{taskType}', TasksManagement::class)->name('admin.tasks.manage');
-Route::get('/task/manage/{task}/register', CreateTask::class)->name('admin.tasks.register');
-Route::get('/tasks/manage/{task}/show', ShowFinishedTask::class)->name('admin.tasks.show');
-
-
-// Movimientso
-Route::get('/movements', MovementsIndex::class)->name('admin.movements.index');
-Route::get('/movements/manage/{movementType}', MovementsManagement::class)->name('admin.movements.manage');
-Route::get('/movement/manage/{movement}/register', CreateMovement::class)->name('admin.movements.register');
-Route::get('/movements/manage/{movement}/show', ShowFinishedMovement::class)->name('admin.movements.show');

@@ -49,17 +49,9 @@ class Purchase extends Model
         return $this->belongsTo(VoucherTypes::class);
     }
 
-    // Falta el id_supplier
-
     // Relationship many to many with Product
     public function products()
     {
         return $this->belongsToMany(Product::class)->withPivot('quantity', 'price', 'subtotal')->withTimestamps();
-    }
-
-    // Has one TrunkPurchase
-    public function trunk_purchase()
-    {
-        return $this->hasOne(TrunkPurchase::class);
     }
 }
