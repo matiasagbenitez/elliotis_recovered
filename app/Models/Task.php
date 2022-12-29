@@ -36,4 +36,9 @@ class Task extends Model
     {
         return $this->belongsTo(TaskStatus::class);
     }
+
+    public function lot()
+    {
+        return $this->hasOne(Lot::class);
+    }
 }

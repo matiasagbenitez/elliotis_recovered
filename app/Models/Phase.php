@@ -10,4 +10,9 @@ class Phase extends Model
     use HasFactory;
 
     protected $guarded = ['id', 'created_at', 'updated_at'];
+
+    public function sublots()
+    {
+        return $this->hasMany(Sublot::class);
+    }
 }

@@ -94,4 +94,9 @@ class Product extends Model
             'previous_product_id',
         );
     }
+
+    public function sublots()
+    {
+        return $this->hasMany(Sublot::class);
+    }
 }
