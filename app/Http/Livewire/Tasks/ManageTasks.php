@@ -73,8 +73,9 @@ class ManageTasks extends Component
     public function finishTask($id)
     {
         try {
-            return redirect()->route('admin.tasks.register', ['task' => $id]);
+            return redirect()->route('admin.tasks.register', ['task_type' => $this->type_of_task_id, 'task' => $id]);
         } catch (\Throwable $th) {
+            dd($th);
             $this->emit('error', '¡Error al finalizar la tarea de tipo '. Str::lower($this->task_type_name) .'!');
         }
         $this->render();
@@ -83,8 +84,9 @@ class ManageTasks extends Component
     public function showFinishedTask($id)
     {
         try {
-            return redirect()->route('admin.tasks.show', ['task' => $id]);
+            return redirect()->route('admin.tasks.show', ['task_type' => $this->type_of_task_id, 'task' => $id]);
         } catch (\Throwable $th) {
+            dd($th);
             $this->emit('error', '¡Error al mostrar la tarea de tipo: '. $this->task_type_name .'!');
         }
         $this->render();
