@@ -41,4 +41,21 @@ class Task extends Model
     {
         return $this->hasOne(Lot::class);
     }
+
+    // Many to Many with TrunkSublot
+    public function trunkSublots()
+    {
+        return $this->belongsToMany(TrunkSublot::class, 'initial_task_detail', 'task_id', 'trunk_sublot_id')->withPivot('consumed_quantity')->withTimestamps();
+    }
+
+    // Many to Many with Sublot
+    public function inputSublotsDetails()
+    {
+        return $this->belongsToMany(Sublot::class, 'input_task_detail', 'task_id', 'sublot_id')->withPivot('consumed_quantity')->withTimestamps();
+    }
+
+    public function outputSublotsDetails()
+    {
+        return $this->belongsToMany(Sublot::class, 'output_task_detail', 'task_id', 'sublot_id')->withPivot('produced_quantity')->withTimestamps();
+    }
 }

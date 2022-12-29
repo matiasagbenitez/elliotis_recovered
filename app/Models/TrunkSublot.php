@@ -26,4 +26,10 @@ class TrunkSublot extends Model
         return $this->belongsTo(Area::class);
     }
 
+    // Many to Many with Task
+    public function tasks()
+    {
+        return $this->belongsToMany(Task::class, 'initial_task_detail', 'trunk_sublot_id', 'task_id');
+    }
+
 }

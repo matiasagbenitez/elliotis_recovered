@@ -30,4 +30,15 @@ class Sublot extends Model
     {
         return $this->belongsTo(Product::class);
     }
+
+    // Many to Many with Task
+    public function inputTasksDetails()
+    {
+        return $this->belongsToMany(Task::class, 'input_task_detail', 'sublot_id', 'task_id')->withPivot('consumed_quantity')->withTimestamps();
+    }
+
+    public function outputTasksDetails()
+    {
+        return $this->belongsToMany(Task::class, 'output_task_detail', 'sublot_id', 'task_id')->withPivot('produced_quantity')->withTimestamps();
+    }
 }
