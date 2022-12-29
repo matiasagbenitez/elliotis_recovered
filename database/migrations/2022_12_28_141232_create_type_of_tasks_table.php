@@ -32,6 +32,8 @@ return new class extends Migration
             // Composite key
             $table->unique(['origin_area_id', 'destination_area_id', 'initial_phase_id', 'final_phase_id'], 'type_of_task_key');
 
+            $table->string('icon', 255)->default('default.png');
+
             $table->timestamps();
         });
     }

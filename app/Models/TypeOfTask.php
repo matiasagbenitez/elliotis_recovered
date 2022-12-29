@@ -31,8 +31,8 @@ class TypeOfTask extends Model
         return $this->belongsTo(Phase::class, 'final_phase_id');
     }
 
-    // public function tasks()
-    // {
-    //     return $this->hasMany(Task::class);
-    // }
+    public function tasks()
+    {
+        return $this->hasMany(Task::class);
+    }
 }

@@ -7,6 +7,7 @@ use App\Http\Livewire\Sales\CreateSale;
 use App\Http\Livewire\Sales\IndexSales;
 use App\Http\Livewire\Tasks\CreateTask;
 use App\Http\Livewire\Tasks\IndexTasks;
+use App\Http\Livewire\Tasks\ManageTasks;
 use App\Http\Livewire\Clients\EditClient;
 use App\Http\Livewire\Phases\IndexPhases;
 use App\Http\Livewire\Clients\CreateClient;
@@ -116,4 +117,8 @@ Route::get('/task-statuses', IndexTaskStatuses::class)->name('admin.task-statuse
 Route::get('/phases', IndexPhases::class)->name('admin.phases.index');
 Route::get('/types-of-tasks', IndexTypesOfTasks::class)->name('admin.types-of-tasks.index');
 Route::get('/following-products', IndexFollowingProducts::class)->name('admin.following-products.index');
-ROute::get('/previous-products', IndexPreviousProducts::class)->name('admin.previous-products.index');
+Route::get('/previous-products', IndexPreviousProducts::class)->name('admin.previous-products.index');
+
+// Tareas
+Route::get('/tasks', IndexTasks::class)->name('admin.tasks.index');
+Route::get('/tasks/{task_type}/manage', ManageTasks::class)->name('admin.tasks.manage');

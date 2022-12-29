@@ -5,15 +5,40 @@ namespace App\Http\Livewire\Tasks;
 use App\Models\User;
 use Livewire\Component;
 use App\Models\TaskType;
+use App\Models\TypeOfTask;
 use Illuminate\Support\Facades\Date;
 
 class IndexTasks extends Component
 {
     public $tasksTypes, $stats;
+    public $filter = 'all';
 
     public function mount()
     {
-        $this->tasksTypes = TaskType::all();
+        $this->tasksTypes = TypeOfTask::all();
+        $this->stats = $this->getStats();
+    }
+
+    public function updatedFilter($value)
+    {
+        switch ($value) {
+            case 'all':
+                $this->tasksTypes = TypeOfTask::all();
+                break;
+
+            case 'production':
+                $this->tasksTypes = TypeOfTask::where('transformation', true)->get();
+                break;
+
+            case 'movement':
+                $this->tasksTypes = TypeOfTask::where('movement', true)->get();
+                break;
+
+            default:
+                # code...
+                break;
+        }
+
         $this->stats = $this->getStats();
     }
 
@@ -52,8 +77,6 @@ class IndexTasks extends Component
                 ) : null,
             ];
         }
-
-        // dd($stats);
 
         return $stats;
     }

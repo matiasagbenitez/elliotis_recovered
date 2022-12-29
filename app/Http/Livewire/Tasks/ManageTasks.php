@@ -3,18 +3,19 @@
 namespace App\Http\Livewire\Tasks;
 
 use App\Models\Task;
-use App\Models\TaskStatus;
 use App\Models\User;
 use Livewire\Component;
-use App\Models\TaskType;
+use App\Models\TaskStatus;
+use App\Models\TypeOfTask;
 use Livewire\WithPagination;
 use Illuminate\Support\Facades\Date;
 
-class TasksManagement extends Component
+class ManageTasks extends Component
 {
+
     use WithPagination;
 
-    public $task_type_name, $task_type_id, $running_task;
+    public $task_type_name, $type_of_task_id, $running_task;
     public $tasks, $employees, $statuses;
 
     protected $listeners = ['startNewTask', 'finishTask', 'alert' => 'showAlert'];
@@ -26,10 +27,10 @@ class TasksManagement extends Component
         'toDate' => null,
     ];
 
-    public function mount(TaskType $taskType)
+    public function mount(TypeOfTask $task_type)
     {
-        $this->task_type_name = $taskType->name;
-        $this->task_type_id = $taskType->id;
+        $this->task_type_name = $task_type->name;
+        $this->type_of_task_id = $task_type->id;
         $this->running_task = $this->getRunningTask();
         $this->employees = User::all();
         $this->statuses = TaskStatus::all();
@@ -51,9 +52,9 @@ class TasksManagement extends Component
     public function getTasks()
     {
         if ($this->running_task) {
-            $allTasks = Task::filter($this->filters)->where('task_type_id', $this->task_type_id)->latest()->paginate(10);
+            $allTasks = Task::filter($this->filters)->where('type_of_task_id', $this->type_of_task_id)->latest()->paginate(10);
         } else {
-            $allTasks = Task::filter($this->filters)->where('task_type_id', $this->task_type_id)->orderBy('task_status_id', 'asc')->orderBy('updated_at', 'desc')->paginate(10);
+            $allTasks = Task::filter($this->filters)->where('type_of_task_id', $this->type_of_task_id)->orderBy('task_status_id', 'asc')->orderBy('updated_at', 'desc')->paginate(10);
         }
 
         $tasks = [];
@@ -74,7 +75,7 @@ class TasksManagement extends Component
 
     public function getRunningTask()
     {
-        $running_task = Task::where('task_type_id', $this->task_type_id)->where('task_status_id', 2)->first();
+        $running_task = Task::where('type_of_task_id', $this->type_of_task_id)->where('task_status_id', 2)->first();
         return $running_task;
     }
 
@@ -82,7 +83,7 @@ class TasksManagement extends Component
     {
         try {
             $createForm = [
-                'task_type_id' => $this->task_type_id,
+                'type_of_task_id' => $this->type_of_task_id,
                 'task_status_id' => 2,
                 'started_at' => Date::now(),
                 'started_by' => auth()->user()->id,
@@ -120,6 +121,6 @@ class TasksManagement extends Component
 
     public function render()
     {
-        return view('livewire.tasks.tasks-management');
+        return view('livewire.tasks.manage-tasks');
     }
 }
