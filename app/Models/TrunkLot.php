@@ -18,7 +18,7 @@ class TrunkLot extends Model
     }
 
     // Relationship with TrunkSublot
-    public function sublots()
+    public function trunkSublots()
     {
         return $this->hasMany(TrunkSublot::class);
     }

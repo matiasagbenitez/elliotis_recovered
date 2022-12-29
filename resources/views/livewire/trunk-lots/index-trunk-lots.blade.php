@@ -99,7 +99,7 @@
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-200">
-                        @foreach ($trunk_lot->sublots as $lot)
+                        @foreach ($trunk_lot->trunkSublots as $lot)
                             <tr>
                                 <td class="px-6 py-2 text-center">
                                     <p class="text-sm uppercase">
