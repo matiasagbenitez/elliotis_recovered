@@ -48,7 +48,7 @@ class IndexTasks extends Component
 
         foreach ($this->tasksTypes as $taskType) {
 
-            $running_task = $taskType->tasks()->where('task_status_id', 2)->first();
+            $running_task = $taskType->tasks()->where('task_status_id', 1)->first();
             $running_task ? $task = $running_task : $task = $taskType->tasks()->latest()->first();
 
             $stats[] = [
@@ -56,11 +56,11 @@ class IndexTasks extends Component
                 'task_id' => $running_task ? $task->id : null,
                 'name' => $taskType->name,
                 'icon' => $taskType->icon,
-                'running_task' => $task ? ($task->task_status_id == 2 ? true : false) : null,
+                'running_task' => $task ? ($task->task_status_id == 1 ? true : false) : null,
                 'user' =>
                     $task ?
                     (
-                        $task->task_status_id == 2
+                        $task->task_status_id == 1
                         ?
                         User::find($task->started_by)->name
                         :
@@ -69,7 +69,7 @@ class IndexTasks extends Component
                 'date' =>
                 $task ?
                 (
-                    $task->task_status_id == 2
+                    $task->task_status_id == 1
                     ?
                     Date::parse($task->started_at)->format('d/m/Y H:i')
                     :

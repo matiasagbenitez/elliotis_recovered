@@ -57,8 +57,7 @@
                             Ninguna tarea de tipo <span class="uppercase">{{ $task_type_name }}</span>
                             se está ejecutando ahora mismo.</p>
                         <p class="text-sm">
-                            Puedes iniciar una nueva tarea pulsando el botón "Iniciar nueva tarea" o bien, elegir una
-                            tarea PENDIENTE de la lista.
+                            Puedes iniciar una nueva tarea pulsando el botón "Iniciar nueva tarea".
                         </p>
                     </div>
                 </div>
@@ -178,28 +177,22 @@
                             </td>
                             <td class="px-6 py-3 text-center">
                                 @switch($task['status'])
-                                    @case(1)
-                                        <span
-                                            class="px-6 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-stone-100 text-stone-800">
-                                            PENDIENTE
-                                        </span>
-                                    @break
 
-                                    @case(2)
+                                    @case(1)
                                         <span
                                             class="px-6 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
                                             EN PROCESO
                                         </span>
                                     @break
 
-                                    @case(3)
+                                    @case(2)
                                         <span
                                             class="px-6 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
                                             FINALIZADA
                                         </span>
                                     @break
 
-                                    @case(4)
+                                    @case(3)
                                         <span
                                             class="px-6 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
                                             CANCELADA
@@ -212,21 +205,14 @@
                             <td class="px-6 py-3 text-sm">
                                 <div class="flex items-center justify-center gap-2">
                                     @switch($task['status'])
-                                        @case(1)
-                                            @if (!$running_task)
-                                                <x-jet-button>
-                                                    <i class="fas fa-play"></i>
-                                                </x-jet-button>
-                                            @endif
-                                        @break
 
-                                        @case(2)
+                                        @case(1)
                                             <x-jet-button wire:click="$emit('finish', '{{ $task['id'] }}')">
                                                 <i class="fas fa-stop"></i>
                                             </x-jet-button>
                                         @break
 
-                                        @case(3)
+                                        @case(2)
                                             <x-jet-secondary-button wire:click="showFinishedTask({{ $task['id'] }})">
                                                 <i class="fas fa-list"></i>
                                             </x-jet-secondary-button>
@@ -264,7 +250,7 @@
             }).then((result) => {
                 if (result.isConfirmed) {
 
-                    Livewire.emitTo('tasks.tasks-management', 'startNewTask');
+                    Livewire.emitTo('tasks.manage-tasks', 'startNewTask');
 
                     Livewire.on('success', message => {
                         const Toast = Swal.mixin({
@@ -309,7 +295,7 @@
             }).then((result) => {
                 if (result.isConfirmed) {
 
-                    Livewire.emitTo('tasks.tasks-management', 'finishTask', taskId);
+                    Livewire.emitTo('tasks.manage-tasks', 'finishTask', taskId);
 
                     Livewire.on('success', message => {
                         const Toast = Swal.mixin({
