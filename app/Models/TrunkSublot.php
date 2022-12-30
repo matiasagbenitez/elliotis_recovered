@@ -29,7 +29,7 @@ class TrunkSublot extends Model
     // Many to Many with Task
     public function tasks()
     {
-        return $this->belongsToMany(Task::class, 'initial_task_detail', 'trunk_sublot_id', 'task_id');
+        return $this->belongsToMany(Task::class, 'initial_task_detail', 'sublot_id', 'task_id');
     }
 
 }

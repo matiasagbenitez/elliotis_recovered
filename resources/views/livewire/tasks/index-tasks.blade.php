@@ -6,8 +6,6 @@
         </div>
     </x-slot>
 
-
-
     <div class="p-6 bg-white rounded-lg shadow mb-5">
         <div class="px-6 py-3">
             <h1 class="font-bold uppercase text-lg text-center mb-3 mt-0">Tipos de tareas</h1>
@@ -22,8 +20,9 @@
 
             @foreach ($stats as $stat)
                 <a href="{{ route('admin.tasks.manage', $stat['id']) }}">
-                {{-- <a href="#"> --}}
-                    <div class="hover:bg-gray-50 hover:shadow-lg rounded-lg p-2 hover:cursor-pointer h-full flex flex-col justify-between">
+                    {{-- <a href="#"> --}}
+                    <div
+                        class="hover:bg-gray-50 hover:shadow-lg rounded-lg p-2 hover:cursor-pointer h-full flex flex-col justify-between">
                         <div class="flex justify-center">
                             <img class="h-40 w-40" src="{{ asset($stat['icon']) }}" alt="Ícono de la tarea">
                         </div>
@@ -61,5 +60,18 @@
 
         </div>
     </div>
-
 </div>
+
+@push('script')
+    <script>
+        Livewire.on('success', message => {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: message,
+                showConfirmButton: true,
+                confirmButtonColor: '#1f2937',
+            });
+        });
+    </script>
+@endpush

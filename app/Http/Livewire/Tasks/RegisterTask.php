@@ -8,6 +8,7 @@ use App\Models\Sublot;
 use Livewire\Component;
 use App\Models\TypeOfTask;
 use App\Models\TrunkSublot;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Date;
 
 class RegisterTask extends Component
@@ -15,8 +16,8 @@ class RegisterTask extends Component
     public $task, $type_of_task;
     public $sublots;
     public $info = [];
-    public $movement, $transformation;
-    protected $listeners = ['save'];
+    public $movement, $transformation, $both, $initial;
+    protected $listeners = ['presave'];
 
     public $inputSelects = [];
     public $inputSublots = [];
@@ -51,6 +52,18 @@ class RegisterTask extends Component
             'destination_area' => $this->type_of_task->destinationArea->name,
         ];
 
+        if ($this->type_of_task->initial_task) {
+            $this->initial = true;
+        } else if ($this->type_of_task->movement && !$this->type_of_task->transformation) {
+            $this->movement = true;
+        } else if ($this->type_of_task->transformation && !$this->type_of_task->movement) {
+            $this->transformation = true;
+        } else if ($this->type_of_task->transformation && $this->type_of_task->movement) {
+            $this->both = true;
+        } else {
+            abort(403);
+        }
+
         $this->getSublots();
     }
 
@@ -59,19 +72,26 @@ class RegisterTask extends Component
     public function getSublots()
     {
         if ($this->type_of_task->initial_task) {
-            $sublots = TrunkSublot::where('area_id', $this->type_of_task->origin_area_id)->get();
+            $sublots = TrunkSublot::where('area_id', $this->type_of_task->origin_area_id)->where('available', true)->get();
         } else {
-            $sublots = Sublot::where('phase_id', $this->type_of_task->origin_phase_id)->where('area_id', $this->type_of_task->initial_area_id)->get();
+            $sublots = Sublot::where('phase_id', $this->type_of_task->initial_phase_id)->where('area_id', $this->type_of_task->origin_area_id)->where('available', true)->get();
         }
 
         // Preparamos la información para el select
         foreach ($sublots as $sublot) {
+
+            if ($sublot->trunkLot) {
+                $lot_code = 'Lote: ' . $sublot->trunkLot->code . ' - ' . $sublot->trunkLot->purchase->supplier->business_name;
+            } else {
+                $lot_code = 'Lote: ' . $sublot->lot->code;
+            }
+
             $this->inputSublots[] = [
                 'id' => $sublot->id,
-                'actual_quantity' => $sublot->actual_quantity,
                 'product_name' => $sublot->product->name,
-                'lot_code' =>  'Lote: ' . $sublot->trunkLot ? $sublot->trunkLot->code . ' - ' . $sublot->trunkLot->purchase->supplier->business_name : $sublot->lot->code,
-                'sublot_code' => $sublot->code ? 'Sublote: ' . $sublot->code : ''
+                'lot_code' => $lot_code,
+                'sublot_code' => $sublot->code ? 'Sublote: ' . $sublot->code : '',
+                'actual_quantity' => $sublot->actual_quantity,
             ];
         }
 
@@ -116,12 +136,96 @@ class RegisterTask extends Component
         $this->inputSelects = array_values($this->inputSelects);
     }
 
-    public function save()
+    // TIPO DE TAREA
+    public function presave()
     {
+        // TAREA INICIAL
         if ($this->type_of_task->initial_task) {
-            dd($this->inputSelects);
+
+            $this->save_initial();
+
+            // TAREA DE MOVIMIENTO
+        } else if ($this->type_of_task->movement && !$this->type_of_task->transformation) {
+            dd('movement');
+
+
+            // TAREA DE TRANSFORMACIÓN
+        } else if ($this->type_of_task->transformation && !$this->type_of_task->movement) {
+            dd('transformation');
+
+
+            // TAREA DE MOVIMIENTO Y TRANSFORMACIÓN
+        } else if ($this->type_of_task->transformation && $this->type_of_task->movement) {
+            dd('both');
+
+
+            // ERROR
         } else {
-            dd('mmm');
+            abort(403);
+        }
+    }
+
+    public function save_initial()
+    {
+        try {
+            // Validar cantidades consumidas
+            foreach ($this->inputSelects as $sublot) {
+                $trunk_sublot = TrunkSublot::find($sublot['sublot_id']);
+                if ($sublot['consumed_quantity'] > $trunk_sublot->actual_quantity) {
+                    $this->emit('error', 'La cantidad consumida no puede ser mayor a la cantidad actual del sublote.');
+                    return;
+                }
+            }
+
+            // Validación
+            $this->validate([
+                'inputSelects.*.sublot_id' => 'required',
+                'inputSelects.*.consumed_quantity' => 'required|numeric|min:1'
+            ]);
+
+            // Completamos la tabla intermedia (initial_task_detail)
+            $this->task->trunkSublots()->sync($this->inputSelects);
+
+            // Creamos el lote
+            $this->task->lot()->create([
+                'code' => 'L' . $this->task->typeOfTask->finalPhase->prefix . '-' . $this->task->id,
+            ]);
+
+            // Creamos los sublotes de salida
+            foreach ($this->inputSelects as $sublot) {
+
+                // Actualizamos el sublote de rollos
+                $trunk_sublot = TrunkSublot::find($sublot['sublot_id']);
+                $trunk_sublot->update([
+                    'actual_quantity' => $trunk_sublot->actual_quantity - $sublot['consumed_quantity'],
+                    'available' => $trunk_sublot->actual_quantity - $sublot['consumed_quantity'] > 0 ? 1 : 0
+                ]);
+
+                // Creamos el sublote de salida
+                $this->task->lot->sublots()->create([
+                    'code' => 'S' . $this->task->typeOfTask->finalPhase->prefix . '-' . $this->task->id,
+                    'phase_id' => $this->task->typeOfTask->final_phase_id,
+                    'area_id' => $this->task->typeOfTask->destination_area_id,
+                    'product_id' => $trunk_sublot->product_id,
+                    'initial_quantity' => $sublot['consumed_quantity'],
+                    'actual_quantity' => $sublot['consumed_quantity'],
+                ]);
+            }
+
+            // Actualizamos la tarea
+            $this->task->update([
+                'task_status_id' => 2,
+                'finished_at' => now(),
+                'finished_by' => auth()->user()->id,
+            ]);
+
+            // Redireccionamos con flash message
+            $name = Str::upper($this->task->typeOfTask->name);
+            session()->flash('flash.banner', 'Tarea de tipo ' . $name . ' registrada correctamente.');
+            return redirect()->route('admin.tasks.index');
+
+        } catch (\Throwable $th) {
+            dd($th);
         }
     }
 

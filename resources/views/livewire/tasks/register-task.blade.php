@@ -193,7 +193,7 @@
             }).then((result) => {
                 if (result.isConfirmed) {
 
-                    Livewire.emitTo('tasks.register-task', 'save');
+                    Livewire.emitTo('tasks.register-task', 'presave');
 
                     Livewire.on('success', message => {
                         const Toast = Swal.mixin({
@@ -221,6 +221,16 @@
                     });
                 }
             })
+        });
+
+        Livewire.on('error', message => {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: message,
+                showConfirmButton: true,
+                confirmButtonColor: '#1f2937',
+            });
         });
     </script>
 @endpush

@@ -4,7 +4,6 @@ namespace App\Http\Livewire\Tasks;
 
 use App\Models\User;
 use Livewire\Component;
-use App\Models\TaskType;
 use App\Models\TypeOfTask;
 use Illuminate\Support\Facades\Date;
 

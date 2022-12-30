@@ -72,7 +72,7 @@ class PurchaseSeeder extends Seeder
                     'code' => 'LR-' . str_pad($codeNumber + 1, 4, '0', STR_PAD_LEFT),
                 ]);
 
-                $trunkLot->sublots()->createMany(
+                $trunkLot->trunkSublots()->createMany(
                     $purchase->products->map(function ($product) {
                         return [
                             'product_id' => $product->id,

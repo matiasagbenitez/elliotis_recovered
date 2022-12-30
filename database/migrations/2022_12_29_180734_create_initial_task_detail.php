@@ -14,8 +14,8 @@ return new class extends Migration
             $table->unsignedBigInteger('task_id');
             $table->foreign('task_id')->references('id')->on('tasks');
 
-            $table->unsignedBigInteger('trunk_sublot_id')->nullable();
-            $table->foreign('trunk_sublot_id')->references('id')->on('trunk_sublots');
+            $table->unsignedBigInteger('sublot_id')->nullable();
+            $table->foreign('sublot_id')->references('id')->on('trunk_sublots');
 
             $table->integer('consumed_quantity')->min(0)->nullable();
 
