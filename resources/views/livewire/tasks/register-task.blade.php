@@ -142,8 +142,8 @@
                         <x-jet-input-error for="inputSelects.*.sublot_id" class="mt-2" />
                     @else
                         <p class="text-center mt-4">
-                            ¡No hay productos de entrada! Intenta agregar alguno con el botón
-                            <span class="font-bold">"Agregar producto"</span>.
+                            ¡No hay sublotes de entrada! Intenta agregar alguno con el botón
+                            <span class="font-bold">"Agregar sublote"</span>.
                         </p>
                     @endif
                     {{-- BOTÓN AGREGAR PRODUCTOS --}}
@@ -152,12 +152,78 @@
                         <div>
                             <x-jet-button type="button" wire:click.prevent="addInputSelect" class="px-3">
                                 <i class="fas fa-plus mr-2"></i>
-                                Agregar producto
+                                Agregar sublote
                             </x-jet-button>
                         </div>
                     </div>
                 </div>
             </div>
+
+            {{-- PRODUCTOS SALIDA --}}
+            @if ($transformation == true)
+                <h1 class="font-bold text-lg mt-5">Detalle productos de salida</h1>
+                <hr class="mt-1">
+
+                <div class="grid grid-cols-6 gap-4 mb-10">
+
+                    {{-- SALIDA --}}
+                    <div class="col-span-6">
+                        @if ($outputSelects)
+                            <div class="grid grid-cols-6 w-full text-center text-sm uppercase font-bold text-gray-600">
+                                <div class="col-span-5 py-2">Detalle de productos a generar de salida</div>
+                                <div class="col-span-1 py-2">Cantidad</div>
+                            </div>
+
+                            <div
+                                class="grid grid-cols-6 w-full text-center text-sm uppercase text-gray-600 gap-2 items-center">
+                                @foreach ($outputSelects as $index => $outputProduct)
+                                    <div class="col-span-5 flex">
+                                        <button type="button"
+                                            wire:click.prevent="removeOutputSelect({{ $index }})">
+                                            <i class="fas fa-trash mx-4 hover:text-red-600"
+                                                title="Eliminar producto"></i>
+                                        </button>
+                                        <select name="outputSelects[{{ $index }}][product_id]"
+                                            wire:model.lazy="outputSelects.{{ $index }}.product_id"
+                                            class="input-control w-full p-1 pl-3">
+                                            <option disabled value="">Seleccione un producto</option>
+                                            @foreach ($outputProducts as $product)
+                                                <option value="{{ $product['id'] }}""
+                                                    {{ $this->isProductInOutputSelect($product['id']) ? 'disabled' : '' }}>
+                                                    {{ $product['name'] }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div class="col-span-1">
+                                        <x-jet-input type="number" min="1" {{-- max="{{ $inputSublots[$index]->actual_quantity }}" --}}
+                                            name="outputSelects[{{ $index }}][produced_quantity]"
+                                            wire:model.lazy="outputSelects.{{ $index }}.produced_quantity"
+                                            class="input-control w-full p-1 text-center" />
+                                    </div>
+                                @endforeach
+
+                            </div>
+                            <x-jet-input-error for="outputSelects.*.product_id" class="mt-2" />
+                        @else
+                            <p class="text-center mt-4">
+                                ¡No hay productos de entrada! Intenta agregar alguno con el botón
+                                <span class="font-bold">"Agregar producto"</span>.
+                            </p>
+                        @endif
+                        {{-- BOTÓN AGREGAR PRODUCTOS --}}
+                        <div
+                            class="{{ $outputSelects ? 'col-span-4' : 'col-span-6' }}  mt-4 flex justify-center items-center gap-2">
+                            <div>
+                                <x-jet-button type="button" wire:click.prevent="addOutputSelect" class="px-3">
+                                    <i class="fas fa-plus mr-2"></i>
+                                    Agregar producto
+                                </x-jet-button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @endif
 
             {{-- BOTÓN GUARDAR --}}
             <div class="flex justify-between items-center mt-6">

@@ -22,8 +22,9 @@ class RegisterTask extends Component
     public $inputSelects = [];
     public $inputSublots = [];
 
-    public $taskOutputProducts = [];
-    public $allOutputProducts = [];
+    public $outputSelects = [];
+    public $outputProducts = [];
+    public $followingProducts = [];
 
     public $createForm = [
         'type_of_task' => '',
@@ -67,7 +68,6 @@ class RegisterTask extends Component
         $this->getSublots();
     }
 
-
     // OBTENER SUBLOTES DE ENTRADA
     public function getSublots()
     {
@@ -100,6 +100,42 @@ class RegisterTask extends Component
         ];
     }
 
+    // SI LA TAREA ES DE TRANSFORMACIÓN, OBTENER PRODUCTOS DE SALIDA
+    public function updatedInputSelects()
+    {
+        if ($this->transformation) {
+            $this->reset('outputProducts');
+            $this->getFollowingProducts();
+        }
+    }
+
+    // OBTENER PRODUCTOS DE SALIDA
+    public function getFollowingProducts()
+    {
+        $followingProducts = [];
+
+        foreach ($this->inputSelects as $input) {
+            if ($input['sublot_id'] != '') {
+                $sublot = Sublot::find($input['sublot_id']);
+                $followingProducts[] = $sublot->product->followingProducts;
+            }
+        }
+
+        // Eliminamos los repetidos
+        $followingProducts = collect($followingProducts)->collapse()->unique('id')->values()->all();
+
+        foreach ($followingProducts as $product) {
+            $this->outputProducts[] = [
+                'id' => $product->id,
+                'name' => $product->name,
+            ];
+        }
+
+        $this->outputSelects = [
+            ['product_id' => '', 'produced_quantity' => 1]
+        ];
+    }
+
     // RESETEAR SELECT DE SUBLOTES
     public function resetInputSelects()
     {
@@ -118,6 +154,18 @@ class RegisterTask extends Component
         }
     }
 
+    // AGREGAR PRODUCTO DE SALIDA
+    public function addOutputSelect()
+    {
+        if (count($this->outputSelects) == count($this->outputProducts)) {
+            return;
+        }
+
+        if (!empty($this->outputSelects[count($this->outputSelects) - 1]['product_id']) || count($this->outputSelects) == 0) {
+            $this->outputSelects[] = ['product_id' => '', 'produced_quantity' => 1];
+        }
+    }
+
     // CONTROLAR REPETICIÓN DE SUBLOTES
     public function isSublotInInputSelect($id)
     {
@@ -129,11 +177,35 @@ class RegisterTask extends Component
         return false;
     }
 
+    // CONTROLAR REPETICIÓN DE PRODUCTOS DE SALIDA
+    public function isProductInOutputSelect($id)
+    {
+        foreach ($this->outputSelects as $product) {
+            if ($product['product_id'] == $id) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     // REMOVE INPUT PRODUCT
     public function removeInputSelect($index)
     {
         unset($this->inputSelects[$index]);
         $this->inputSelects = array_values($this->inputSelects);
+
+        if ($this->transformation) {
+            $this->reset('outputProducts');
+            $this->getFollowingProducts();
+        }
+
+    }
+
+    // REMOVE OUTPUT PRODUCT
+    public function removeOutputSelect($index)
+    {
+        unset($this->outputSelects[$index]);
+        $this->outputSelects = array_values($this->outputSelects);
     }
 
     // TIPO DE TAREA
@@ -146,18 +218,17 @@ class RegisterTask extends Component
 
             // TAREA DE MOVIMIENTO
         } else if ($this->type_of_task->movement && !$this->type_of_task->transformation) {
-            dd('movement');
 
+            $this->save_movement();
 
             // TAREA DE TRANSFORMACIÓN
         } else if ($this->type_of_task->transformation && !$this->type_of_task->movement) {
-            dd('transformation');
 
+            $this->save_transformation();
 
             // TAREA DE MOVIMIENTO Y TRANSFORMACIÓN
         } else if ($this->type_of_task->transformation && $this->type_of_task->movement) {
             dd('both');
-
 
             // ERROR
         } else {
@@ -209,6 +280,145 @@ class RegisterTask extends Component
                     'product_id' => $trunk_sublot->product_id,
                     'initial_quantity' => $sublot['consumed_quantity'],
                     'actual_quantity' => $sublot['consumed_quantity'],
+                ]);
+            }
+
+            // Actualizamos la tarea
+            $this->task->update([
+                'task_status_id' => 2,
+                'finished_at' => now(),
+                'finished_by' => auth()->user()->id,
+            ]);
+
+            // Redireccionamos con flash message
+            $name = Str::upper($this->task->typeOfTask->name);
+            session()->flash('flash.banner', 'Tarea de tipo ' . $name . ' registrada correctamente.');
+            return redirect()->route('admin.tasks.index');
+
+        } catch (\Throwable $th) {
+            dd($th);
+        }
+    }
+
+    public function save_transformation()
+    {
+        try {
+            // Validar las cantidades consumidas
+            foreach ($this->inputSelects as $item) {
+                $sublot = Sublot::find($item['sublot_id']);
+                if ($item['consumed_quantity'] > $sublot->actual_quantity) {
+                    $this->emit('error', 'La cantidad consumida no puede ser mayor a la cantidad actual del sublote.');
+                    return;
+                }
+            }
+
+            // Validación
+            $this->validate([
+                'inputSelects.*.sublot_id' => 'required',
+                'inputSelects.*.consumed_quantity' => 'required|numeric|min:1',
+                'outputSelects.*.product_id' => 'required',
+                'outputSelects.*.produced_quantity' => 'required|numeric|min:1',
+            ]);
+
+            // Completamos la tabla intermedia (input_task_detail)
+            $this->task->inputSublotsDetails()->sync($this->inputSelects);
+
+            // Actualizamos los sublotes de entrada
+            foreach ($this->inputSelects as $item) {
+                $sublot = Sublot::find($item['sublot_id']);
+                $sublot->update([
+                    'actual_quantity' => $sublot->actual_quantity - $item['consumed_quantity'],
+                    'available' => $sublot->actual_quantity - $item['consumed_quantity'] > 0 ? 1 : 0
+                ]);
+            }
+
+            // Creamos el lote
+            $this->task->lot()->create([
+                'code' => 'L' . $this->task->typeOfTask->finalPhase->prefix . '-' . $this->task->id,
+            ]);
+
+            // Creamos los sublotes de salida
+            foreach ($this->outputSelects as $item) {
+                $this->task->lot->sublots()->create([
+                    'code' => 'S' . $this->task->typeOfTask->finalPhase->prefix . '-' . $this->task->id,
+                    'phase_id' => $this->task->typeOfTask->final_phase_id,
+                    'area_id' => $this->task->typeOfTask->destination_area_id,
+                    'product_id' => $item['product_id'],
+                    'initial_quantity' => $item['produced_quantity'],
+                    'actual_quantity' => $item['produced_quantity'],
+                ]);
+
+                // Sublot id
+                $sublot = Sublot::where('code', 'S' . $this->task->typeOfTask->finalPhase->prefix . '-' . $this->task->id)->first();
+
+                // Creamos un arreglo para completar la tabla intermedia (output_task_detail)
+                $aux[] = [
+                    'sublot_id' => $sublot->id,
+                    'produced_quantity' => $item['produced_quantity'],
+                ];
+
+                $this->task->outputSublotsDetails()->sync($aux);
+            }
+
+            // Actualizamos la tarea
+            $this->task->update([
+                'task_status_id' => 2,
+                'finished_at' => now(),
+                'finished_by' => auth()->user()->id,
+            ]);
+
+            // Redireccionamos con flash message
+            $name = Str::upper($this->task->typeOfTask->name);
+            session()->flash('flash.banner', 'Tarea de tipo ' . $name . ' registrada correctamente.');
+            return redirect()->route('admin.tasks.index');
+
+        } catch (\Throwable $th) {
+            dd($th);
+        }
+    }
+
+    public function save_movement()
+    {
+        try {
+            // Validar las cantidades consumidas
+            foreach ($this->inputSelects as $item) {
+                $sublot = Sublot::find($item['sublot_id']);
+                if ($item['consumed_quantity'] > $sublot->actual_quantity) {
+                    $this->emit('error', 'La cantidad consumida no puede ser mayor a la cantidad actual del sublote.');
+                    return;
+                }
+            }
+
+            // Validación
+            $this->validate([
+                'inputSelects.*.sublot_id' => 'required',
+                'inputSelects.*.consumed_quantity' => 'required|numeric|min:1'
+            ]);
+
+            // Completamos la tabla intermedia (input_task_detail)
+            $this->task->inputSublotsDetails()->sync($this->inputSelects);
+
+            // Creamos el lote
+            $this->task->lot()->create([
+                'code' => 'L' . $this->task->typeOfTask->finalPhase->prefix . '-' . $this->task->id,
+            ]);
+
+            // Actualizamos los sublotes de entrada
+            foreach ($this->inputSelects as $item) {
+                $sublot = Sublot::find($item['sublot_id']);
+                $sublot->update([
+                    'actual_quantity' => $sublot->actual_quantity - $item['consumed_quantity'],
+                    'available' => $sublot->actual_quantity - $item['consumed_quantity'] > 0 ? 1 : 0
+                ]);
+
+                // Creamos el sublote de salida
+                $this->task->lot->sublots()->create([
+                    'code' => 'S' . $this->task->typeOfTask->finalPhase->prefix . '-' . $this->task->id,
+                    'phase_id' => $this->task->typeOfTask->final_phase_id,
+                    'area_id' => $this->task->typeOfTask->destination_area_id,
+                    'product_id' => $sublot->product_id,
+                    'initial_quantity' => $item['consumed_quantity'],
+                    'actual_quantity' => $item['consumed_quantity'],
                 ]);
             }
 
