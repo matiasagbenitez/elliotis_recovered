@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Livewire\Sales\ShowSale;
+use App\Http\Livewire\Tasks\ShowTask;
 use Illuminate\Support\Facades\Route;
 use App\Http\Livewire\Areas\IndexAreas;
 use App\Http\Livewire\Sales\CreateSale;
@@ -9,6 +10,7 @@ use App\Http\Livewire\Tasks\IndexTasks;
 use App\Http\Livewire\Tasks\ManageTasks;
 use App\Http\Livewire\Clients\EditClient;
 use App\Http\Livewire\Phases\IndexPhases;
+use App\Http\Livewire\Tasks\RegisterTask;
 use App\Http\Livewire\Clients\CreateClient;
 use App\Http\Livewire\Clients\IndexClients;
 use App\Http\Livewire\Unities\IndexUnities;
@@ -48,7 +50,6 @@ use App\Http\Livewire\PurchaseOrders\PurchaseOrdersIndex;
 use App\Http\Livewire\PreviousProducts\IndexPreviousProducts;
 use App\Http\Livewire\FollowingProducts\IndexFollowingProducts;
 use App\Http\Livewire\PucharseParameters\IndexPucharseParameters;
-use App\Http\Livewire\Tasks\RegisterTask;
 
 Route::get('/countries', IndexCountries::class)->name('admin.countries.index');
 Route::get('/provinces', IndexProvinces::class)->name('admin.provinces.index');
@@ -115,3 +116,4 @@ Route::get('/previous-products', IndexPreviousProducts::class)->name('admin.prev
 Route::get('/tasks', IndexTasks::class)->name('admin.tasks.index');
 Route::get('/tasks/{task_type}/manage', ManageTasks::class)->name('admin.tasks.manage');
 Route::get('/tasks/{task_type}/register/{task}', RegisterTask::class)->name('admin.tasks.register');
+Route::get('/tasks/show/{task}', ShowTask::class)->name('admin.tasks.show');
