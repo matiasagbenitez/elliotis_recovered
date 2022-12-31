@@ -160,7 +160,7 @@
             </div>
 
             {{-- PRODUCTOS SALIDA --}}
-            @if ($transformation == true)
+            @if ($transformation == true || $movement_transformation == true)
                 <h1 class="font-bold text-lg mt-5">Detalle productos de salida</h1>
                 <hr class="mt-1">
 
