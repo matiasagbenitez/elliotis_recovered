@@ -5,6 +5,7 @@ namespace App\Http\Livewire\Tasks;
 use App\Models\Task;
 use App\Models\User;
 use App\Models\Sublot;
+use App\Models\Product;
 use Livewire\Component;
 use App\Models\TypeOfTask;
 use App\Models\TrunkSublot;
@@ -477,12 +478,14 @@ class RegisterTask extends Component
             $this->validate([
                 'inputSelects.*.sublot_id' => 'required',
                 'inputSelects.*.consumed_quantity' => 'required|numeric|min:1',
-                'outputSelects.*.product_id' => 'required',
-                'outputSelects.*.produced_quantity' => 'required|numeric|min:1',
+                // 'outputSelects.*.product_id' => 'required',
+                // 'outputSelects.*.produced_quantity' => 'required|numeric|min:1|lte:inputSelects.*.consumed_quantity',
             ]);
 
             // Completamos la tabla intermedia (input_task_detail)
             $this->task->inputSublotsDetails()->sync($this->inputSelects);
+
+            $outputProducts = [];
 
             // Actualizamos los sublotes de entrada
             foreach ($this->inputSelects as $item) {
@@ -491,6 +494,14 @@ class RegisterTask extends Component
                     'actual_quantity' => $sublot->actual_quantity - $item['consumed_quantity'],
                     'available' => $sublot->actual_quantity - $item['consumed_quantity'] > 0 ? 1 : 0
                 ]);
+
+                // Get first following product
+                $followingProduct = Product::find($sublot->product_id)->followingProducts()->first();
+
+                $outputProducts[] = [
+                    'product_id' => $followingProduct->id,
+                    'produced_quantity' => $item['consumed_quantity'],
+                ];
             }
 
             // Creamos el lote
@@ -499,7 +510,19 @@ class RegisterTask extends Component
             ]);
 
             // Creamos los sublotes de salida
-            foreach ($this->outputSelects as $item) {
+            // foreach ($this->outputSelects as $item) {
+            //     $this->task->lot->sublots()->create([
+            //         'code' => 'S' . $this->task->typeOfTask->finalPhase->prefix . '-' . $this->task->id,
+            //         'phase_id' => $this->task->typeOfTask->final_phase_id,
+            //         'area_id' => $this->task->typeOfTask->destination_area_id,
+            //         'product_id' => $item['product_id'],
+            //         'initial_quantity' => $item['produced_quantity'],
+            //         'actual_quantity' => $item['produced_quantity'],
+            //     ]);
+            // }
+
+            // Creamos los sublotes de salida
+            foreach ($outputProducts as $item) {
                 $this->task->lot->sublots()->create([
                     'code' => 'S' . $this->task->typeOfTask->finalPhase->prefix . '-' . $this->task->id,
                     'phase_id' => $this->task->typeOfTask->final_phase_id,
