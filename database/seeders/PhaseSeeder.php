@@ -13,7 +13,7 @@ class PhaseSeeder extends Seeder
             [
                 'name' => 'Rollo para cortar',
                 'slug' => 'rollo-para-cortar',
-                'prefix' => 'R'
+                'prefix' => 'RO'
             ],
             [
                 'name' => 'Faja húmeda para secar',
@@ -33,7 +33,7 @@ class PhaseSeeder extends Seeder
             [
                 'name' => 'Paquete listo para venta',
                 'slug' => 'paquete-listo-para-venta',
-                'prefix' => 'P'
+                'prefix' => 'PA'
             ]
         ];
 

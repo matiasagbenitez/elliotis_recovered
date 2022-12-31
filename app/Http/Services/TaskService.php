@@ -2,6 +2,8 @@
 
 namespace App\Http\Services;
 
+use App\Models\Lot;
+use App\Models\Sublot;
 use App\Models\Task;
 use App\Models\User;
 use App\Models\TypeOfTask;
@@ -39,4 +41,39 @@ class TaskService
         return $tasks;
     }
 
+    public static function getLotCode(Task $task)
+    {
+        $lastCode = Lot::latest('code')->first();
+
+        if ($lastCode) {
+            $lastCode = $lastCode->code;
+        } else {
+            $lastCode = $task->typeOfTask->finalPhase->prefix  . '-0000';
+        }
+
+        $number = substr($lastCode, -4);
+        $number = intval($number);
+        $number++;
+        $number = str_pad($number, 4, '0', STR_PAD_LEFT);
+
+        return $task->typeOfTask->finalPhase->prefix . '-' . $number;
+    }
+
+    public static function getSublotCode(Task $task)
+    {
+        $lastCode = Sublot::latest('code')->first();
+
+        if ($lastCode) {
+            $lastCode = $lastCode->code;
+        } else {
+            $lastCode = $task->typeOfTask->finalPhase->prefix  . '-0000';
+        }
+
+        $number = substr($lastCode, -4);
+        $number = intval($number);
+        $number++;
+        $number = str_pad($number, 4, '0', STR_PAD_LEFT);
+
+        return $task->typeOfTask->finalPhase->prefix . '-' . $number;
+    }
 }
