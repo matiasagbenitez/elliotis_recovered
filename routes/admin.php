@@ -49,6 +49,8 @@ use App\Http\Livewire\PurchaseOrders\CreatePurchaseOrder;
 use App\Http\Livewire\PurchaseOrders\PurchaseOrdersIndex;
 use App\Http\Livewire\PreviousProducts\IndexPreviousProducts;
 use App\Http\Livewire\FollowingProducts\IndexFollowingProducts;
+use App\Http\Livewire\Lots\LotsIndex;
+use App\Http\Livewire\Lots\SublotsIndex;
 use App\Http\Livewire\PucharseParameters\IndexPucharseParameters;
 
 Route::get('/countries', IndexCountries::class)->name('admin.countries.index');
@@ -117,3 +119,7 @@ Route::get('/tasks', IndexTasks::class)->name('admin.tasks.index');
 Route::get('/tasks/{task_type}/manage', ManageTasks::class)->name('admin.tasks.manage');
 Route::get('/tasks/{task_type}/register/{task}', RegisterTask::class)->name('admin.tasks.register');
 Route::get('/tasks/show/{task}', ShowTask::class)->name('admin.tasks.show');
+
+
+Route::get('/lots', LotsIndex::class)->name('admin.lots.index');
+Route::get('/lots/{lot}/sublots', SublotsIndex::class)->name('admin.sublots.index');
