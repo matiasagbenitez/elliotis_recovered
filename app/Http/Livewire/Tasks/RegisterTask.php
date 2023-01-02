@@ -18,7 +18,7 @@ class RegisterTask extends Component
     public $task, $type_of_task;
     public $sublots;
     public $info = [];
-    public $movement, $transformation, $movement_transformation, $initial;
+    public $movement, $transformation, $movement_transformation, $initial, $final;
     protected $listeners = ['presave'];
 
     public $inputSelects = [];
@@ -59,10 +59,12 @@ class RegisterTask extends Component
             $this->initial = true;
         } else if ($this->type_of_task->movement && !$this->type_of_task->transformation) {
             $this->movement = true;
-        } else if ($this->type_of_task->transformation && !$this->type_of_task->movement) {
+        } else if ($this->type_of_task->transformation && !$this->type_of_task->movement && !$this->type_of_task->final_task) {
             $this->transformation = true;
         } else if ($this->type_of_task->transformation && $this->type_of_task->movement) {
             $this->movement_transformation = true;
+        } else if ($this->type_of_task->final_task) {
+            $this->final = true;
         } else {
             abort(403);
         }
@@ -105,7 +107,7 @@ class RegisterTask extends Component
     // SI LA TAREA ES DE TRANSFORMACIÓN, OBTENER PRODUCTOS DE SALIDA
     public function updatedInputSelects()
     {
-        if ($this->transformation || $this->movement_transformation) {
+        if ($this->transformation || $this->movement_transformation || $this->final) {
             $this->reset('outputProducts');
             $this->getFollowingProducts();
         }
@@ -196,11 +198,10 @@ class RegisterTask extends Component
         unset($this->inputSelects[$index]);
         $this->inputSelects = array_values($this->inputSelects);
 
-        if ($this->transformation || $this->movement_transformation) {
+        if ($this->transformation || $this->movement_transformation || $this->final) {
             $this->reset('outputProducts');
             $this->getFollowingProducts();
         }
-
     }
 
     // REMOVE OUTPUT PRODUCT
@@ -224,7 +225,7 @@ class RegisterTask extends Component
             $this->save_movement();
 
             // TAREA DE TRANSFORMACIÓN
-        } else if ($this->type_of_task->transformation && !$this->type_of_task->movement) {
+        } else if ($this->type_of_task->transformation && !$this->type_of_task->movement && !$this->type_of_task->final_task) {
 
             $this->save_transformation();
 
@@ -234,6 +235,9 @@ class RegisterTask extends Component
             $this->save_movement_transformation();
 
             // ERROR
+        } else if ($this->final) {
+
+            $this->save_final();
         } else {
             abort(403);
         }
@@ -307,7 +311,6 @@ class RegisterTask extends Component
             $name = Str::upper($this->task->typeOfTask->name);
             session()->flash('flash.banner', 'Tarea de tipo ' . $name . ' registrada correctamente.');
             return redirect()->route('admin.tasks.index');
-
         } catch (\Throwable $th) {
             dd($th);
         }
@@ -392,7 +395,6 @@ class RegisterTask extends Component
             $name = Str::upper($this->task->typeOfTask->name);
             session()->flash('flash.banner', 'Tarea de tipo ' . $name . ' registrada correctamente.');
             return redirect()->route('admin.tasks.index');
-
         } catch (\Throwable $th) {
             dd($th);
         }
@@ -473,7 +475,6 @@ class RegisterTask extends Component
             $name = Str::upper($this->task->typeOfTask->name);
             session()->flash('flash.banner', 'Tarea de tipo ' . $name . ' registrada correctamente.');
             return redirect()->route('admin.tasks.index');
-
         } catch (\Throwable $th) {
             dd($th);
         }
@@ -566,10 +567,92 @@ class RegisterTask extends Component
             $name = Str::upper($this->task->typeOfTask->name);
             session()->flash('flash.banner', 'Tarea de tipo ' . $name . ' registrada correctamente.');
             return redirect()->route('admin.tasks.index');
-
         } catch (\Throwable $th) {
             dd($th);
         }
+    }
+
+    public function save_final()
+    {
+        // Validar las cantidades consumidas
+        foreach ($this->inputSelects as $item) {
+            $sublot = Sublot::find($item['sublot_id']);
+            if ($item['consumed_quantity'] > $sublot->actual_quantity) {
+                $this->emit('error', 'La cantidad consumida no puede ser mayor a la cantidad actual del sublote.');
+                return;
+            }
+        }
+
+        $totals = TaskService::getTotals($this->inputSelects);
+        $outputCollection = collect($this->outputSelects);
+
+        foreach ($totals as $item) {
+            $product = $outputCollection->firstWhere('product_id', $item['following_product_id']);
+            if ($item['quantity'] != $item['size'] * $product['produced_quantity']) {
+                $this->emit('error', 'Revise las cantidades ingresadas en los detalles de entrada y salida.');
+                return;
+            }
+        }
+
+        // Completamos la tabla intermedia (input_task_detail)
+        $this->task->inputSublotsDetails()->sync($this->inputSelects);
+
+        // Actualizamos los sublotes de entrada
+        foreach ($this->inputSelects as $item) {
+            $sublot = Sublot::find($item['sublot_id']);
+            $sublot->update([
+                'actual_quantity' => $sublot->actual_quantity - $item['consumed_quantity'],
+                'available' => $sublot->actual_quantity - $item['consumed_quantity'] > 0 ? 1 : 0
+            ]);
+
+            $sublot->product->update([
+                'real_stock' => $sublot->product->real_stock - $item['consumed_quantity']
+            ]);
+        }
+
+        // Creamos el lote
+        $this->task->lot()->create([
+            'code' => 'L' . TaskService::getLotCode($this->task),
+        ]);
+
+        // Creamos los sublotes de salida
+        foreach ($this->outputSelects as $item) {
+            $this->task->lot->sublots()->create([
+                'code' => 'S' .  TaskService::getSublotCode($this->task->lot),
+                'phase_id' => $this->task->typeOfTask->final_phase_id,
+                'area_id' => $this->task->typeOfTask->destination_area_id,
+                'product_id' => $item['product_id'],
+                'initial_quantity' => $item['produced_quantity'],
+                'actual_quantity' => $item['produced_quantity'],
+            ]);
+        }
+
+        $aux = [];
+
+        foreach ($this->task->lot->sublots as $sublot) {
+            $aux[] = [
+                'sublot_id' => $sublot->id,
+                'produced_quantity' => $sublot->initial_quantity,
+            ];
+
+            $sublot->product->update([
+                'real_stock' => $sublot->product->real_stock + $sublot->initial_quantity
+            ]);
+        }
+
+        $this->task->outputSublotsDetails()->sync($aux);
+
+        // Actualizamos la tarea
+        $this->task->update([
+            'task_status_id' => 2,
+            'finished_at' => now(),
+            'finished_by' => auth()->user()->id,
+        ]);
+
+        // Redireccionamos con flash message
+        $name = Str::upper($this->task->typeOfTask->name);
+        session()->flash('flash.banner', 'Tarea de tipo ' . $name . ' registrada correctamente.');
+        return redirect()->route('admin.tasks.index');
     }
 
     public function render()

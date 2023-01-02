@@ -110,6 +110,7 @@ class TypeOfTaskSeeder extends Seeder
                 'type' => 'Producción',
                 'name' => 'Empaquetado',
                 'initial_task' => false,
+                'final_task' => true,
                 'movement' => false,
                 'origin_area_id' => 7,
                 'destination_area_id' => 7,

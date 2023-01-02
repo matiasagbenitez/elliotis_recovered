@@ -16,6 +16,7 @@ return new class extends Migration
 
             // Just one 'initial_task' attribute can be true
             $table->boolean('initial_task')->default(false);
+            $table->boolean('final_task')->default(false);
 
             $table->boolean('movement')->default(false);
             $table->unsignedBigInteger('origin_area_id');
