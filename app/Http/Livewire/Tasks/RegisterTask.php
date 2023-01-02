@@ -196,7 +196,7 @@ class RegisterTask extends Component
         unset($this->inputSelects[$index]);
         $this->inputSelects = array_values($this->inputSelects);
 
-        if ($this->transformation || $this->movement_tansformation) {
+        if ($this->transformation || $this->movement_transformation) {
             $this->reset('outputProducts');
             $this->getFollowingProducts();
         }
@@ -231,7 +231,7 @@ class RegisterTask extends Component
             // TAREA DE MOVIMIENTO Y TRANSFORMACIÓN
         } else if ($this->type_of_task->transformation && $this->type_of_task->movement) {
 
-            $this->save_movement_tansformation();
+            $this->save_movement_transformation();
 
             // ERROR
         } else {
@@ -276,7 +276,7 @@ class RegisterTask extends Component
 
                 // Creamos el sublote de salida
                 $this->task->lot->sublots()->create([
-                    'code' => 'S' . TaskService::getSublotCode($this->task),
+                    'code' => 'S' . TaskService::getSublotCode($this->task->lot),
                     'phase_id' => $this->task->typeOfTask->final_phase_id,
                     'area_id' => $this->task->typeOfTask->destination_area_id,
                     'product_id' => $trunk_sublot->product_id,
@@ -357,7 +357,7 @@ class RegisterTask extends Component
             // Creamos los sublotes de salida
             foreach ($this->outputSelects as $item) {
                 $this->task->lot->sublots()->create([
-                    'code' => 'S' .  TaskService::getSublotCode($this->task),
+                    'code' => 'S' .  TaskService::getSublotCode($this->task->lot),
                     'phase_id' => $this->task->typeOfTask->final_phase_id,
                     'area_id' => $this->task->typeOfTask->destination_area_id,
                     'product_id' => $item['product_id'],
@@ -438,7 +438,7 @@ class RegisterTask extends Component
 
                 // Creamos el sublote de salida
                 $this->task->lot->sublots()->create([
-                    'code' => 'S' . TaskService::getSublotCode($this->task),
+                    'code' => 'S' . TaskService::getSublotCode($this->task->lot),
                     'phase_id' => $this->task->typeOfTask->final_phase_id,
                     'area_id' => $this->task->typeOfTask->destination_area_id,
                     'product_id' => $sublot->product_id,
@@ -479,7 +479,7 @@ class RegisterTask extends Component
         }
     }
 
-    public function save_movement_tansformation()
+    public function save_movement_transformation()
     {
         try {
             // Validar las cantidades consumidas
@@ -531,7 +531,7 @@ class RegisterTask extends Component
             // Creamos los sublotes de salida
             foreach ($outputProducts as $item) {
                 $this->task->lot->sublots()->create([
-                    'code' => 'S' . TaskService::getSublotCode($this->task),
+                    'code' => 'S' . TaskService::getSublotCode($this->task->lot),
                     'phase_id' => $this->task->typeOfTask->final_phase_id,
                     'area_id' => $this->task->typeOfTask->destination_area_id,
                     'product_id' => $item['product_id'],

@@ -41,39 +41,36 @@ class TaskService
         return $tasks;
     }
 
-    public static function getLotCode(Task $task)
+    public static function getLotCode()
     {
-        $lastCode = Lot::latest('code')->first();
+        $lot = Lot::latest()->first();
 
-        if ($lastCode) {
-            $lastCode = $lastCode->code;
+        if ($lot) {
+            $lastCode = $lot->code;
         } else {
-            $lastCode = $task->typeOfTask->finalPhase->prefix  . '-0000';
+            $lastCode = '0000';
         }
 
-        $number = substr($lastCode, -4);
-        $number = intval($number);
-        $number++;
-        $number = str_pad($number, 4, '0', STR_PAD_LEFT);
+        $lastCode = intval(substr($lastCode, -4));
+        $newCode = sprintf("%04d", $lastCode + 1);
 
-        return $task->typeOfTask->finalPhase->prefix . '-' . $number;
+        return $newCode;
     }
 
-    public static function getSublotCode(Task $task)
+    public static function getSublotCode(Lot $lot)
     {
-        $lastCode = Sublot::latest('code')->first();
-
-        if ($lastCode) {
-            $lastCode = $lastCode->code;
+        // Si el lote no tiene sublotes, se crea el primer sublote
+        if ($lot->sublots->isEmpty()) {
+            $lastCode = '00';
         } else {
-            $lastCode = $task->typeOfTask->finalPhase->prefix  . '-0000';
+            $lastCode = $lot->sublots->last()->code;
         }
 
-        $number = substr($lastCode, -4);
-        $number = intval($number);
-        $number++;
-        $number = str_pad($number, 4, '0', STR_PAD_LEFT);
+        $lastCode = intval(substr($lastCode, -4));
+        $newCode = sprintf("%02d", $lastCode + 1);
 
-        return $task->typeOfTask->finalPhase->prefix . '-' . $number;
+        $aux = rand(1000, 9999);
+        return $aux;
+        // return $newCode;
     }
 }

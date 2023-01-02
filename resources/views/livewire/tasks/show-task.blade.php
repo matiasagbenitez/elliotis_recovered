@@ -109,7 +109,7 @@
                         Producto
                     </th>
                     <th scope="col" class="w-1/6 px-4 py-2">
-                        {{ $movement || $initial ? 'Stock original' : 'Cantidad consumida' }}
+                        {{ $movement || $initial || $movement_transformation ? 'Stock original' : 'Cantidad consumida' }}
                     </th>
                 </tr>
             </thead>
@@ -158,7 +158,7 @@
                         Producto
                     </th>
                     <th scope="col" class="w-1/6 px-4 py-2">
-                        {{ $movement || $initial ? 'Cantidad movida' : 'Cantidad producida' }}
+                        {{ $movement || $initial || $movement_transformation ? 'Cantidad movida' : 'Cantidad producida' }}
                     </th>
                 </tr>
             </thead>

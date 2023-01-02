@@ -44,7 +44,7 @@ class ShowTask extends Component
             $this->transformation = true;
             $this->show_transformation();
         } else if ($this->type_of_task->transformation && $this->type_of_task->movement) {
-            $this->show_movement();
+            $this->show_movement_transformation();
             $this->movement_transformation = true;
         } else {
             abort(403);
@@ -100,7 +100,7 @@ class ShowTask extends Component
                 'lot_code' => $sublot->lot->code,
                 'sublot_code' => $sublot->code,
                 'product_name' => $sublot->product->name,
-                'quantity' => $sublot->pivot->consumed_quantity,
+                'quantity' => $sublot->initial_quantity,
             ];
         }
 
@@ -109,7 +109,28 @@ class ShowTask extends Component
                 'lot_code' => $sublot->lot->code,
                 'sublot_code' => $sublot->code,
                 'product_name' => $sublot->product->name,
+                'quantity' => $sublot->pivot->produced_quantity,
+            ];
+        }
+    }
+
+    public function show_movement_transformation()
+    {
+        foreach ($this->task->inputSublotsDetails as $sublot) {
+            $this->inputData [] = [
+                'lot_code' => $sublot->lot->code,
+                'sublot_code' => $sublot->code,
+                'product_name' => $sublot->product->name,
                 'quantity' => $sublot->initial_quantity,
+            ];
+        }
+
+        foreach ($this->task->outputSublotsDetails as $sublot) {
+            $this->outputData [] = [
+                'lot_code' => $sublot->lot->code,
+                'sublot_code' => $sublot->code,
+                'product_name' => $sublot->product->name,
+                'quantity' => $sublot->pivot->produced_quantity,
             ];
         }
     }
