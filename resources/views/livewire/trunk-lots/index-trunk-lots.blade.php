@@ -7,12 +7,11 @@
     </x-slot>
 
     @if ($trunk_lots->count())
-        <div class="px-8 py-6 bg-white rounded-lg shadow mb-5">
+        <div class="py-3 {{ $resume_view ? 'pb-0 bg-gray-50' : '' }} bg-white rounded-lg shadow mb-5">
             <button wire:click='toggleResumeView'
-                class="font-semibold text-lg text-gray-800 leading-tight hover:font-bold">
+                class="font-semibold text-lg text-gray-800 leading-tight hover:font-bold pl-3">
                 Resumen de disponibilidad
             </button>
-            <hr class="mt-1">
             @if ($resume_view)
                 <div class="my-2">
                     <x-responsive-table>
@@ -58,13 +57,14 @@
             @endif
         </div>
 
-        <h1 class="font-semibold text-lg text-gray-800 leading-tight text-center uppercase mb-3">LOTES DE ROLLOS PARA
+        <h1 class="font-bold p-3 text-xl text-gray-800 leading-tight text-center uppercase mb-3">LOTES DE ROLLOS PARA
             PRODUCCIÓN</h1>
 
         @foreach ($trunk_lots as $trunk_lot)
-            <div class="px-8 py-6 bg-white rounded-lg shadow mb-5">
-                <div class="flex justify-between">
-                    <span class="font-bold">
+            <div class="pt-4 bg-gray-50 rounded-lg shadow mb-5">
+
+                <div class="flex justify-between items-center px-6 mb-2">
+                    <span class="font-extrabold text-lg">
                         {{ $trunk_lot->code }}
                     </span>
                     <a href="{{ route('admin.purchases.show-detail', $trunk_lot->purchase_id) }}"
@@ -72,74 +72,76 @@
                         Compra #{{ $trunk_lot->purchase->id }}
                         ({{ $trunk_lot->purchase->supplier->business_name }})
                     </a>
+                    <p class="font-bold">Alta producción:
+                        <span class="font-normal">{{ Date::parse($trunk_lot->created_at)->format('d-m-Y H:i') }}
+                        </span>
+                    </p>
                 </div>
-                <hr class="my-1">
-                <p class="font-bold py-3">Fecha alta producción:
-                    <span class="font-normal">{{ Date::parse($trunk_lot->created_at)->format('d-m-Y H:i') }}hs
-                    </span>
-                </p>
-                <table class="text-gray-600 min-w-full divide-y divide-gray-200 table-fixed">
-                    <thead class="text-sm text-center text-gray-700 uppercase border-b bg-gray-50">
-                        <tr>
-                            <th scope="col" class="px-4 py-2 whitespace-nowrap">
-                                ID sublote
-                            </th>
-                            <th scope="col" class="w-3/6 px-4 py-2">
-                                Producto
-                            </th>
-                            <th scope="col" class="w-1/6 px-4 py-2">
-                                Cantidad inicial
-                            </th>
-                            <th scope="col" class="w-1/6 px-4 py-2">
-                                Cantidad actual
-                            </th>
-                            <th scope="col" class="w-1/6 px-4 py-2">
-                                Disponibilidad
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-gray-200">
-                        @foreach ($trunk_lot->trunkSublots as $lot)
-                            <tr>
-                                <td class="px-6 py-2 text-center">
-                                    <p class="text-sm uppercase">
-                                        {{ $lot->id }}
-                                    </p>
-                                </td>
-                                <td class="px-6 py-2 text-center">
-                                    <p class="text-sm uppercase">
-                                        {{ $lot->product->name }}
-                                    </p>
-                                </td>
-                                <td class="px-6 py-2 text-center">
-                                    <p class="text-sm uppercase">
-                                        {{ $lot->initial_quantity }}
-                                    </p>
-                                </td>
-                                <td class="px-6 py-2 text-center">
-                                    <p class="text-sm uppercase">
-                                        {{ $lot->actual_quantity }}
-                                    </p>
-                                </td>
-                                <td class="px-6 py-2 text-center">
-                                    <p class="text-sm uppercase">
-                                        @if ($lot->available)
-                                            <span
-                                                class="px-6 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                                                Disponible
-                                            </span>
-                                        @else
-                                            <span
-                                                class="px-6 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
-                                                Sin stock
-                                            </span>
-                                        @endif
-                                </td>
 
+                <x-responsive-table>
+                    <table class="text-gray-600 min-w-full divide-y divide-gray-200 table-fixed">
+                        <thead class="text-sm text-center text-gray-700 uppercase border-b bg-gray-200">
+                            <tr>
+                                <th scope="col" class="px-4 py-2 whitespace-nowrap">
+                                    ID sublote
+                                </th>
+                                <th scope="col" class="w-3/6 px-4 py-2">
+                                    Producto
+                                </th>
+                                <th scope="col" class="w-1/6 px-4 py-2">
+                                    Cantidad inicial
+                                </th>
+                                <th scope="col" class="w-1/6 px-4 py-2">
+                                    Cantidad actual
+                                </th>
+                                <th scope="col" class="w-1/6 px-4 py-2">
+                                    Disponibilidad
+                                </th>
                             </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody class="divide-y divide-gray-200">
+                            @foreach ($trunk_lot->trunkSublots as $lot)
+                                <tr>
+                                    <td class="px-6 py-2 text-center">
+                                        <p class="text-sm uppercase">
+                                            {{ $lot->id }}
+                                        </p>
+                                    </td>
+                                    <td class="px-6 py-2 text-center">
+                                        <p class="text-sm uppercase">
+                                            {{ $lot->product->name }}
+                                        </p>
+                                    </td>
+                                    <td class="px-6 py-2 text-center">
+                                        <p class="text-sm uppercase">
+                                            {{ $lot->initial_quantity }}
+                                        </p>
+                                    </td>
+                                    <td class="px-6 py-2 text-center">
+                                        <p class="text-sm uppercase">
+                                            {{ $lot->actual_quantity }}
+                                        </p>
+                                    </td>
+                                    <td class="px-6 py-2 text-center">
+                                        <p class="text-sm uppercase">
+                                            @if ($lot->available)
+                                                <span
+                                                    class="px-6 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                                    Disponible
+                                                </span>
+                                            @else
+                                                <span
+                                                    class="px-6 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
+                                                    Sin stock
+                                                </span>
+                                            @endif
+                                    </td>
+
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </x-responsive-table>
             </div>
         @endforeach
 </div>
