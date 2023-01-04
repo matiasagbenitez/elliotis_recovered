@@ -12,14 +12,54 @@ class CountrySeeder extends Seeder
 {
     public function run()
     {
-        Country::factory(3)->create()->each(function (Country $country) {
-            Province::factory(4)->create([
-                'country_id' => $country->id
-            ])->each(function (Province $province) {
-                Locality::factory(5)->create([
-                    'province_id' => $province->id
-                ]);
-            });
-        });
+        Country::create([
+            'name' => 'Argentina',
+        ]);
+
+        Province::create([
+            'name' => 'Misiones',
+            'country_id' => 1,
+        ]);
+
+        $localities = [
+            'Posadas',
+            'Garupá',
+            'Santa Ana',
+            'Jardín América',
+            'Capioví',
+            'Puerto Rico',
+            'San Vicente',
+            'Montecarlo',
+            'Eldorado',
+            'Puerto Iguazú',
+            'Guaraní',
+            'Puerto Leoni',
+        ];
+
+        foreach ($localities as $locality) {
+            Locality::create([
+                'name' => $locality,
+                'province_id' => 1,
+            ]);
+        }
+
+        Province::create([
+            'name' => 'Buenos Aires',
+            'country_id' => 1,
+        ]);
+
+        $localities = [
+            'La Plata',
+            'Zárate',
+            'Campana',
+            'Escobar',
+        ];
+
+        foreach ($localities as $locality) {
+            Locality::create([
+                'name' => $locality,
+                'province_id' => 2,
+            ]);
+        }
     }
 }

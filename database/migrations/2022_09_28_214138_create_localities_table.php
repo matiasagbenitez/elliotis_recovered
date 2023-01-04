@@ -12,7 +12,7 @@ return new class extends Migration
             $table->id();
 
             $table->string('name');
-            $table->string('postal_code');
+            $table->string('postal_code')->nullable();
 
             $table->unsignedBigInteger('province_id');
             $table->foreign('province_id')->references('id')->on('provinces');
