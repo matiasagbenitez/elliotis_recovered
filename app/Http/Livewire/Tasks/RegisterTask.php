@@ -2,7 +2,7 @@
 
 namespace App\Http\Livewire\Tasks;
 
-use App\Http\Services\TaskService;
+use App\Models\Lot;
 use App\Models\Task;
 use App\Models\User;
 use App\Models\Sublot;
@@ -11,6 +11,7 @@ use Livewire\Component;
 use App\Models\TypeOfTask;
 use App\Models\TrunkSublot;
 use Illuminate\Support\Str;
+use App\Http\Services\TaskService;
 use Illuminate\Support\Facades\Date;
 
 class RegisterTask extends Component
@@ -264,34 +265,34 @@ class RegisterTask extends Component
             $this->task->trunkSublots()->sync($this->inputSelects);
 
             // Creamos el lote
-            $this->task->lot()->create([
-                'code' => 'L' . TaskService::getLotCode($this->task)
+          $lot = Lot::create([
+                'task_id' => $this->task->id,
+                'code' => 'L' . TaskService::getLotCode($this->task),
             ]);
-
-            // Creamos los sublotes de salida
-            foreach ($this->inputSelects as $sublot) {
-
-                // Actualizamos el sublote de rollos
-                $trunk_sublot = TrunkSublot::find($sublot['sublot_id']);
-                $trunk_sublot->update([
-                    'actual_quantity' => $trunk_sublot->actual_quantity - $sublot['consumed_quantity'],
-                    'available' => $trunk_sublot->actual_quantity - $sublot['consumed_quantity'] > 0 ? 1 : 0
-                ]);
-
-                // Creamos el sublote de salida
-                $this->task->lot->sublots()->create([
-                    'code' => 'S' . TaskService::getSublotCode($this->task->lot),
-                    'phase_id' => $this->task->typeOfTask->final_phase_id,
-                    'area_id' => $this->task->typeOfTask->destination_area_id,
-                    'product_id' => $trunk_sublot->product_id,
-                    'initial_quantity' => $sublot['consumed_quantity'],
-                    'actual_quantity' => $sublot['consumed_quantity'],
-                ]);
-            }
 
             $aux = [];
 
-            foreach ($this->task->lot->sublots as $sublot) {
+            // Creamos los sublotes de salida
+            foreach ($this->inputSelects as $item) {
+
+                // Actualizamos el sublote de rollos
+                $trunk_sublot = TrunkSublot::find($item['sublot_id']);
+                $trunk_sublot->update([
+                    'actual_quantity' => $trunk_sublot->actual_quantity - $item['consumed_quantity'],
+                    'available' => $trunk_sublot->actual_quantity - $item['consumed_quantity'] > 0 ? 1 : 0
+                ]);
+
+                // Creamos el sublote de salida
+                $sublot = Sublot::create([
+                    'code' => 'S' . TaskService::getSublotCode($this->task->lot),
+                    'lot_id' => $lot->id,
+                    'phase_id' => $this->task->typeOfTask->final_phase_id,
+                    'product_id' => $trunk_sublot->product_id,
+                    'area_id' => $this->task->typeOfTask->destination_area_id,
+                    'initial_quantity' => $item['consumed_quantity'],
+                    'actual_quantity' => $item['consumed_quantity'],
+                ]);
+
                 $aux[] = [
                     'sublot_id' => $sublot->id,
                     'produced_quantity' => $sublot->initial_quantity,
@@ -353,25 +354,25 @@ class RegisterTask extends Component
             }
 
             // Creamos el lote
-            $this->task->lot()->create([
+            $lot = Lot::create([
+                'task_id' => $this->task->id,
                 'code' => 'L' . TaskService::getLotCode($this->task),
             ]);
 
+            $aux = [];
+
             // Creamos los sublotes de salida
             foreach ($this->outputSelects as $item) {
-                $this->task->lot->sublots()->create([
+                $sublot = Sublot::create([
                     'code' => 'S' .  TaskService::getSublotCode($this->task->lot),
+                    'lot_id' => $lot->id,
                     'phase_id' => $this->task->typeOfTask->final_phase_id,
-                    'area_id' => $this->task->typeOfTask->destination_area_id,
                     'product_id' => $item['product_id'],
+                    'area_id' => $this->task->typeOfTask->destination_area_id,
                     'initial_quantity' => $item['produced_quantity'],
                     'actual_quantity' => $item['produced_quantity'],
                 ]);
-            }
 
-            $aux = [];
-
-            foreach ($this->task->lot->sublots as $sublot) {
                 $aux[] = [
                     'sublot_id' => $sublot->id,
                     'produced_quantity' => $sublot->initial_quantity,
@@ -422,44 +423,43 @@ class RegisterTask extends Component
             $this->task->inputSublotsDetails()->sync($this->inputSelects);
 
             // Creamos el lote
-            $this->task->lot()->create([
+            $lot = Lot::create([
+                'task_id' => $this->task->id,
                 'code' => 'L' . TaskService::getLotCode($this->task),
             ]);
 
             // Actualizamos los sublotes de entrada
             foreach ($this->inputSelects as $item) {
-                $sublot = Sublot::find($item['sublot_id']);
-                $sublot->update([
-                    'actual_quantity' => $sublot->actual_quantity - $item['consumed_quantity'],
-                    'available' => $sublot->actual_quantity - $item['consumed_quantity'] > 0 ? 1 : 0
+                $input_sublot = Sublot::find($item['sublot_id']);
+                $input_sublot->update([
+                    'actual_quantity' => $input_sublot->actual_quantity - $item['consumed_quantity'],
+                    'available' => $input_sublot->actual_quantity - $item['consumed_quantity'] > 0 ? 1 : 0
                 ]);
 
-                $sublot->product->update([
-                    'real_stock' => $sublot->product->real_stock - $item['consumed_quantity']
-                ]);
+                // $input_sublot->product->update([
+                //     'real_stock' => $input_sublot->product->real_stock - $item['consumed_quantity']
+                // ]);
 
                 // Creamos el sublote de salida
-                $this->task->lot->sublots()->create([
+                $sublot = Sublot::create([
                     'code' => 'S' . TaskService::getSublotCode($this->task->lot),
+                    'lot_id' => $lot->id,
                     'phase_id' => $this->task->typeOfTask->final_phase_id,
+                    'product_id' => $input_sublot->product_id,
                     'area_id' => $this->task->typeOfTask->destination_area_id,
-                    'product_id' => $sublot->product_id,
                     'initial_quantity' => $item['consumed_quantity'],
                     'actual_quantity' => $item['consumed_quantity'],
                 ]);
-            }
 
-            $aux = [];
-
-            foreach ($this->task->lot->sublots as $sublot) {
                 $aux[] = [
                     'sublot_id' => $sublot->id,
                     'produced_quantity' => $sublot->initial_quantity,
                 ];
 
-                $sublot->product->update([
-                    'real_stock' => $sublot->product->real_stock + $sublot->initial_quantity
-                ]);
+                // $sublot->product->update([
+                //     'real_stock' => $sublot->product->real_stock + $sublot->initial_quantity
+                // ]);
+
             }
 
             $this->task->outputSublotsDetails()->sync($aux);
@@ -505,18 +505,18 @@ class RegisterTask extends Component
 
             // Actualizamos los sublotes de entrada
             foreach ($this->inputSelects as $item) {
-                $sublot = Sublot::find($item['sublot_id']);
-                $sublot->update([
-                    'actual_quantity' => $sublot->actual_quantity - $item['consumed_quantity'],
-                    'available' => $sublot->actual_quantity - $item['consumed_quantity'] > 0 ? 1 : 0
+                $input_sublot = Sublot::find($item['sublot_id']);
+                $input_sublot->update([
+                    'actual_quantity' => $input_sublot->actual_quantity - $item['consumed_quantity'],
+                    'available' => $input_sublot->actual_quantity - $item['consumed_quantity'] > 0 ? 1 : 0
                 ]);
 
-                $sublot->product->update([
-                    'real_stock' => $sublot->product->real_stock - $item['consumed_quantity']
+                $input_sublot->product->update([
+                    'real_stock' => $input_sublot->product->real_stock - $item['consumed_quantity']
                 ]);
 
                 // Get first following product
-                $followingProduct = Product::find($sublot->product_id)->followingProducts()->first();
+                $followingProduct = Product::find($input_sublot->product_id)->followingProducts()->first();
 
                 $outputProducts[] = [
                     'product_id' => $followingProduct->id,
@@ -525,25 +525,25 @@ class RegisterTask extends Component
             }
 
             // Creamos el lote
-            $this->task->lot()->create([
+            $lot = Lot::create([
+                'task_id' => $this->task->id,
                 'code' => 'L' . TaskService::getLotCode($this->task),
             ]);
 
+            $aux = [];
+
             // Creamos los sublotes de salida
             foreach ($outputProducts as $item) {
-                $this->task->lot->sublots()->create([
+                $sublot = Sublot::create([
                     'code' => 'S' . TaskService::getSublotCode($this->task->lot),
+                    'lot_id' => $lot->id,
                     'phase_id' => $this->task->typeOfTask->final_phase_id,
-                    'area_id' => $this->task->typeOfTask->destination_area_id,
                     'product_id' => $item['product_id'],
+                    'area_id' => $this->task->typeOfTask->destination_area_id,
                     'initial_quantity' => $item['produced_quantity'],
                     'actual_quantity' => $item['produced_quantity'],
                 ]);
-            }
 
-            $aux = [];
-
-            foreach ($this->task->lot->sublots as $sublot) {
                 $aux[] = [
                     'sublot_id' => $sublot->id,
                     'produced_quantity' => $sublot->initial_quantity,
@@ -599,37 +599,37 @@ class RegisterTask extends Component
 
         // Actualizamos los sublotes de entrada
         foreach ($this->inputSelects as $item) {
-            $sublot = Sublot::find($item['sublot_id']);
-            $sublot->update([
-                'actual_quantity' => $sublot->actual_quantity - $item['consumed_quantity'],
-                'available' => $sublot->actual_quantity - $item['consumed_quantity'] > 0 ? 1 : 0
+            $input_sublot = Sublot::find($item['sublot_id']);
+            $input_sublot->update([
+                'actual_quantity' => $input_sublot->actual_quantity - $item['consumed_quantity'],
+                'available' => $input_sublot->actual_quantity - $item['consumed_quantity'] > 0 ? 1 : 0
             ]);
 
-            $sublot->product->update([
-                'real_stock' => $sublot->product->real_stock - $item['consumed_quantity']
+            $input_sublot->product->update([
+                'real_stock' => $input_sublot->product->real_stock - $item['consumed_quantity']
             ]);
         }
 
         // Creamos el lote
-        $this->task->lot()->create([
+        $lot = Lot::create([
+            'task_id' => $this->task->id,
             'code' => 'L' . TaskService::getLotCode($this->task),
         ]);
 
+        $aux = [];
+
         // Creamos los sublotes de salida
         foreach ($this->outputSelects as $item) {
-            $this->task->lot->sublots()->create([
+            $sublot = Sublot::create([
                 'code' => 'S' .  TaskService::getSublotCode($this->task->lot),
+                'lot_id' => $lot->id,
                 'phase_id' => $this->task->typeOfTask->final_phase_id,
-                'area_id' => $this->task->typeOfTask->destination_area_id,
                 'product_id' => $item['product_id'],
+                'area_id' => $this->task->typeOfTask->destination_area_id,
                 'initial_quantity' => $item['produced_quantity'],
                 'actual_quantity' => $item['produced_quantity'],
             ]);
-        }
 
-        $aux = [];
-
-        foreach ($this->task->lot->sublots as $sublot) {
             $aux[] = [
                 'sublot_id' => $sublot->id,
                 'produced_quantity' => $sublot->initial_quantity,
