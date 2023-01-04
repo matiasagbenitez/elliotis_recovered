@@ -12,21 +12,46 @@ class Test extends Component
 
     public function mount()
     {
-        $this->purchaseProduct = Product::find(20);
-        $this->purchaseQuantity = 1;
+        $this->purchaseProduct = Product::find(19);
+        $this->purchaseQuantity = 2;
 
-        $this->previousProducts = $this->getPreviousProducts($this->purchaseProduct);
+        $needed = $this->purchaseQuantity - $this->purchaseProduct->real_stock;
+        $this->previousProducts[] = [
+            'id' => $this->purchaseProduct->id,
+            'name' => $this->purchaseProduct->name,
+            'quantity' => $this->purchaseProduct->real_stock,
+            'needed' => $needed
+        ];
+
+        $unities = $this->purchaseProduct->productType->unity->unities * $needed;
+
+        $this->previousProducts = $this->getPreviousProducts($this->purchaseProduct, $this->previousProducts, $unities);
+
+        $this->calculate();
     }
 
-    public function getPreviousProducts(Product $product, &$previousProducts = [])
+    public function getPreviousProducts(Product $product, &$previousProducts = [], $unities)
     {
         $previousProduct = $product->previousProduct;
-        if ($previousProduct && $previousProduct->id != $product->id) {
-            $previousProducts[] = $previousProduct;
-            $this->getPreviousProducts($previousProduct, $previousProducts);
+        if ($previousProduct) {
+            $newUnities = $unities - $previousProduct->real_stock;
+            $previousProducts[] = [
+                'id' => $previousProduct->id,
+                'name' => $previousProduct->name,
+                'quantity' => $previousProduct->real_stock,
+                'needed' => $newUnities
+            ];
+            $this->getPreviousProducts($previousProduct, $previousProducts, $newUnities);
         }
 
         return $previousProducts;
+    }
+
+    public function calculate()
+    {
+        if ($this->purchaseProduct->phase_id == 5) {
+
+        }
     }
 
     public function render()

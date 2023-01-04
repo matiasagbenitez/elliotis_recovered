@@ -15,4 +15,9 @@ class Phase extends Model
     {
         return $this->hasMany(Sublot::class);
     }
+
+    public function products()
+    {
+        return $this->hasMany(Product::class);
+    }
 }

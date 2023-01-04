@@ -99,4 +99,9 @@ class Product extends Model
     {
         return $this->hasMany(Sublot::class);
     }
+
+    public function phase()
+    {
+        return $this->belongsTo(Phase::class);
+    }
 }

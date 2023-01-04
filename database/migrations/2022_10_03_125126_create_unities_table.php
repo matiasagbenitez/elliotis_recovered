@@ -12,6 +12,7 @@ return new class extends Migration
             $table->id();
 
             $table->string('name')->required()->unique();
+            $table->boolean('is_package')->default(false);
             $table->integer('unities')->required()->unique();
 
             $table->timestamps();

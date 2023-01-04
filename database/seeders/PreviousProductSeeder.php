@@ -13,15 +13,6 @@ class PreviousProductSeeder extends Seeder
 
             // 10
             [
-                'product_id' => 1,
-                'previous_product_id' => 1,
-                'initial' => true,
-            ],
-            [
-                'product_id' => 5,
-                'previous_product_id' => 1,
-            ],
-            [
                 'product_id' => 9,
                 'previous_product_id' => 5,
             ],
@@ -35,15 +26,6 @@ class PreviousProductSeeder extends Seeder
             ],
 
             // 11
-            [
-                'product_id' => 2,
-                'previous_product_id' => 2,
-                'initial' => true,
-            ],
-            [
-                'product_id' => 6,
-                'previous_product_id' => 2,
-            ],
             [
                 'product_id' => 10,
                 'previous_product_id' => 6,
@@ -60,15 +42,6 @@ class PreviousProductSeeder extends Seeder
 
             // 12
             [
-                'product_id' => 3,
-                'previous_product_id' => 3,
-                'initial' => true,
-            ],
-            [
-                'product_id' => 7,
-                'previous_product_id' => 3,
-            ],
-            [
                 'product_id' => 11,
                 'previous_product_id' => 7,
             ],
@@ -82,15 +55,6 @@ class PreviousProductSeeder extends Seeder
             ],
 
             // 13
-            [
-                'product_id' => 4,
-                'previous_product_id' => 4,
-                'initial' => true,
-            ],
-            [
-                'product_id' => 8,
-                'previous_product_id' => 4,
-            ],
             [
                 'product_id' => 12,
                 'previous_product_id' => 8,

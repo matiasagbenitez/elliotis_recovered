@@ -22,6 +22,7 @@ class UnitySeeder extends Seeder
             [
                 'name' => 'Paquetes grandes',
                 'unities' => 702,
+                'is_package' => true,
             ],
         ];
 

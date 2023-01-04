@@ -15,6 +15,7 @@ class ProductSeeder extends Seeder
             [
                 'name' => ProductType::find(1)->product_name->name . ' ' . ProductType::find(1)->measure->name . ' (pino elliotis)',
                 'product_type_id' => 1,
+                'phase_id' => 1,
                 'wood_type_id' => 1,
                 'is_buyable' => true,
                 'real_stock' => 120,
@@ -30,6 +31,7 @@ class ProductSeeder extends Seeder
             [
                 'name' => ProductType::find(2)->product_name->name . ' ' . ProductType::find(2)->measure->name . ' (pino elliotis)',
                 'product_type_id' => 2,
+                'phase_id' => 1,
                 'wood_type_id' => 1,
                 'is_buyable' => true,
                 'real_stock' => 80,
@@ -45,6 +47,7 @@ class ProductSeeder extends Seeder
             [
                 'name' => ProductType::find(3)->product_name->name . ' ' . ProductType::find(3)->measure->name . ' (pino elliotis)',
                 'product_type_id' => 3,
+                'phase_id' => 1,
                 'wood_type_id' => 1,
                 'is_buyable' => true,
                 'real_stock' => 110,
@@ -60,6 +63,7 @@ class ProductSeeder extends Seeder
             [
                 'name' => ProductType::find(4)->product_name->name . ' ' . ProductType::find(4)->measure->name . ' (pino elliotis)',
                 'product_type_id' => 4,
+                'phase_id' => 1,
                 'wood_type_id' => 1,
                 'is_buyable' => true,
                 'real_stock' => 90,
@@ -75,8 +79,9 @@ class ProductSeeder extends Seeder
             [
                 'name' => ProductType::find(5)->product_name->name . ' ' . ProductType::find(5)->measure->name . ' (pino elliotis)',
                 'product_type_id' => 5,
+                'phase_id' => 2,
                 'wood_type_id' => 1,
-                'real_stock' => 1500,
+                'real_stock' => 150,
                 'minimum_stock' => 1000,
                 'reposition' => 500,
                 'iva_type_id' => 2,
@@ -89,8 +94,9 @@ class ProductSeeder extends Seeder
             [
                 'name' => ProductType::find(6)->product_name->name . ' ' . ProductType::find(6)->measure->name . ' (pino elliotis)',
                 'product_type_id' => 6,
+                'phase_id' => 2,
                 'wood_type_id' => 1,
-                'real_stock' => 1500,
+                'real_stock' => 150,
                 'minimum_stock' => 1000,
                 'reposition' => 500,
                 'iva_type_id' => 2,
@@ -103,8 +109,9 @@ class ProductSeeder extends Seeder
             [
                 'name' => ProductType::find(7)->product_name->name . ' ' . ProductType::find(7)->measure->name . ' (pino elliotis)',
                 'product_type_id' => 7,
+                'phase_id' => 2,
                 'wood_type_id' => 1,
-                'real_stock' => 1500,
+                'real_stock' => 150,
                 'minimum_stock' => 1000,
                 'reposition' => 500,
                 'iva_type_id' => 2,
@@ -117,8 +124,9 @@ class ProductSeeder extends Seeder
             [
                 'name' => ProductType::find(8)->product_name->name . ' ' . ProductType::find(8)->measure->name . ' (pino elliotis)',
                 'product_type_id' => 8,
+                'phase_id' => 2,
                 'wood_type_id' => 1,
-                'real_stock' => 1500,
+                'real_stock' => 150,
                 'minimum_stock' => 1000,
                 'reposition' => 500,
                 'iva_type_id' => 2,
@@ -131,8 +139,9 @@ class ProductSeeder extends Seeder
             [
                 'name' => ProductType::find(9)->product_name->name . ' ' . ProductType::find(9)->measure->name . ' (pino elliotis)',
                 'product_type_id' => 9,
+                'phase_id' => 3,
                 'wood_type_id' => 1,
-                'real_stock' => 2500,
+                'real_stock' => 250,
                 'minimum_stock' => 1000,
                 'reposition' => 500,
                 'iva_type_id' => 2,
@@ -145,8 +154,9 @@ class ProductSeeder extends Seeder
             [
                 'name' => ProductType::find(10)->product_name->name . ' ' . ProductType::find(10)->measure->name . ' (pino elliotis)',
                 'product_type_id' => 10,
+                'phase_id' => 3,
                 'wood_type_id' => 1,
-                'real_stock' => 2500,
+                'real_stock' => 250,
                 'minimum_stock' => 1000,
                 'reposition' => 500,
                 'iva_type_id' => 2,
@@ -159,8 +169,9 @@ class ProductSeeder extends Seeder
             [
                 'name' => ProductType::find(11)->product_name->name . ' ' . ProductType::find(11)->measure->name . ' (pino elliotis)',
                 'product_type_id' => 11,
+                'phase_id' => 3,
                 'wood_type_id' => 1,
-                'real_stock' => 2500,
+                'real_stock' => 250,
                 'minimum_stock' => 1000,
                 'reposition' => 500,
                 'iva_type_id' => 2,
@@ -173,8 +184,9 @@ class ProductSeeder extends Seeder
             [
                 'name' => ProductType::find(12)->product_name->name . ' ' . ProductType::find(12)->measure->name . ' (pino elliotis)',
                 'product_type_id' => 12,
+                'phase_id' => 3,
                 'wood_type_id' => 1,
-                'real_stock' => 2500,
+                'real_stock' => 250,
                 'minimum_stock' => 1000,
                 'reposition' => 500,
                 'iva_type_id' => 2,
@@ -187,6 +199,7 @@ class ProductSeeder extends Seeder
             [
                 'name' => ProductType::find(13)->product_name->name . ' ' . ProductType::find(13)->measure->name . ' (pino elliotis)',
                 'product_type_id' => 13,
+                'phase_id' => 4,
                 'wood_type_id' => 1,
                 'real_stock' => 200,
                 'minimum_stock' => 300,
@@ -201,6 +214,7 @@ class ProductSeeder extends Seeder
             [
                 'name' => ProductType::find(14)->product_name->name . ' ' . ProductType::find(14)->measure->name . ' (pino elliotis)',
                 'product_type_id' => 14,
+                'phase_id' => 4,
                 'wood_type_id' => 1,
                 'real_stock' => 200,
                 'minimum_stock' => 300,
@@ -215,6 +229,7 @@ class ProductSeeder extends Seeder
             [
                 'name' => ProductType::find(15)->product_name->name . ' ' . ProductType::find(15)->measure->name . ' (pino elliotis)',
                 'product_type_id' => 15,
+                'phase_id' => 4,
                 'wood_type_id' => 1,
                 'real_stock' => 200,
                 'minimum_stock' => 300,
@@ -229,6 +244,7 @@ class ProductSeeder extends Seeder
             [
                 'name' => ProductType::find(16)->product_name->name . ' ' . ProductType::find(16)->measure->name . ' (pino elliotis)',
                 'product_type_id' => 16,
+                'phase_id' => 4,
                 'wood_type_id' => 1,
                 'real_stock' => 200,
                 'minimum_stock' => 300,
@@ -243,9 +259,10 @@ class ProductSeeder extends Seeder
             [
                 'name' => ProductType::find(17)->product_name->name . ' ' . ProductType::find(17)->measure->name . ' (pino elliotis)',
                 'product_type_id' => 17,
+                'phase_id' => 5,
                 'wood_type_id' => 1,
                 'is_salable' => true,
-                'real_stock' => 15,
+                'real_stock' => 1,
                 'minimum_stock' => 4,
                 'reposition' => 4,
                 'iva_type_id' => 2,
@@ -258,9 +275,10 @@ class ProductSeeder extends Seeder
             [
                 'name' => ProductType::find(18)->product_name->name . ' ' . ProductType::find(18)->measure->name . ' (pino elliotis)',
                 'product_type_id' => 18,
+                'phase_id' => 5,
                 'wood_type_id' => 1,
                 'is_salable' => true,
-                'real_stock' => 15,
+                'real_stock' => 1,
                 'minimum_stock' => 4,
                 'reposition' => 4,
                 'iva_type_id' => 2,
@@ -273,9 +291,10 @@ class ProductSeeder extends Seeder
             [
                 'name' => ProductType::find(19)->product_name->name . ' ' . ProductType::find(19)->measure->name . ' (pino elliotis)',
                 'product_type_id' => 19,
+                'phase_id' => 5,
                 'wood_type_id' => 1,
                 'is_salable' => true,
-                'real_stock' => 15,
+                'real_stock' => 1,
                 'minimum_stock' => 4,
                 'reposition' => 4,
                 'iva_type_id' => 2,
@@ -288,9 +307,10 @@ class ProductSeeder extends Seeder
             [
                 'name' => ProductType::find(20)->product_name->name . ' ' . ProductType::find(20)->measure->name . ' (pino elliotis)',
                 'product_type_id' => 20,
+                'phase_id' => 5,
                 'wood_type_id' => 1,
                 'is_salable' => true,
-                'real_stock' => 15,
+                'real_stock' => 0,
                 'minimum_stock' => 4,
                 'reposition' => 4,
                 'iva_type_id' => 2,
