@@ -25,6 +25,12 @@ return new class extends Migration
             $table->integer('finished_by')->nullable();
             $table->dateTime('finished_at')->nullable();
 
+            // Cancelled
+            $table->boolean('cancelled')->default(false);
+            $table->dateTime('cancelled_at')->nullable();
+            $table->integer('cancelled_by')->nullable();
+            $table->text('cancelled_reason')->nullable();
+
             $table->timestamps();
         });
     }

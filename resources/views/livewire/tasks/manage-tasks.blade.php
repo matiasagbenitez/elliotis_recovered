@@ -177,7 +177,6 @@
                             </td>
                             <td class="px-6 py-3 text-center">
                                 @switch($task['status'])
-
                                     @case(1)
                                         <span
                                             class="px-6 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
@@ -203,9 +202,8 @@
                                 @endswitch
                             </td>
                             <td class="px-6 py-3 text-sm">
-                                <div class="flex items-center justify-center gap-2">
+                                <div class="flex items-center justify-end gap-2">
                                     @switch($task['status'])
-
                                         @case(1)
                                             <x-jet-button wire:click="$emit('finish', '{{ $task['id'] }}')">
                                                 <i class="fas fa-stop"></i>
@@ -213,6 +211,17 @@
                                         @break
 
                                         @case(2)
+                                            <button title="Anular tarea"
+                                                wire:click="$emit('disableTask', '{{ $task['id'] }}')">
+                                                <i class="fas fa-ban mr-1 hover:text-red-700"></i>
+                                            </button>
+
+                                            <x-jet-secondary-button wire:click="showFinishedTask({{ $task['id'] }})">
+                                                <i class="fas fa-list"></i>
+                                            </x-jet-secondary-button>
+                                        @break
+
+                                        @case(3)
                                             <x-jet-secondary-button wire:click="showFinishedTask({{ $task['id'] }})">
                                                 <i class="fas fa-list"></i>
                                             </x-jet-secondary-button>
@@ -353,4 +362,60 @@
         });
     </script>
 
+    <script>
+        Livewire.on('disableTask', async (taskId) => {
+
+            const {
+                value: reason
+            } = await Swal.fire({
+                title: 'Anular tarea',
+                input: 'textarea',
+                inputPlaceholder: 'Especifique aquí el o los motivos de anulación',
+                showCancelButton: true,
+                confirmButtonColor: '#1f2937',
+                cancelButtonColor: '#dc2626',
+                cancelButtonColor: '#d33',
+                cancelButtonText: 'Cancelar',
+            });
+
+            if (reason) {
+                Swal.fire({
+                    title: '¿Anular tarea?',
+                    text: "¡No podrás revertir esta acción!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#1f2937',
+                    cancelButtonColor: '#dc2626',
+                    confirmButtonText: 'Sí, anular tarea',
+                    cancelButtonText: 'Cancelar'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        Livewire.emitTo('tasks.manage-tasks', 'disable', taskId, reason);
+                        Livewire.on('success', message => {
+                            const Toast = Swal.mixin({
+                                toast: true,
+                                position: 'top-end',
+                                showConfirmButton: false,
+                                timer: 3000,
+                                timerProgressBar: true,
+                            });
+                            Toast.fire({
+                                icon: 'success',
+                                title: message
+                            });
+                        });
+                        Livewire.on('error', message => {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Oops...',
+                                text: message,
+                                showConfirmButton: true,
+                                confirmButtonColor: '#1f2937',
+                            });
+                        });
+                    }
+                })
+            }
+        });
+    </script>
 @endpush

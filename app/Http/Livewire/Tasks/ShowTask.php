@@ -12,6 +12,7 @@ class ShowTask extends Component
     public $task, $type_of_task;
     public $taskData = [];
     public $initial, $transformation, $movement, $movement_transformation;
+    public $user_who_cancelled = null;
 
     public $inputData = [];
     public $outputData = [];
@@ -33,6 +34,10 @@ class ShowTask extends Component
             'destination_area' => $task->typeOfTask->destinationArea->name,
             'final_phase' => $task->typeOfTask->finalPhase->name,
         ];
+
+        if ($task->cancelled_by) {
+            $this->user_who_cancelled = User::find($task->cancelled_by)->name;
+        }
 
         if ($this->type_of_task->initial_task) {
             $this->initial = true;
