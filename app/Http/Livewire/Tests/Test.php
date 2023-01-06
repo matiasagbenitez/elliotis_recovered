@@ -13,7 +13,7 @@ class Test extends Component
     public function mount()
     {
         $this->purchaseProduct = Product::find(19);
-        $this->purchaseQuantity = 10;
+        $this->purchaseQuantity = 2;
 
         $needed = $this->purchaseQuantity - $this->purchaseProduct->real_stock;
         $this->previousProducts[] = [

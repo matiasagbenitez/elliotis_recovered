@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Livewire\Tests\Test;
+use App\Http\Livewire\Lots\LotsIndex;
 use App\Http\Livewire\Sales\ShowSale;
 use App\Http\Livewire\Tasks\ShowTask;
 use Illuminate\Support\Facades\Route;
@@ -7,12 +9,16 @@ use App\Http\Livewire\Areas\IndexAreas;
 use App\Http\Livewire\Sales\CreateSale;
 use App\Http\Livewire\Sales\IndexSales;
 use App\Http\Livewire\Tasks\IndexTasks;
+use App\Http\Livewire\Tests\TestOrders;
+use App\Http\Livewire\Lots\SublotsAreas;
+use App\Http\Livewire\Lots\SublotsIndex;
 use App\Http\Livewire\Tasks\ManageTasks;
 use App\Http\Livewire\Clients\EditClient;
 use App\Http\Livewire\Phases\IndexPhases;
 use App\Http\Livewire\Tasks\RegisterTask;
 use App\Http\Livewire\Clients\CreateClient;
 use App\Http\Livewire\Clients\IndexClients;
+use App\Http\Livewire\Lots\SublotsProducts;
 use App\Http\Livewire\Unities\IndexUnities;
 use App\Http\Livewire\Ranking\PruebaRanking;
 use App\Http\Livewire\IvaTypes\IndexIvaTypes;
@@ -49,12 +55,7 @@ use App\Http\Livewire\PurchaseOrders\CreatePurchaseOrder;
 use App\Http\Livewire\PurchaseOrders\PurchaseOrdersIndex;
 use App\Http\Livewire\PreviousProducts\IndexPreviousProducts;
 use App\Http\Livewire\FollowingProducts\IndexFollowingProducts;
-use App\Http\Livewire\Lots\LotsIndex;
-use App\Http\Livewire\Lots\SublotsAreas;
-use App\Http\Livewire\Lots\SublotsIndex;
-use App\Http\Livewire\Lots\SublotsProducts;
 use App\Http\Livewire\PucharseParameters\IndexPucharseParameters;
-use App\Http\Livewire\Tests\Test;
 
 Route::get('/countries', IndexCountries::class)->name('admin.countries.index');
 Route::get('/provinces', IndexProvinces::class)->name('admin.provinces.index');
@@ -132,3 +133,4 @@ Route::get('/sublots/products', SublotsProducts::class)->name('admin.sublots-pro
 
 // Test
 Route::get('/tests', Test::class)->name('admin.tests.index');
+Route::get('/tests-orders', TestOrders::class)->name('admin.tests-orders.index');
