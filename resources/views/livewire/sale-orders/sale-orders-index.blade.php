@@ -114,6 +114,11 @@
                                             <i class="fas fa-list"></i>
                                         </x-jet-secondary-button>
                                     </a>
+                                    <a title="Ver producción necesaria" href="{{ route('admin.sale-orders.show-necessary-production', $saleOrder) }}">
+                                        <x-jet-button>
+                                            <i class="fas fa-calculator"></i>
+                                        </x-jet-button>
+                                    </a>
                                 </div>
                             </td>
                         </tr>

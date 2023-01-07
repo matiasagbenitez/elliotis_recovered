@@ -53,8 +53,10 @@ use App\Http\Livewire\PurchaseOrders\ShowPurchaseOrder;
 use App\Http\Livewire\Tenderings\ShowFinishedTendering;
 use App\Http\Livewire\PurchaseOrders\CreatePurchaseOrder;
 use App\Http\Livewire\PurchaseOrders\PurchaseOrdersIndex;
+use App\Http\Livewire\SaleOrders\ShowNecessaryProduction;
 use App\Http\Livewire\PreviousProducts\IndexPreviousProducts;
 use App\Http\Livewire\FollowingProducts\IndexFollowingProducts;
+use App\Http\Livewire\Productions\ProductionCalculation;
 use App\Http\Livewire\PucharseParameters\IndexPucharseParameters;
 
 Route::get('/countries', IndexCountries::class)->name('admin.countries.index');
@@ -95,6 +97,7 @@ Route::get('/sale/{sale}/detail', ShowSale::class)->name('admin.sales.show-detai
 Route::get('/sale-orders', SaleOrdersIndex::class)->name('admin.sale-orders.index');
 Route::get('/sale-order/create', CreateSaleOrder::class)->name('admin.sale-orders.create');
 Route::get('/sale-order/{saleOrder}/detail', ShowSaleOrder::class)->name('admin.sale-orders.show-detail');
+Route::get('/sale-order/{saleOrder}/detail/necessary-production', ShowNecessaryProduction::class)->name('admin.sale-orders.show-necessary-production');
 
 Route::get('/purchase-orders', PurchaseOrdersIndex::class)->name('admin.purchase-orders.index');
 Route::get('/purchase-order/create', CreatePurchaseOrder::class)->name('admin.purchase-orders.create');
@@ -134,3 +137,7 @@ Route::get('/sublots/products', SublotsProducts::class)->name('admin.sublots-pro
 // Test
 Route::get('/tests', Test::class)->name('admin.tests.index');
 Route::get('/tests-orders', TestOrders::class)->name('admin.tests-orders.index');
+
+
+// Producción
+Route::get('/necessary-production', ProductionCalculation::class)->name('admin.necessary-production.index');

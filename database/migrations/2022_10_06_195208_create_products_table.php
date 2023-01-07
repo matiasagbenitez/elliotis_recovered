@@ -24,6 +24,7 @@ return new class extends Migration
             $table->float('selling_price')->required();
 
             $table->integer('real_stock')->required();
+            $table->integer('necessary_stock')->nullable();
             $table->integer('minimum_stock')->required();
             $table->integer('reposition')->required();
 

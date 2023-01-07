@@ -6,6 +6,8 @@ use App\Models\Client;
 use App\Models\Product;
 use Livewire\Component;
 use App\Models\SaleOrder;
+use App\Http\Services\SaleOrderService;
+use App\Http\Services\NecessaryProductionService;
 
 class CreateSaleOrder extends Component
 {
@@ -160,6 +162,8 @@ class CreateSaleOrder extends Component
             'iva' => $iva,
             'total' => $subtotal + $iva,
         ]);
+
+        NecessaryProductionService::calculate();
 
         // Retornamos mensaje de éxito y redireccionamos
         $id = $saleOrder->id;
