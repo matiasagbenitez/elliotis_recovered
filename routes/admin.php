@@ -56,6 +56,7 @@ use App\Http\Livewire\PurchaseOrders\PurchaseOrdersIndex;
 use App\Http\Livewire\SaleOrders\ShowNecessaryProduction;
 use App\Http\Livewire\PreviousProducts\IndexPreviousProducts;
 use App\Http\Livewire\FollowingProducts\IndexFollowingProducts;
+use App\Http\Livewire\NecesaryProduction\IndexNecessaryProduction;
 use App\Http\Livewire\Productions\ProductionCalculation;
 use App\Http\Livewire\PucharseParameters\IndexPucharseParameters;
 
@@ -140,4 +141,4 @@ Route::get('/tests-orders', TestOrders::class)->name('admin.tests-orders.index')
 
 
 // Producción
-Route::get('/necessary-production', ProductionCalculation::class)->name('admin.necessary-production.index');
+Route::get('/necessary-production', IndexNecessaryProduction::class)->name('admin.necessary-production.index');

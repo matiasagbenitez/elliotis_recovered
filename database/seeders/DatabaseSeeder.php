@@ -35,6 +35,9 @@ class DatabaseSeeder extends Seeder
         $this->call(ProductSeeder::class);
         $this->call(PurchaseSeeder::class);
         $this->call(SaleSeeder::class);
+
+        $this->call(PreviousProductSeeder::class);
+
         $this->call(SaleOrderSeeder::class);
         $this->call(PurchaseOrderSeeder::class);
         $this->call(TenderingSeeder::class);
@@ -43,7 +46,6 @@ class DatabaseSeeder extends Seeder
         $this->call(TaskStatusSeeder::class);
         $this->call(TypeOfTaskSeeder::class);
         $this->call(FollowingProductSeeder::class);
-        $this->call(PreviousProductSeeder::class);
 
     }
 }

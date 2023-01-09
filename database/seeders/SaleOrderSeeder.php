@@ -5,13 +5,14 @@ namespace Database\Seeders;
 use App\Models\Product;
 use App\Models\SaleOrder;
 use Illuminate\Database\Seeder;
+use App\Http\Services\NecessaryProductionService;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 class SaleOrderSeeder extends Seeder
 {
     public function run()
     {
-        SaleOrder::factory(5)->create();
+        SaleOrder::factory(3)->create();
 
         // Associate random products to each sale order
         SaleOrder::all()->each(function ($saleOrder) {
@@ -49,7 +50,10 @@ class SaleOrderSeeder extends Seeder
 
             // Total
             $saleOrder->save();
+
+            NecessaryProductionService::calculate(null, true);
         });
 
     }
+
 }

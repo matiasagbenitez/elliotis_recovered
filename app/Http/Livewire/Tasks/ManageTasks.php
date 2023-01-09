@@ -13,15 +13,16 @@ use Livewire\WithPagination;
 use App\Models\InputTaskDetail;
 use App\Http\Services\TaskService;
 use App\Models\InitialTaskDetail;
+use App\Models\Product;
 use Illuminate\Support\Facades\Date;
 
 class ManageTasks extends Component
 {
-
     use WithPagination;
 
     public $task_type_name, $type_of_task_id, $running_task, $tasks, $employees, $statuses;
     protected $listeners = ['startNewTask', 'finishTask', 'disable'];
+    public $pendingProducts = [];
 
     public $filters = [
         'employee_id' => null,
@@ -38,6 +39,19 @@ class ManageTasks extends Component
         $this->tasks = TaskService::getTasks($this->running_task, $this->filters, $this->type_of_task_id);
         $this->employees = User::all();
         $this->statuses = TaskStatus::all();
+
+        $pendingProduction = Product::where('phase_id', $task_type->finalPhase->id)->where('phase_id', '!=', $task_type->initialPhase->id)->get();
+
+        foreach ($pendingProduction as $product) {
+            if ($product->necessary_stock != null && $product->necessary_stock > 0) {
+                $this->pendingProducts[] = [
+                    'product_id' => $product->id,
+                    'name' => $product->name,
+                    'necessary_stock' => $product->necessary_stock,
+                ];
+            }
+        }
+
     }
 
     public function updatedFilters()

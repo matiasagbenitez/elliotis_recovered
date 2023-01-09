@@ -163,7 +163,7 @@ class CreateSaleOrder extends Component
             'total' => $subtotal + $iva,
         ]);
 
-        NecessaryProductionService::calculate();
+        NecessaryProductionService::calculate(null, true);
 
         // Retornamos mensaje de éxito y redireccionamos
         $id = $saleOrder->id;
