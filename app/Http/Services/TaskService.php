@@ -23,7 +23,7 @@ class TaskService
         if ($running_task) {
             $allTasks = Task::filter($filters)->where('type_of_task_id', $type_of_task_id)->latest()->paginate(10);
         } else {
-            $allTasks = Task::filter($filters)->where('type_of_task_id', $type_of_task_id)->orderBy('updated_at', 'desc')->paginate(10);
+            $allTasks = Task::filter($filters)->where('type_of_task_id', $type_of_task_id)->orderBy('id', 'desc')->paginate(10);
         }
 
         $tasks = [];

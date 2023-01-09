@@ -12,7 +12,7 @@ class PurchaseSeeder extends Seeder
 {
     public function run()
     {
-        Purchase::factory(5)->create();
+        Purchase::factory(15)->create();
 
         // Associate random products to each purchase
         Purchase::all()->each(function ($purchase) {
@@ -54,7 +54,7 @@ class PurchaseSeeder extends Seeder
             }
             $purchase->total = $purchase->subtotal + $purchase->iva;
 
-            if ($purchase->id <= 3) {
+            if ($purchase->id <= 13) {
 
                 // Last code
                 $lastCode = TrunkLot::latest('code')->first();
