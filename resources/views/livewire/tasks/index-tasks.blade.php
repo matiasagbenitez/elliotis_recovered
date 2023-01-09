@@ -16,45 +16,57 @@
             </select>
         </div>
 
-        <div class="grid grid-cols-5 gap-4">
+        <div class="gap-4">
 
             @foreach ($stats as $stat)
                 <a href="{{ route('admin.tasks.manage', $stat['id']) }}">
-                    {{-- <a href="#"> --}}
+
                     <div
-                        class="hover:bg-gray-50 hover:shadow-lg rounded-lg p-2 hover:cursor-pointer h-full flex flex-col justify-between">
-                        <div class="flex justify-center">
-                            <img class="h-40 w-40" src="{{ asset($stat['icon']) }}" alt="Ícono de la tarea">
+                        class="hover:bg-gray-50 hover:shadow-lg rounded-lg p-2 hover:cursor-pointer h-full flex items-center">
+                        <div class="w-1/2 flex items-center gap-10 font-mono">
+                            <div class="hidden md:flex md:justify-center">
+                                <img class="h-24 w-24" src="{{ asset($stat['icon']) }}" alt="Ícono de la tarea">
+                            </div>
+
+                            <h2 class="uppercase font-bold text-center my-3">{{ $stat['name'] }}</h2>
                         </div>
 
-                        <h2 class="uppercase font-bold text-center my-3">{{ $stat['name'] }}</h2>
+                        <div class="w-1/4">
+                            @if ($stat['running_task'] == true)
+                                <div class="space-y-1 text-center p-3 font-semibold">
+                                    <span
+                                        class="px-6 py-1 mb-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                        LÍNEA EN FUNCIONAMIENTO
+                                    </span>
+                                    @if (isset($stat['running_task']))
+                                        <p class="text-sm">Iniciada por {{ $stat['user'] }}</p>
+                                        <p class="text-sm">{{ $stat['date'] }}</p>
+                                    @endif
+                                </div>
+                            @elseif ($stat['running_task'] == false)
+                                <div class="space-y-1 text-center p-3 font-semibold ">
+                                    <span
+                                        class="px-6 py-1 mb-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
+                                        LÍNEA DETENIDA
+                                    </span>
+                                    @if (isset($stat['running_task']))
+                                        <p class="text-sm">Detenida por {{ $stat['user'] }}</p>
+                                        <p class="text-sm">{{ $stat['date'] }}</p>
+                                    @endif
+                                </div>
+                            @endif
+                        </div>
 
-                        @if ($stat['running_task'] == true)
-                            <div class="space-y-1 text-center p-3 font-semibold">
-                                <span
-                                    class="px-6 py-1 mb-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                                    LÍNEA EN FUNCIONAMIENTO
-                                </span>
-                                @if (isset($stat['running_task']))
-                                    <p class="text-sm">Última tarea iniciada por</p>
-                                    <p class="text-sm">{{ $stat['user'] }}</p>
-                                    <p class="text-sm">el {{ $stat['date'] }}hs</p>
-                                @endif
-                            </div>
-                        @elseif ($stat['running_task'] == false)
-                            <div class="space-y-1 text-center p-3 font-semibold ">
-                                <span
-                                    class="px-6 py-1 mb-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
-                                    LÍNEA DETENIDA
-                                </span>
-                                @if (isset($stat['running_task']))
-                                    <p class="text-sm">Última tarea finalizada por</p>
-                                    <p class="text-sm">{{ $stat['user'] }}</p>
-                                    <p class="text-sm">el {{ $stat['date'] }}hs</p>
-                                @endif
-                            </div>
-                        @endif
+                        <div class="w-1/4 flex items-center justify-end">
+                            @if ($stat['pendingProducts'] == true)
+                                <i class="fas fa-exclamation-triangle text-yellow-500 mr-3" title="Producción necesaria"></i>
+                            @endif
+                            <x-jet-secondary-button>
+                                Gestionar
+                            </x-jet-secondary-button>
+                        </div>
                     </div>
+
                 </a>
             @endforeach
 
