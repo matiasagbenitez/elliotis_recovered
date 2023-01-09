@@ -25,11 +25,18 @@
                 <x-jet-input-error class="mt-2 text-xs font-semibold" for="createForm.name" />
             </div>
 
+            {{-- Prefix --}}
+            <div class="mb-4">
+                <x-jet-label class="mb-2">Descripción</x-jet-label>
+                <x-jet-input wire:model.defer="createForm.description" type="text" class="w-full"
+                    placeholder="Ingrese la descripción de la tarea"></x-jet-input>
+                <x-jet-input-error class="mt-2 text-xs font-semibold" for="createForm.description" />
+            </div>
+
             {{-- Tarea inicial --}}
             <div class="mb-4">
                 <x-jet-label class="mb-2">¿Es una tarea inicial?</x-jet-label>
                 <select wire:model.defer="createForm.initial_task" class="input-control w-full">
-                    <option value="">Seleccione una opción</option>
                     <option value="0">No</option>
                     <option value="1">Si</option>
                 </select>

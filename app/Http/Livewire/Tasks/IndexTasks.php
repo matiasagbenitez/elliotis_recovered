@@ -68,6 +68,7 @@ class IndexTasks extends Component
                 'id' => $taskType->id,
                 'task_id' => $running_task ? $task->id : null,
                 'name' => $taskType->name,
+                'description' => $taskType->description,
                 'icon' => $taskType->icon,
                 'running_task' => $task ? ($task->task_status_id == 1 ? true : false) : null,
                 'user' =>

@@ -13,6 +13,7 @@ class TypeOfTaskSeeder extends Seeder
             [
                 'type' => 'Movimiento (tarea inicial)',
                 'name' => 'Movimiento de rollos para corte',
+                'description' => 'Movimiento de rollos desde playa de rollos a la línea de corte',
                 'initial_task' => true,
                 'movement' => true,
                 'origin_area_id' => 1,
@@ -25,6 +26,7 @@ class TypeOfTaskSeeder extends Seeder
             [
                 'type' => 'Producción',
                 'name' => 'Corte de rollos',
+                'description' => 'Corte de rollos en fajas',
                 'initial_task' => false,
                 'movement' => false,
                 'origin_area_id' => 2,
@@ -37,6 +39,7 @@ class TypeOfTaskSeeder extends Seeder
             [
                 'type' => 'Movimiento',
                 'name' => 'Movimiento para secado',
+                'description' => 'Movimiento de fajas desde la línea de corte al sector de secado',
                 'initial_task' => false,
                 'movement' => true,
                 'origin_area_id' => 2,
@@ -49,6 +52,7 @@ class TypeOfTaskSeeder extends Seeder
             [
                 'type' => 'Movimiento/Producción',
                 'name' => 'Movimiento a depósito de fajas secas',
+                'description' => 'Movimiento de fajas secas desde el sector de secado al depósito',
                 'initial_task' => false,
                 'movement' => true,
                 'origin_area_id' => 3,
@@ -61,6 +65,7 @@ class TypeOfTaskSeeder extends Seeder
             [
                 'type' => 'Movimiento',
                 'name' => 'Movimiento para machimbrado',
+                'description' => 'Movimiento de fajas desde el depósito a la machimbradora',
                 'initial_task' => false,
                 'movement' => true,
                 'origin_area_id' => 4,
@@ -73,6 +78,7 @@ class TypeOfTaskSeeder extends Seeder
             [
                 'type' => 'Producción',
                 'name' => 'Machimbrado',
+                'description' => 'Machimbrado de fajas secas para la obtención de machimbres',
                 'initial_task' => false,
                 'movement' => false,
                 'origin_area_id' => 5,
@@ -85,6 +91,7 @@ class TypeOfTaskSeeder extends Seeder
             [
                 'type' => 'Movimiento',
                 'name' => 'Movimiento a depósito de fajas machimbradas',
+                'description' => 'Movimiento de fajas machimbradas al depósito de fajas machimbradas',
                 'initial_task' => false,
                 'movement' => true,
                 'origin_area_id' => 5,
@@ -97,6 +104,7 @@ class TypeOfTaskSeeder extends Seeder
             [
                 'type' => 'Movimiento',
                 'name' => 'Movimiento para empaquetado',
+                'description' => 'Movimiento de fajas machimbradas desde el depósito a la empaquetadora',
                 'initial_task' => false,
                 'movement' => true,
                 'origin_area_id' => 6,
@@ -109,6 +117,7 @@ class TypeOfTaskSeeder extends Seeder
             [
                 'type' => 'Producción',
                 'name' => 'Empaquetado',
+                'description' => 'Empaquetado de fajas machimbradas en paquetes',
                 'initial_task' => false,
                 'final_task' => true,
                 'movement' => false,
@@ -122,6 +131,7 @@ class TypeOfTaskSeeder extends Seeder
             [
                 'type' => 'Movimiento',
                 'name' => 'Movimiento a depósito de paquetes',
+                'description' => 'Movimiento de paquetes desde la empaquetadora al depósito de paquetes',
                 'initial_task' => false,
                 'movement' => true,
                 'origin_area_id' => 7,

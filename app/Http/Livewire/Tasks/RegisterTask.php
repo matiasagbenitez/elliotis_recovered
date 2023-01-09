@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Tasks;
 
+use App\Http\Services\NecessaryProductionService;
 use App\Models\Lot;
 use App\Models\Task;
 use App\Models\User;
@@ -242,6 +243,8 @@ class RegisterTask extends Component
         } else {
             abort(403);
         }
+
+        NecessaryProductionService::calculate(null, true);
     }
 
     public function save_initial()

@@ -13,6 +13,7 @@ return new class extends Migration
 
             $table->string('type', 255)->nullable();
             $table->string('name', 255)->unique();
+            $table->string('description', 255)->nullable();
 
             // Just one 'initial_task' attribute can be true
             $table->boolean('initial_task')->default(false);

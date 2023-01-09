@@ -17,6 +17,7 @@ class EditTypeOfTask extends Component
     public $editForm = [
         'type' => '',
         'name' => '',
+        'description' => '',
         'initial_task' => '',
         'movement' => '',
         'origin_area_id' => '',
@@ -29,6 +30,7 @@ class EditTypeOfTask extends Component
     protected $validationAttributes = [
         'editForm.name' => 'name',
         'editForm.initial_task' => 'initial task',
+        'editForm.description' => 'description',
         'editForm.origin_area_id' => 'origin area',
         'editForm.destination_area_id' => 'destination area',
         'editForm.initial_phase_id' => 'initial phase',
@@ -52,6 +54,7 @@ class EditTypeOfTask extends Component
         $this->editForm = [
             'type' => $this->typeOfTask->type,
             'name' => $this->typeOfTask->name,
+            'description' => $this->typeOfTask->description,
             'initial_task' => $this->typeOfTask->initial_task,
             'movement' => $this->typeOfTask->movement,
             'origin_area_id' => $this->typeOfTask->origin_area_id,
@@ -101,8 +104,8 @@ class EditTypeOfTask extends Component
             $this->emit('success', '¡El tipo de tarea se ha actualizado con éxito!');
             $this->emit('render');
         } catch (\Throwable $th) {
-            dd($th);
-            // $this->emit('error', '¡No es posible crear el tipo de tarea! Verifica los campos y recuerda que no se pueden repetir la combinación de áreas y fases iniciales y finales. Además, solo puede haber una tarea inicial.');
+            // dd($th);
+            $this->emit('error', '¡No es posible crear el tipo de tarea! Verifica los campos y recuerda que no se pueden repetir la combinación de áreas y fases iniciales y finales. Además, solo puede haber una tarea inicial.');
         }
     }
 

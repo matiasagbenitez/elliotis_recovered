@@ -14,7 +14,7 @@
                     <select wire:model='filters.task_name' class="input-control w-full">
                         <option disabled value="">Seleccione una opción</option>
                         @foreach ($typesOfTasks as $type)
-                            <option value="{{ $type->name }}">{{ $type->name }}</option>
+                            <option value="{{ $type->id }}">{{ $type->name }}</option>
                         @endforeach
                     </select>
                 </div>

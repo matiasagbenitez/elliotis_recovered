@@ -16,7 +16,8 @@ class CreateTypeOfTask extends Component
     public $createForm = [
         'type' => '',
         'name' => '',
-        'initial_task' => '',
+        'description' => '',
+        'initial_task' => 0,
         'movement' => '',
         'origin_area_id' => '',
         'destination_area_id' => '',
@@ -36,6 +37,7 @@ class CreateTypeOfTask extends Component
 
     protected $validationAttributes = [
         'createForm.name' => 'name',
+        'createForm.description' => 'description',
         'createForm.initial_task' => 'initial task',
         'createForm.origin_area_id' => 'origin area',
         'createForm.destination_area_id' => 'destination area',
@@ -85,8 +87,8 @@ class CreateTypeOfTask extends Component
             $this->emit('success', '¡El tipo de tarea se ha creado con éxito!');
             $this->emit('render');
         } catch (\Throwable $th) {
-            dd($th);
-            // $this->emit('error', '¡No es posible crear el tipo de tarea! Verifica los campos y recuerda que no se pueden repetir la combinación de áreas y fases iniciales y finales. Además, solo puede haber una tarea inicial.');
+            // dd($th);
+            $this->emit('error', '¡No es posible crear el tipo de tarea! Verifica los campos y recuerda que no se pueden repetir la combinación de áreas y fases iniciales y finales. Además, solo puede haber una tarea inicial.');
         }
     }
 

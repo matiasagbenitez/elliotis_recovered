@@ -79,5 +79,7 @@ class DatabaseSeeder extends Seeder
         for ($i = 0; $i < 6; $i++) {
             $this->call(Task8Seeder::class);
         }
+
+        $this->call(NecessaryProductionSeeder::class);
     }
 }

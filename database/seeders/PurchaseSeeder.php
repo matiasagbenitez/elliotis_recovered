@@ -38,6 +38,10 @@ class PurchaseSeeder extends Seeder
                     'price' => $price,
                     'subtotal' => $quantity * $price
                 ]);
+
+                $product->update([
+                    'real_stock' => $product->real_stock + $quantity
+                ]);
             }
 
             // Subtotal

@@ -23,15 +23,18 @@
 
                     <div
                         class="hover:bg-gray-50 hover:shadow-lg rounded-lg p-2 hover:cursor-pointer h-full flex items-center">
-                        <div class="w-1/2 flex items-center gap-10 font-mono">
+                        <div class="w-2/3 flex items-center gap-10 font-mono">
                             <div class="hidden md:flex md:justify-center">
                                 <img class="h-24 w-24" src="{{ asset($stat['icon']) }}" alt="Ícono de la tarea">
                             </div>
 
-                            <h2 class="uppercase font-bold text-center my-3">{{ $stat['name'] }}</h2>
+                            <div class="flex flex-col items-start">
+                                <h2 class="uppercase font-bold text-center">{{ $stat['name'] }}</h2>
+                                <p class="font-normal font-sans text-sm">{{ $stat['description'] }}</p>
+                            </div>
                         </div>
 
-                        <div class="w-1/4">
+                        <div class="w-1/3">
                             @if ($stat['running_task'] == true)
                                 <div class="space-y-1 text-center p-3 font-semibold">
                                     <span
@@ -46,7 +49,7 @@
                             @elseif ($stat['running_task'] == false)
                                 <div class="space-y-1 text-center p-3 font-semibold ">
                                     <span
-                                        class="px-6 py-1 mb-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
+                                        class="px-6 py-1 mb-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-orange-100 text-orange-800">
                                         LÍNEA DETENIDA
                                     </span>
                                     @if (isset($stat['running_task']))
@@ -59,7 +62,8 @@
 
                         <div class="w-1/4 flex items-center justify-end">
                             @if ($stat['pendingProducts'] == true)
-                                <i class="fas fa-exclamation-triangle text-yellow-500 mr-3" title="Producción necesaria"></i>
+                                <i class="fas fa-exclamation-triangle text-yellow-500 mr-3"
+                                    title="Producción necesaria"></i>
                             @endif
                             <x-jet-secondary-button>
                                 Gestionar

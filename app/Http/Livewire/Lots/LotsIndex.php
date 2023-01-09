@@ -9,7 +9,7 @@ use Livewire\Component;
 
 class LotsIndex extends Component
 {
-    public $lots, $typesOfTasks;
+    public $lots = [], $typesOfTasks;
     public $stats = [];
     public $filters = [
         'task_name' => '',
@@ -26,11 +26,14 @@ class LotsIndex extends Component
 
     // public function updatedFilters($value)
     // {
-    //     $this->lots = Lot::whereHas('task', function ($query) {
-    //         $query->whereHas('typeOfTask', function ($query) {
-    //             $query->where('name', 'like', '%' . $this->filters['task_name'] . '%');
+    //     if ($this->filters['task_name'] != '') {
+    //         $this->lots = Lot::whereHas('task', function ($query) {
+    //             $query->where('type_of_task_id', $this->filters['task_name']);
     //         });
-    //     });
+    //         dd($this->lots);
+    //     } else {
+    //         $this->lots = Lot::orderBy('created_at', 'desc')->get();
+    //     }
 
     //     $this->getStats();
     // }
@@ -50,6 +53,7 @@ class LotsIndex extends Component
                 'created_by' => User::find($lot->task->finished_by)->name,
             ];
         }
+        $this->render();
     }
 
     public function render()
