@@ -15,9 +15,14 @@ class NecessaryProductionService
     public static function calculate(SaleOrder $saleOrder = null, $updateStock = false)
     {
         if ($saleOrder) {
-            $orders = SaleOrder::where('is_active', true)->where('id', $saleOrder->id)->get();
+            $orders = SaleOrder::where('is_active', true)->where('its_done', false)->where('id', $saleOrder->id)->get();
         } else {
-            $orders = SaleOrder::where('is_active', true)->get();
+            $orders = SaleOrder::where('is_active', true)->where('its_done', false)->get();
+        }
+
+        // If $orders is empty, return empty array
+        if ($orders->isEmpty()) {
+            return;
         }
 
         foreach ($orders as $order) {

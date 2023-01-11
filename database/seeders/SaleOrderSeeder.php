@@ -30,7 +30,6 @@ class SaleOrderSeeder extends Seeder
                 // $product = Product::where('is_salable', true)->inRandomOrder()->first();
 
                 $quantity = rand(1, 4);
-                $price = $product->selling_price;
 
                 $saleOrder->products()->attach($product->id, [
                     'm2_unitary' => $product->m2,

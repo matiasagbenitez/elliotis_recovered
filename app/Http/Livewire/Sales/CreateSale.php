@@ -7,12 +7,15 @@ use App\Models\Client;
 use App\Models\Product;
 use Livewire\Component;
 use App\Models\Supplier;
+use App\Models\SaleOrder;
 use App\Models\VoucherTypes;
 use Livewire\WithFileUploads;
 use App\Models\PaymentMethods;
-use App\Models\PaymentConditions;
 use App\Models\ProductSaleOrder;
-use App\Models\SaleOrder;
+use App\Models\PaymentConditions;
+use Illuminate\Support\Facades\Auth;
+use App\Http\Services\NecessaryProductionService;
+use Termwind\Components\Dd;
 
 class CreateSale extends Component
 {
@@ -21,7 +24,7 @@ class CreateSale extends Component
 
     // SALE PARAMETERS
     public $clients = [], $payment_conditions = [], $payment_methods = [], $voucher_types = [];
-    public $client_iva_condition = '', $client_discriminates_iva, $has_order_associated = 0, $client_orders = [];
+    public $client_discriminates_iva, $has_order_associated = '', $client_orders = [];
 
     // PRODUCTS
     public $orderProducts = [];
@@ -29,10 +32,10 @@ class CreateSale extends Component
 
     // CREATE FORM
     public $createForm = [
-        'user_id' => 1,
+        'user_id' => '',
         'date' => '',
         'client_id' => '',
-        'client_order_id' => 0,
+        'client_order_id' => '',
         'payment_condition_id' => '',
         'payment_method_id' => '',
         'voucher_type_id' => '',
@@ -45,8 +48,8 @@ class CreateSale extends Component
 
     // VALIDATION
     protected $rules = [
-        'createForm.date' => 'required|date',
         'createForm.client_id' => 'required|integer|exists:clients,id',
+        'createForm.date' => 'required|date',
         'createForm.client_order_id' => 'nullable|integer',
         'createForm.payment_condition_id' => 'required|integer|exists:payment_conditions,id',
         'createForm.payment_method_id' => 'required|integer|exists:payment_methods,id',
@@ -57,19 +60,33 @@ class CreateSale extends Component
         'createForm.total' => 'required',
         'createForm.observations' => 'nullable|string',
         'orderProducts.*.product_id' => 'required',
+        'orderProducts.*.m2_unitary' => 'required|numeric|min:1',
         'orderProducts.*.quantity' => 'required|numeric|min:1',
+        'orderProducts.*.m2_total' => 'required|numeric|min:1',
+        'orderProducts.*.m2_price' => 'required|numeric|min:1',
     ];
 
     public function mount()
     {
-        $this->clients = Client::orderBy('business_name')->get();
+        $allClients = Client::orderBy('business_name')->get();
+        $this->createForm['date'] = date('Y-m-d');
+
+        foreach ($allClients as $client) {
+            $this->clients[] = [
+                'id' => $client->id,
+                'name' => $client->business_name,
+                'iva_condition' => $client->iva_condition->name,
+                'discriminates_iva' => $client->iva_condition->discriminate ? 'Discrimina' : 'No discrimina'
+            ];
+        }
+
         $this->payment_conditions = PaymentConditions::orderBy('name')->get();
         $this->payment_methods = PaymentMethods::orderBy('name')->get();
         $this->voucher_types = VoucherTypes::orderBy('name')->get();
 
         $this->allProducts = Product::where('is_salable', true)->orderBy('name')->get();
         $this->orderProducts = [
-            ['product_id' => '', 'quantity' => 1, 'price' => 0, 'subtotal' => '0']
+            ['product_id' => '', 'm2_unitary' => 0, 'quantity' => 1, 'm2_total' => 0, 'm2_price' => 0, 'subtotal' => 0]
         ];
     }
 
@@ -77,28 +94,39 @@ class CreateSale extends Component
     public function resetOrderProducts()
     {
         $this->orderProducts = [
-            ['product_id' => '', 'quantity' => 1, 'price' => 0, 'subtotal' => '0']
+            ['product_id' => '', 'm2_unitary' => 0, 'quantity' => 1, 'm2_total' => 0, 'm2_price' => 0, 'subtotal' => 0]
         ];
         $this->createForm['subtotal'] = 0;
         $this->createForm['iva'] = 0;
         $this->createForm['total'] = 0;
     }
 
-    public function updatedCreateFormClientId()
+    public function updatedCreateFormClientId($value)
     {
-        $this->client_iva_condition = Client::find($this->createForm['client_id'])->iva_condition->name ?? '';
-        $this->client_discriminates_iva = Client::find($this->createForm['client_id'])->iva_condition->discriminate ?? null;
-        $this->reset(['has_order_associated', 'client_orders']);
-        $this->resetOrderProducts();
-        // $this->updatedOrderProducts();
+        $client = Client::find($value);
+        $this->client_discriminates_iva = $client->iva_condition->discriminate ? true : false;
+        $this->orderProducts = [
+            ['product_id' => '', 'm2_unitary' => 0, 'quantity' => 1, 'm2_total' => 0, 'm2_price' => 0, 'subtotal' => 0]
+        ];
+        $this->createForm = [
+            'user_id' => 1,
+            'client_id' => $value,
+            'date' => date('Y-m-d'),
+            'subtotal' => 0,
+            'iva' => 0,
+            'total' => 0,
+            'observations' => '',
+        ];
+        $this->reset('has_order_associated', 'client_orders');
     }
 
     public function updatedHasOrderAssociated()
     {
         if ($this->has_order_associated == 0) {
-            $this->client_orders = [];
+            $this->reset('client_orders');
             $this->resetOrderProducts();
         } else {
+            $this->reset('client_orders');
             $this->client_orders = SaleOrder::where('client_id', $this->createForm['client_id'])->where('is_active', true)->get();
         }
     }
@@ -107,7 +135,20 @@ class CreateSale extends Component
     public function updatedCreateFormClientOrderId($value)
     {
         $this->orderProducts = [];
-        $this->orderProducts = ProductSaleOrder::where('sale_order_id', $value)->get()->toArray();
+
+        $orderDetail = ProductSaleOrder::where('sale_order_id', $value)->get()->toArray();
+
+        foreach ($orderDetail as $product) {
+            $this->orderProducts[] = [
+                'product_id' => $product['product_id'],
+                'm2_unitary' => $product['m2_unitary'],
+                'quantity' => $product['quantity'],
+                'm2_total' => $product['m2_total'],
+                'm2_price' => $this->client_discriminates_iva ? $product['m2_price'] : $product['m2_price'] * 1.21,
+                'subtotal' => $this->client_discriminates_iva ? $product['subtotal'] : $product['subtotal'] * 1.21,
+            ];
+        }
+
         $this->updatedOrderProducts();
     }
 
@@ -153,20 +194,14 @@ class CreateSale extends Component
     {
         $subtotal = 0;
 
-        if ($this->client_discriminates_iva) {
-            foreach ($this->orderProducts as $index => $product) {
-                // Si el cliente discrimina IVA, se calcula el IVA sobre el subtotal de la venta
-                $this->orderProducts[$index]['price'] = Product::find($product['product_id'])->selling_price ?? 0;
-                $this->orderProducts[$index]['subtotal'] = number_format($product['quantity'] * $this->orderProducts[$index]['price'], 2, '.', '');
-                $subtotal += $this->orderProducts[$index]['subtotal'];
-            }
-        } else {
-            foreach ($this->orderProducts as $index => $product) {
-                // Si el cliente no discrimina IVA, se calcula el IVA junto al precio unitario de cada producto
-                $aux = Product::find($product['product_id'])->selling_price ?? 0;
-                $aux *= 1.21;
-                $this->orderProducts[$index]['price'] = $aux;
-                $this->orderProducts[$index]['subtotal'] = number_format($product['quantity'] * $this->orderProducts[$index]['price'], 2, '.', '');
+        foreach ($this->orderProducts as $index => $product) {
+            if (empty($product['quantity']) || empty($product['m2_price'])) {
+                $this->orderProducts[$index]['subtotal'] = 0;
+                continue;
+            } else {
+                $this->orderProducts[$index]['m2_unitary'] = Product::find($product['product_id'])->m2 ?? 0;
+                $this->orderProducts[$index]['m2_total'] = number_format($this->orderProducts[$index]['quantity'] * $this->orderProducts[$index]['m2_unitary'], 2, '.', '');
+                $this->orderProducts[$index]['subtotal'] = number_format($this->orderProducts[$index]['m2_total'] * $this->orderProducts[$index]['m2_price'], 2, '.', '');
                 $subtotal += $this->orderProducts[$index]['subtotal'];
             }
         }
@@ -177,13 +212,38 @@ class CreateSale extends Component
             $this->createForm['iva'] = number_format($subtotal * 0.21, 2, '.', '');
             $this->createForm['total'] = number_format($subtotal * 1.21, 2, '.', '');
         } else {
+            $this->createForm['subtotal'] = number_format($subtotal / 1.21, 2, '.', '');
+            $this->createForm['iva'] = number_format($subtotal / 1.21 * 0.21, 2, '.', '');
             $this->createForm['total'] = number_format($subtotal, 2, '.', '');
         }
     }
 
+    public function updatePrice($index)
+    {
+        $price = Product::find($this->orderProducts[$index]['product_id'])->m2_price ?? 0;
+
+        if (!$this->client_discriminates_iva) {
+            $price = $price * 1.21;
+        }
+
+        $this->orderProducts[$index]['m2_price'] = number_format($price, 2, '.', '');
+        $this->updatedOrderProducts();
+    }
+
+
     // CREATE SALE
     public function save()
     {
+        try {
+            if ($this->has_order_associated == '' || $this->has_order_associated == 0) {
+                $this->createForm['client_order_id'] = null;
+            } elseif ($this->has_order_associated == 1 && $this->createForm['client_order_id'] == '') {
+                $this->createForm['client_order_id'] = null;
+            }
+        } catch (\Throwable $th) {
+            $this->emit('error', 'Ocurrió un error al intentar guardar la venta con la orden de venta seleccionada.');
+        }
+
         // Validamos los campos
         $this->validate();
 
@@ -196,72 +256,58 @@ class CreateSale extends Component
             }
         }
 
-        // Creamos la venta con los datos del formulario
-        $sale = Sale::create($this->createForm);
+        $this->createForm['user_id'] = Auth::user()->id;
 
-        // Creamos los productos de la venta en la tabla pivote
-        if ($this->client_discriminates_iva) {
+        try {
+            // Creamos la venta con los datos del formulario
+            $sale = Sale::create($this->createForm);
+
+            // Creamos los productos de la venta en la tabla pivote
             foreach ($this->orderProducts as $product) {
                 $sale->products()->attach($product['product_id'], [
+                    'm2_unitary' => $product['m2_unitary'],
                     'quantity' => $product['quantity'],
-                    'price' => $product['price'],
-                    'subtotal' => $product['quantity'] * $product['price'],
+                    'm2_total' => $product['m2_total'],
+                    'm2_price' => $this->client_discriminates_iva ? $product['m2_price'] : $product['m2_price'] / 1.21,
+                    'subtotal' => $this->client_discriminates_iva ? $product['subtotal'] : $product['subtotal'] / 1.21,
                 ]);
             }
-        } else {
-            foreach ($this->orderProducts as $product) {
-                $sale->products()->attach($product['product_id'], [
-                    'quantity' => $product['quantity'],
-                    'price' => $product['price'] / 1.21,
-                    'subtotal' => $product['quantity'] * ($product['price'] / 1.21),
+
+            // Actualizamos el stock de los productos
+            foreach ($sale->products as $product) {
+                $p = Product::find($product->id);
+                $p->update([
+                    'real_stock' => $p->real_stock - $product->pivot->quantity,
                 ]);
             }
-        }
 
-        // Obtenemos el subtotal de la venta
-        $subtotal = $sale->products->sum(function ($product) {
-            return $product->pivot->subtotal;
-        });
+            // Actualizamos la orden de venta
+            if ($this->has_order_associated) {
+                $saleOrder = SaleOrder::find($this->createForm['client_order_id']);
+                if ($saleOrder) {
+                    $saleOrder->update([
+                        'its_done' => true,
+                    ]);
+                }
+            }
 
-        // Obtenemos el IVA de la venta
-        $iva = $subtotal * 0.21;
-
-        $sale->update([
-            'subtotal' => $subtotal,
-            'iva' => $iva,
-            'total' => $subtotal + $iva,
-        ]);
-
-        // Actualizamos el stock de los productos
-        foreach ($sale->products as $product) {
-            $p = Product::find($product->id);
-            $p->update([
-                'real_stock' => $p->real_stock - $product->pivot->quantity,
+            // Añadimos 1 venta al cliente
+            $client = Client::find($sale->client_id);
+            $client->update([
+                'total_sales' => $client->total_sales + 1,
             ]);
+
+            NecessaryProductionService::calculate(null, true);
+
+            // Retornamos mensaje de éxito y redireccionamos
+            $id = $sale->id;
+            $message = '¡La venta se ha creado correctamente! Su ID es: ' . $id;
+            session()->flash('flash.banner', $message);
+            return redirect()->route('admin.sales.index');
+        } catch (\Throwable $th) {
+            dd($th->getMessage());
+            // $this->emit('error', '¡Ha ocurrido un error! Verifica la información ingresada.');
         }
-
-        // Actualizamos la orden de venta
-        if ($this->createForm['client_order_id'] != null) {
-            $saleOrder = SaleOrder::find($this->createForm['client_order_id']);
-            $saleOrder->update([
-                'its_done' => true,
-            ]);
-        }
-
-        // Añadimos 1 venta al cliente
-        $client = Client::find($sale->client_id);
-        $client->update([
-            'total_sales' => $client->total_sales + 1,
-        ]);
-
-        // Reseteamos el formulario
-        $this->reset('createForm', 'orderProducts');
-
-        // Retornamos mensaje de éxito y redireccionamos
-        $id = $sale->id;
-        $message = '¡La venta se ha creado correctamente! Su ID es: ' . $id;
-        session()->flash('flash.banner', $message);
-        return redirect()->route('admin.sales.index');
     }
 
     public function render()

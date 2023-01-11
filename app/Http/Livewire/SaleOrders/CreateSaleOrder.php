@@ -157,29 +157,33 @@ class CreateSaleOrder extends Component
     // CREATE SALE ORDER
     public function save()
     {
-        $this->validate();
+        try {
+            $this->validate();
 
-        // Creamos la orden de venta
-        $saleOrder = SaleOrder::create($this->createForm);
+            // Creamos la orden de venta
+            $saleOrder = SaleOrder::create($this->createForm);
 
-        // Creamos los productos de la orden de venta en la tabla pivote
-        foreach ($this->orderProducts as $product) {
-            $saleOrder->products()->attach($product['product_id'], [
-                'm2_unitary' => $product['m2_unitary'],
-                'quantity' => $product['quantity'],
-                'm2_total' => $product['m2_total'],
-                'm2_price' => $this->client_discriminates_iva ? $product['m2_price'] : $product['m2_price'] / 1.21,
-                'subtotal' => $this->client_discriminates_iva ? $product['subtotal'] : $product['subtotal'] / 1.21,
-            ]);
+            // Creamos los productos de la orden de venta en la tabla pivote
+            foreach ($this->orderProducts as $product) {
+                $saleOrder->products()->attach($product['product_id'], [
+                    'm2_unitary' => $product['m2_unitary'],
+                    'quantity' => $product['quantity'],
+                    'm2_total' => $product['m2_total'],
+                    'm2_price' => $this->client_discriminates_iva ? $product['m2_price'] : $product['m2_price'] / 1.21,
+                    'subtotal' => $this->client_discriminates_iva ? $product['subtotal'] : $product['subtotal'] / 1.21,
+                ]);
+            }
+
+            NecessaryProductionService::calculate(null, true);
+
+            // Retornamos mensaje de éxito y redireccionamos
+            $id = $saleOrder->id;
+            $message = '¡La orden venta se ha creado correctamente! Su ID es: ' . $id;
+            session()->flash('flash.banner', $message);
+            return redirect()->route('admin.sale-orders.index');
+        } catch (\Throwable $th) {
+            $this->emit('error',  '¡Ha ocurrido un error! Verifica la información ingresada.');
         }
-
-        NecessaryProductionService::calculate(null, true);
-
-        // Retornamos mensaje de éxito y redireccionamos
-        $id = $saleOrder->id;
-        $message = '¡La orden venta se ha creado correctamente! Su ID es: ' . $id;
-        session()->flash('flash.banner', $message);
-        return redirect()->route('admin.sale-orders.index');
     }
 
     public function render()

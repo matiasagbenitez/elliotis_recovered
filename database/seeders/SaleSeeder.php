@@ -32,15 +32,17 @@ class SaleSeeder extends Seeder
                 $price = $product->selling_price;
 
                 $sale->products()->attach($product->id, [
+                    'm2_unitary' => $product->m2,
                     'quantity' => $quantity,
-                    'price' => $price,
-                    'subtotal' => $quantity * $price
+                    'm2_total' => $product->m2 * $quantity,
+                    'm2_price' => $product->m2_price,
+                    'subtotal' => $product->m2_price * ($product->m2 * $quantity)
                 ]);
             }
 
             // Subtotal
             $subtotal = $sale->products->sum(function ($product) {
-                return $product->pivot->quantity * $product->pivot->price;
+                return $product->pivot->subtotal;
             });
 
             $sale->subtotal = $subtotal;

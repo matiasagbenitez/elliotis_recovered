@@ -54,6 +54,6 @@ class Sale extends Model
     // Relationship many to many with Product
     public function products()
     {
-        return $this->belongsToMany(Product::class)->withPivot('quantity', 'price', 'subtotal')->withTimestamps();
+        return $this->belongsToMany(Product::class)->withPivot('m2_unitary', 'quantity', 'm2_total', 'm2_price', 'subtotal')->withTimestamps();
     }
 }

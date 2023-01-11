@@ -1,4 +1,4 @@
-<div class="max-w-5xl mx-auto bg-white p-10 my-6 rounded-lg">
+<div class="max-w-7xl mx-auto bg-white p-10 my-6 rounded-lg">
 
     <x-slot name="header">
         <a href="{{ route('admin.sales.index') }}">
@@ -31,22 +31,13 @@
         <div class="col-span-2">
             <x-jet-label class="mb-2" for="client_id" value="Cliente (*)" />
             <select id="client_id" class="input-control w-full" wire:model="createForm.client_id">
-                <option value="">Seleccione un cliente</option>
+                <option value="" disabled>Seleccione un cliente</option>
                 @foreach ($clients as $client)
-                    <option value="{{ $client->id }}">{{ $client->business_name }}</option>
+                    <option value="{{ $client['id'] }}">{{ $client['name'] }}
+                        &nbsp;
+                        [{{ $client['iva_condition'] }} - {{ $client['discriminates_iva'] }}]</option>
                 @endforeach
             </select>
-            <p class="mt-2 text-xs text-gray-500" wire:model="createForm.client_id">
-                {{ $client_iva_condition }}
-                @isset($client_discriminates_iva)
-                    @if ($client_discriminates_iva)
-                        (Discrimina IVA)
-                    @else
-                        (No discrimina IVA)
-                    @endif
-
-                @endisset
-            </p>
             <x-jet-input-error for="createForm.client_id" class="mt-2" />
         </div>
 
@@ -55,6 +46,7 @@
             <x-jet-label class="mb-2" value="¿Tiene orden asociada?" />
             <select id="" class="input-control w-full" wire:model="has_order_associated">Seleccione una
                 opción</option>
+                <option value="" disabled>Seleccione una opción</option>
                 <option value="0">No</option>
                 <option value="1">Si</option>
             </select>
@@ -78,47 +70,60 @@
         <div class="col-span-6">
             <h2 class="font-bold">Detalle de compra</h2>
             <hr>
-            @if ($client_discriminates_iva == false)
+            @if ($client_discriminates_iva)
                 <span class="text-xs text-gray-500">
                     <i class="fas fa-info-circle mr-1"></i>
-                    El cliente no discrimina IVA, por lo tanto, el precio de los productos debe ser el precio final.
+                    El cliente discrimina IVA, por lo tanto, el precio de los productos debe ser el precio sin IVA.
                 </span>
             @else
                 <span class="text-xs text-gray-500">
                     <i class="fas fa-info-circle mr-1"></i>
-                    El cliente discrimina IVA, por lo tanto, el precio de los productos debe ser el precio sin IVA.
+                    El cliente no discrimina IVA, por lo tanto, el precio de los productos debe ser el precio final.
                 </span>
             @endif
         </div>
 
         <div class="col-span-6">
             @if ($orderProducts)
-                <div class="grid grid-cols-6 w-full text-center text-sm uppercase font-bold text-gray-600">
-                    <div class="col-span-2 py-1">Producto</div>
-                    <div class="col-span-1 py-1">Cantidad</div>
-                    <div class="col-span-1 py-1">Precio unitario</div>
-                    <div class="col-span-1 py-1"></div>
-                    <div class="col-span-1 py-1">Subtotal</div>
+                <div class="grid grid-cols-8 w-full text-center text-sm uppercase font-bold text-gray-600">
+                    <div class="col-span-3 py-1">Producto</div>
+                    <div class="py-1">M2 unitario</div>
+                    <div class="py-1">Unidades</div>
+                    <div class="py-1">M2 totales</div>
+                    <div class="py-1">
+                        @if ($client_discriminates_iva)
+                            Precio M2
+                        @else
+                            Precio M2 (+ IVA)
+                        @endif
+                    </div>
+                    <div class="py-1">Subtotal</div>
                 </div>
 
-                <div class="grid grid-cols-6 w-full text-center text-sm uppercase text-gray-600 gap-2 items-center">
+                <div class="grid grid-cols-8 w-full text-center text-sm uppercase text-gray-600 gap-2 items-center">
                     @foreach ($orderProducts as $index => $orderProduct)
-                        <div class="col-span-2 flex">
+                        <div class="col-span-3 flex">
                             <button type="button" wire:click.prevent="removeProduct({{ $index }})">
                                 <i class="fas fa-trash mx-4 hover:text-red-600" title="Eliminar producto"></i>
                             </button>
                             <select name="orderProducts[{{ $index }}][product_id]"
                                 wire:model.lazy="orderProducts.{{ $index }}.product_id"
-                                class="input-control w-full p-1 pl-3">
+                                wire:change="updatePrice({{ $index }})" class="input-control w-full p-1 pl-3">
                                 <option disabled value="">Seleccione un producto</option>
                                 @foreach ($allProducts as $product)
                                     {{-- Disable product options that are already in the $orderProducts[][] --}}
                                     <option value="{{ $product->id }}"
                                         {{ $this->isProductInOrder($product->id) ? 'disabled' : '' }}>
-                                        {{ $product->name }} ({{ $product->real_stock }} disponibles)
+                                        {{ $product->name }}
                                     </option>
                                 @endforeach
                             </select>
+                        </div>
+                        <div class="col-span-1">
+                            <x-jet-input readonly disabled type="number" min="1"
+                                name="orderProducts[{{ $index }}][m2_unitary]"
+                                wire:model.lazy="orderProducts.{{ $index }}.m2_unitary"
+                                class="border-none shadow-none w-full p-1 text-center" />
                         </div>
                         <div class="col-span-1">
                             <x-jet-input type="number" min="1"
@@ -127,16 +132,16 @@
                                 class="input-control w-full p-1 text-center" />
                         </div>
                         <div class="col-span-1">
-                            <x-jet-input type="number" min="1" name="orderProducts[{{ $index }}][price]"
-                                wire:model.lazy="orderProducts.{{ $index }}.price"
-                                class="input-control w-full p-1 text-center" />
+                            <x-jet-input readonly disabled type="number" min="1"
+                                name="orderProducts[{{ $index }}][m2_total]"
+                                wire:model.lazy="orderProducts.{{ $index }}.m2_total"
+                                class="border-none shadow-none w-full p-1 text-center" />
                         </div>
-                        <div class="col-span-1 text-xs">
-                            <span>
-                                @if ($client_discriminates_iva)
-                                    IVA
-                                @endif
-                            </span>
+                        <div class="col-span-1">
+                            <x-jet-input type="number" min="1"
+                                name="orderProducts[{{ $index }}][m2_price]"
+                                wire:model="orderProducts.{{ $index }}.m2_price"
+                                class="input-control w-full p-1 text-center" />
                         </div>
                         <div class="col-span-1 flex items-center">
                             $
@@ -159,11 +164,11 @@
         {{-- PARTE INFERIOR --}}
         <div class="col-span-6">
             <hr>
-            <div class="grid grid-cols-6 gap-2">
+            <div class="grid grid-cols-8 gap-2">
 
                 {{-- PARTE IZQUIERDA - BOTÓN AGREGAR PRODUCTO --}}
                 <div
-                    class="{{ $orderProducts ? 'col-span-4' : 'col-span-6' }}  mt-4 flex justify-center items-center gap-2">
+                    class="{{ $orderProducts ? 'col-span-6' : 'col-span-8' }}  mt-4 flex justify-center items-center gap-2">
                     <div>
                         <x-jet-button type="button" wire:click.prevent="addProduct" class="px-3">
                             <i class="fas fa-plus mr-2"></i>
@@ -183,7 +188,7 @@
                 {{-- PARTE DERECHA --}}
                 @if ($orderProducts)
                     <div
-                        class="col-span-1 flex flex-col justify-between text-left my-1 py-1 text-sm uppercase font-bold text-gray-600">
+                        class="col-span-1 flex flex-col justify-between text-center my-1 py-1 text-sm uppercase font-bold text-gray-600">
                         @if ($client_discriminates_iva)
                             <span>Subtotal</span>
                             <span>IVA</span>
@@ -192,8 +197,8 @@
                     </div>
 
                     <div class="col-span-1 text-sm uppercase text-gray-600">
+                        {{-- Subtotal --}}
                         @if ($client_discriminates_iva)
-                            {{-- Subtotal --}}
                             <div>
                                 <div class="flex items-center">
                                     <span>$</span>
