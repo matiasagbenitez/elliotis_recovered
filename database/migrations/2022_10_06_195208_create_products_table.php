@@ -19,6 +19,8 @@ return new class extends Migration
             $table->unsignedBigInteger('phase_id');
             $table->foreign('phase_id')->references('id')->on('phases');
 
+            $table->float('unitary_measure')->required()->default(0);
+
             $table->float('cost')->required();
             $table->float('margin')->required();
             $table->float('selling_price')->required();
@@ -26,7 +28,6 @@ return new class extends Migration
             $table->integer('real_stock')->required();
             $table->integer('necessary_stock')->nullable();
             $table->integer('minimum_stock')->required();
-            $table->integer('reposition')->required();
 
             $table->boolean('is_buyable')->default(false)->required();
             $table->boolean('is_salable')->default(false)->required();

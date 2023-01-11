@@ -12,7 +12,7 @@ return new class extends Migration
             $table->id();
 
             $table->string('name')->required()->unique();
-            $table->float('margin')->default(1.35);
+            $table->float('margin')->default(1);
             $table->timestamps();
         });
     }

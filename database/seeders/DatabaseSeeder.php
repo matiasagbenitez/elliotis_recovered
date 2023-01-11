@@ -47,38 +47,38 @@ class DatabaseSeeder extends Seeder
         $this->call(TypeOfTaskSeeder::class);
         $this->call(FollowingProductSeeder::class);
 
-        // Tasks Seeders
-        for ($i = 0; $i < 8; $i++) {
-            $this->call(Task1Seeder::class);
-        }
+        // // Tasks Seeders
+        // for ($i = 0; $i < 8; $i++) {
+        //     $this->call(Task1Seeder::class);
+        // }
 
-        for ($i = 0; $i < 7; $i++) {
-            $this->call(Task2Seeder::class);
-        }
+        // for ($i = 0; $i < 7; $i++) {
+        //     $this->call(Task2Seeder::class);
+        // }
 
-        for ($i = 0; $i < 6; $i++) {
-            $this->call(Task3Seeder::class);
-        }
+        // for ($i = 0; $i < 6; $i++) {
+        //     $this->call(Task3Seeder::class);
+        // }
 
-        for ($i = 0; $i < 6; $i++) {
-            $this->call(Task4Seeder::class);
-        }
+        // for ($i = 0; $i < 6; $i++) {
+        //     $this->call(Task4Seeder::class);
+        // }
 
-        for ($i = 0; $i < 6; $i++) {
-            $this->call(Task5Seeder::class);
-        }
+        // for ($i = 0; $i < 6; $i++) {
+        //     $this->call(Task5Seeder::class);
+        // }
 
-        for ($i = 0; $i < 6; $i++) {
-            $this->call(Task6Seeder::class);
-        }
+        // for ($i = 0; $i < 6; $i++) {
+        //     $this->call(Task6Seeder::class);
+        // }
 
-        for ($i = 0; $i < 6; $i++) {
-            $this->call(Task7Seeder::class);
-        }
+        // for ($i = 0; $i < 6; $i++) {
+        //     $this->call(Task7Seeder::class);
+        // }
 
-        for ($i = 0; $i < 6; $i++) {
-            $this->call(Task8Seeder::class);
-        }
+        // for ($i = 0; $i < 6; $i++) {
+        //     $this->call(Task8Seeder::class);
+        // }
 
         $this->call(NecessaryProductionSeeder::class);
     }

@@ -8,40 +8,53 @@ use Livewire\Component;
 
 class AddProductsComponent extends Component
 {
-    public $productSales = [];
-    public $productSale = [];
+    public $allProducts = [];
+    public $type_of_purchase = 2;
 
     public $orderProducts = [];
-    public $allProducts = [];
+    public $totalWeight = 0;
+
+    public $createForm = [
+        'subtotal' => 0,
+        'iva' => 0,
+        'total' => 0
+    ];
+
+    public $weightForm = [
+        'totalWeight' => 0,
+        'price' => 0,
+        'subtotal' => 0,
+    ];
 
     public function mount()
     {
-        // $this->productSales = ProductSale group by sale_id (not repeat sale_id)
-
-        $this->allProducts = Product::where('is_salable', true)->get();
+        $this->allProducts = Product::where('is_buyable', true)->get();
         $this->orderProducts = [
-            ['product_id' => '', 'quantity' => 1, 'price' => 0, 'subtotal' => 0],
+            ['product_id' => '', 'unities' => 1, 'quantity' => 0, 'price_quantity' => 0, 'subtotal' => 0],
         ];
     }
 
-    public function updatedProductSale($value)
+    public function updatedTypeOfPurchase()
     {
-        $this->orderProducts = [];
-
-        // Get product_id and quantity from product_sale table where sale_id = $value
-        $this->orderProducts = ProductSale::where('sale_id', $value)->get()->toArray();
-        // dd($this->orderProducts);
+        if ($this->type_of_purchase == 1) {
+            $this->orderProducts = [
+                ['product_id' => '', 'unities' => 1, 'quantity' => 0, 'price_quantity' => 0, 'subtotal' => 0],
+            ];
+        } elseif ($this->type_of_purchase == 2) {
+            $this->orderProducts = [
+                ['product_id' => '', 'unities' => 1],
+            ];
+        }
     }
 
     public function addProduct()
     {
-        // If all products are selected, don't add more
         if (count($this->orderProducts) == count($this->allProducts)) {
             return;
         }
 
         if (!empty($this->orderProducts[count($this->orderProducts) - 1]['product_id'])) {
-            $this->orderProducts[] = ['product_id' => '', 'quantity' => 1, 'price' => 0, 'subtotal' => 0];
+            $this->orderProducts[] = ['product_id' => '', 'unities' => 1, 'quantity' => 0, 'price_quantity' => 0, 'subtotal' => 0];
         }
     }
 
@@ -64,12 +77,53 @@ class AddProductsComponent extends Component
 
     public function showProducts()
     {
-        dd($this->orderProducts);
+        if ($this->type_of_purchase == 1) {
+            dd($this->orderProducts, $this->createForm, $this->totalWeight);
+        } else {
+            dd($this->orderProducts, $this->weightForm, $this->createForm);
+        }
+    }
+
+    public function updatedOrderProducts()
+    {
+
+        $this->validate([
+            'orderProducts.*.product_id' => 'required',
+            'orderProducts.*.unities' => 'required|numeric|min:1',
+            'orderProducts.*.quantity' => 'required|numeric|min:1',
+            'orderProducts.*.price_quantity' => 'required|numeric|min:1',
+        ]);
+
+        foreach ($this->orderProducts as $key => $orderProduct) {
+            $this->orderProducts[$key]['subtotal'] = number_format($orderProduct['quantity'] * $orderProduct['price_quantity'], 2, '.', '');
+        }
+
+        if ($this->type_of_purchase == 1) {
+
+            $this->totalWeight = collect($this->orderProducts)->sum('quantity');
+
+            // Complete createform
+            $this->createForm['subtotal'] = number_format(collect($this->orderProducts)->sum('subtotal'), 2, '.', '');
+            $this->createForm['iva'] = number_format($this->createForm['subtotal'] * 0.21, 2, '.', '');
+            $this->createForm['total'] = number_format($this->createForm['subtotal'] + $this->createForm['iva'], 2, '.', '');
+
+        } else {
+
+
+
+        }
+    }
+
+    public function updatedWeightForm()
+    {
+        $this->weightForm['subtotal'] = number_format($this->weightForm['totalWeight'] * $this->weightForm['price'], 2, '.', '');
+        $this->createForm['iva'] = number_format($this->weightForm['subtotal'] * 0.21, 2, '.', '');
+            $this->createForm['total'] = number_format($this->weightForm['subtotal'] + $this->createForm['iva'], 2, '.', '');
+
     }
 
     public function render()
     {
-        $this->productSales = ProductSale::select('sale_id')->groupBy('sale_id')->get();
         return view('livewire.products.add-products-component');
     }
 }
