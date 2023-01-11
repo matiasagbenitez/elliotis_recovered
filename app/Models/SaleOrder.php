@@ -14,7 +14,7 @@ class SaleOrder extends Model
     // Many to many relationship with products
     public function products()
     {
-        return $this->belongsToMany(Product::class)->withPivot('quantity', 'price', 'subtotal')->withTimestamps();
+        return $this->belongsToMany(Product::class)->withPivot('m2_unitary', 'quantity', 'm2_total', 'm2_price', 'subtotal')->withTimestamps();
     }
 
     // Relationship with User

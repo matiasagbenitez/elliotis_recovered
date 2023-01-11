@@ -27,14 +27,13 @@ class DatabaseSeeder extends Seeder
         $this->call(ProductNameSeeder::class);
         $this->call(ProductTypeSeeder::class);
 
-        // $this->call(PhaseSeeder::class);
         $this->call(AreaSeeder::class);
 
         $this->call(WoodTypeSeeder::class);
         $this->call(PhaseSeeder::class);
         $this->call(ProductSeeder::class);
         $this->call(PurchaseSeeder::class);
-        $this->call(SaleSeeder::class);
+        // $this->call(SaleSeeder::class);
 
         $this->call(PreviousProductSeeder::class);
 

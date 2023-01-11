@@ -109,15 +109,17 @@
                                             <i class="fas fa-ban mr-1"></i>
                                         </button>
                                     @endif
-                                    <a title="Ver detalle" href="{{ route('admin.sale-orders.show-detail', $saleOrder) }}">
-                                        <x-jet-secondary-button>
-                                            <i class="fas fa-list"></i>
-                                        </x-jet-secondary-button>
-                                    </a>
+                                    @if ($saleOrder->is_active)
                                     <a title="Ver producción necesaria" href="{{ route('admin.sale-orders.show-necessary-production', $saleOrder) }}">
                                         <x-jet-button>
                                             <i class="fas fa-calculator"></i>
                                         </x-jet-button>
+                                    </a>
+                                    @endif
+                                    <a title="Ver detalle" href="{{ route('admin.sale-orders.show-detail', $saleOrder) }}">
+                                        <x-jet-secondary-button>
+                                            <i class="fas fa-list"></i>
+                                        </x-jet-secondary-button>
                                     </a>
                                 </div>
                             </td>

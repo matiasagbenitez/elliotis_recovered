@@ -2,8 +2,10 @@
 
 namespace App\Http\Livewire\SaleOrders;
 
+use App\Http\Services\NecessaryProductionService;
 use Livewire\Component;
 use App\Models\SaleOrder;
+use Database\Seeders\NecessaryProductionSeeder;
 use Livewire\WithPagination;
 
 class SaleOrdersIndex extends Component
@@ -44,6 +46,9 @@ class SaleOrdersIndex extends Component
             $saleOrder->cancelled_at = now();
             $saleOrder->cancel_reason = $reason;
             $saleOrder->save();
+
+            NecessaryProductionService::calculate(null, true);
+
             $this->emit('success', 'Orden de venta desactivada correctamente.');
         } catch (\Exception $e) {
             $this->emit('error', 'Error al desactivar la orden de venta');

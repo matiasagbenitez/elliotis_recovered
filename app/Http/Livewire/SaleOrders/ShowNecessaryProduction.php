@@ -14,6 +14,10 @@ class ShowNecessaryProduction extends Component
 
     public function mount(SaleOrder $saleOrder)
     {
+        if (!$saleOrder->is_active) {
+            abort(404);
+        }
+
         $this->saleOrder = $saleOrder;
 
         foreach ($saleOrder->products as $product) {

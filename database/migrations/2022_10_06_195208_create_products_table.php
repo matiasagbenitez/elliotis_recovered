@@ -19,7 +19,8 @@ return new class extends Migration
             $table->unsignedBigInteger('phase_id');
             $table->foreign('phase_id')->references('id')->on('phases');
 
-            $table->float('unitary_measure')->required()->default(0);
+            $table->float('m2')->nullable();
+            $table->float('m2_price')->nullable();
 
             $table->float('cost')->required();
             $table->float('margin')->required();

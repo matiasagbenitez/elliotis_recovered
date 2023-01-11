@@ -21,8 +21,38 @@
         </div>
     </x-slot>
 
+    @if (!$saleOrder->is_active)
+        <div class="max-w-6xl mx-auto bg-red-100 flex justify-center items-center text-red-700 px-4 py-3 rounded relative gap-4 mb-5"
+            role="alert">
+            {{-- <div> --}}
+            <i class="fas fa-ban text-5xl"></i>
+            {{-- </div> --}}
+            <div class="flex flex-col">
+                <p class="font-bold font-mono uppercase">Orden de venta anulada</p>
+                <p class="font-mono text-sm">
+                    La presente orden de venta no es válida ya que fue anulada por {{ $user_who_cancelled }}
+                    el día {{ $saleOrder->updated_at->format('d-m-Y') }} a las
+                    {{ $saleOrder->updated_at->format('H:i') }}.
+                </p>
+            </div>
+        </div>
+    @elseif ($saleOrder->its_done)
+        <div class="max-w-6xl mx-auto bg-green-100 flex justify-center items-center text-green-700 px-4 py-3 rounded relative gap-4 mb-5""
+            role="alert">
+            {{-- <div> --}}
+            <i class="fas fa-ban text-5xl"></i>
+            {{-- </div> --}}
+            <div class="flex flex-col">
+                <p class="font-bold font-mono uppercase">Orden de venta procesada correctamente</p>
+                <a href="{{ route('admin.sales.show-detail', $sale->id) }}" class="font-mono text-sm">
+                    La presente orden fue procesada correctamente y asociada a la venta #{{ $sale->id }}
+                </a>
+            </div>
+        </div>
+    @endif
+
     {{-- Purchase detail --}}
-    <div class="max-w-5xl mx-auto bg-white p-10 rounded-lg border-2">
+    <div class="max-w-6xl mx-auto bg-white p-10 rounded-lg border-2">
         <h2 class=" font-mono font-semibold text-2xl text-gray-800 leading-tight mb-4 uppercase text-center">
             Detalle de orden de venta N° {{ $saleOrder->id }}
         </h2>
@@ -32,7 +62,7 @@
             <p class="font-mono font-bold text-xl">Datos de la orden</p>
             <hr class="w-full">
             <div class="flex justify-between my-2">
-                <div class="w-1/2 space-y-2">
+                <div class="space-y-2">
                     <p class="text-sm font-mono font-bold">
                         Razón social:
                         <span class="font-normal">
@@ -42,37 +72,10 @@
                     </p>
                     <p class="text-sm font-mono font-bold">
                         Fecha comprobante:
-                        <span class="font-normal"> {{ Date::parse($saleOrder->registration_date)->format('d-m-Y') }} </span>
+                        <span class="font-normal"> {{ Date::parse($saleOrder->registration_date)->format('d-m-Y') }}
+                        </span>
                     </p>
                 </div>
-                @if (!$saleOrder->is_active)
-                    <div class="w-1/2 flex justify-center items-center border border-red-700 text-red-700 px-4 py-3 rounded relative gap-4"
-                        role="alert">
-                        {{-- <div> --}}
-                        <i class="fas fa-ban text-5xl"></i>
-                        {{-- </div> --}}
-                        <div class="flex flex-col">
-                            <p class="font-bold font-mono uppercase">Orden de venta anulada</p>
-                            <p class="font-mono text-sm">
-                                La presente orden de venta no es válida ya que fue anulada por {{ $user_who_cancelled }}
-                                el día {{ $saleOrder->updated_at->format('d-m-Y') }} a las {{ $saleOrder->updated_at->format('H:i:s') }} hs
-                            </p>
-                        </div>
-                    </div>
-                    @elseif ($saleOrder->its_done)
-                    <div class="w-1/2 flex justify-center items-center border border-green-700 text-green-700 px-4 py-3 rounded relative gap-4"
-                        role="alert">
-                        {{-- <div> --}}
-                        <i class="fas fa-ban text-5xl"></i>
-                        {{-- </div> --}}
-                        <div class="flex flex-col">
-                            <p class="font-bold font-mono uppercase">Orden de venta procesada correctamente</p>
-                            <a href="{{ route('admin.sales.show-detail', $sale->id) }}" class="font-mono text-sm">
-                                La presente orden fue procesada correctamente y asociada a la venta #{{ $sale->id }}
-                            </a>
-                        </div>
-                    </div>
-                @endif
             </div>
         </div>
 
@@ -83,72 +86,75 @@
 
             {{-- Table for product_purchase --}}
             <div class="mt-5">
-                <table class="min-w-full divide-y border">
-                    <thead>
-                        <tr class="text-center text-gray-500 uppercase text-sm  font-mono font-thin">
-                            <th scope="col" class="px-6 py-1 text-left">
-                                Producto
-                            </th>
-                            <th scope="col" class="px-6 py-1">
-                                Cantidad
-                            </th>
-                            <th scope="col" class="px-6 py-1">
-                                Precio unitario
-                            </th>
-                            <th scope="col" class="px-6 py-1 text-right">
-                                Subtotal
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($saleOrder->products as $product)
-                            <tr class="uppercase text-sm font-mono">
-                                <td class="px-6 py-3 whitespace-nowrap">
-                                    <p>
-                                        {{ $product->name }}
-                                    </p>
-                                </td>
-                                <td class="px-6 py-3 whitespace-nowrap text-center">
-                                    <p>
-                                        {{ $product->pivot->quantity }}
-                                    </p>
-                                </td>
-                                <td class="px-6 py-3 whitespace-nowrap text-center">
-                                    <p>
-                                        {{-- Decimal format --}}
-                                        @php
-                                            $price_with_iva = $product->pivot->price * 1.21;
-                                            $price_with_iva = number_format($price_with_iva, 2, ',', '.');
-                                        @endphp
-
-                                        @if ($saleOrder->client->iva_condition->discriminate)
-                                            ${{ number_format($product->pivot->price, 2, ',', '.') }}
-                                        @else
-                                            ${{ $price_with_iva }}
-                                        @endif
-                                    </p>
-                                </td>
-                                <td class="px-6 py-3 whitespace-nowrap text-right">
-                                    <p>
-                                        @php
-                                            $subtotal_with_iva = $product->pivot->quantity * $product->pivot->price * 1.21;
-                                            $subtotal_with_iva = number_format($subtotal_with_iva, 2, ',', '.');
-                                        @endphp
-
-                                        @if ($saleOrder->client->iva_condition->discriminate)
-                                            ${{ number_format($product->pivot->quantity * $product->pivot->price, 2, ',', '.') }}
-                                        @else
-                                            ${{ $subtotal_with_iva }}
-                                        @endif
-                                    </p>
-                                </td>
+                <x-responsive-table>
+                    <table class="min-w-full divide-y border">
+                        <thead>
+                            <tr class="text-center text-gray-500 uppercase text-sm  font-mono font-thin">
+                                <th scope="col" class="px-3 py-3 whitespace-nowrap">
+                                    Producto
+                                </th>
+                                <th scope="col" class="px-3 py-3 whitespace-nowrap">
+                                    M2 unitario
+                                </th>
+                                <th scope="col" class="px-3 py-3 whitespace-nowrap">
+                                    Unidades
+                                </th>
+                                <th scope="col" class="px-3 py-3 whitespace-nowrap">
+                                    M2 totales
+                                </th>
+                                <th scope="col" class="px-3 py-3 whitespace-nowrap">
+                                    @if ($client_discriminates_iva)
+                                        Precio M2
+                                    @else
+                                        Precio M2 (+ IVA)
+                                    @endif
+                                </th>
+                                <th scope="col" class="px-6 py-3">
+                                    Subtotal
+                                </th>
                             </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            @foreach ($stats as $stat)
+                                <tr class="text-sm font-mono">
+                                    <td class="px-6 py-3">
+                                        <p>
+                                            {{ $stat['name'] }}
+                                        </p>
+                                    </td>
+                                    <td class="px-6 py-3 text-center whitespace-nowrap">
+                                        <p>
+                                            {{ $stat['m2_unitary'] }} m²
+                                        </p>
+                                    </td>
+                                    <td class="px-6 py-3 text-center whitespace-nowrap">
+                                        <p>
+                                            {{ $stat['quantity'] }}
+                                        </p>
+                                    </td>
+                                    <td class="px-6 py-3 text-center whitespace-nowrap">
+                                        <p>
+                                            {{ $stat['m2_total'] }} m²
+                                        </p>
+                                    </td>
+                                    <td class="px-6 py-3 text-center whitespace-nowrap">
+                                        <p>
+                                            ${{ number_format($stat['m2_price'], 2, ',', '.') }}
+                                        </p>
+                                    </td>
+                                    <td class="px-6 py-3 text-center whitespace-nowrap">
+                                        <p>
+                                            ${{ number_format($stat['subtotal'], 2, ',', '.') }}
+                                        </p>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </x-responsive-table>
             </div>
 
-            @if ($saleOrder->client->iva_condition->discriminate)
+            @if ($client_discriminates_iva)
                 {{-- Totales --}}
                 <div class="mt-5 flex flex-col items-end px-6 space-y-2">
                     <p class="text-sm font-mono font-bold">
