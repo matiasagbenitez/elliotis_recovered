@@ -32,13 +32,13 @@ class DatabaseSeeder extends Seeder
         $this->call(WoodTypeSeeder::class);
         $this->call(PhaseSeeder::class);
         $this->call(ProductSeeder::class);
-        $this->call(PurchaseSeeder::class);
+        // $this->call(PurchaseSeeder::class);
         $this->call(SaleSeeder::class);
 
         $this->call(PreviousProductSeeder::class);
 
         $this->call(SaleOrderSeeder::class);
-        $this->call(PurchaseOrderSeeder::class);
+        // $this->call(PurchaseOrderSeeder::class);
         $this->call(TenderingSeeder::class);
 
         // Producción

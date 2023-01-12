@@ -18,7 +18,8 @@ return new class extends Migration
             $table->foreign('product_id')->references('id')->on('products');
 
             $table->integer('quantity');
-            $table->float('price', 10, 2);
+            $table->float('tn_total', 10, 2);
+            $table->float('tn_price', 10, 2);
             $table->float('subtotal', 10, 2);
 
             $table->timestamps();

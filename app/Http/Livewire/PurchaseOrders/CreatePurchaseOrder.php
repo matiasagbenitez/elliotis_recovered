@@ -6,10 +6,19 @@ use App\Models\Product;
 use Livewire\Component;
 use App\Models\Supplier;
 use App\Models\PurchaseOrder;
+use Illuminate\Support\Facades\Auth;
 
 class CreatePurchaseOrder extends Component
 {
     public $suppliers = [], $supplier_iva_condition = '', $supplier_discriminates_iva;
+    public $type_of_purchase = 1;
+
+    public $tn_final = 0;
+
+    public $weightForm = [
+        'totalTn' => 0,
+        'priceTn' => 0
+    ];
 
     // PRODUCTS
     public $orderProducts = [];
@@ -17,7 +26,7 @@ class CreatePurchaseOrder extends Component
 
     // CREATE FORM
     public $createForm = [
-        'user_id' => 1,
+        'user_id' => '',
         'supplier_id' => '',
         'registration_date' => '',
         'subtotal' => 0,
@@ -36,14 +45,27 @@ class CreatePurchaseOrder extends Component
         'createForm.observations' => 'nullable|string',
         'orderProducts.*.product_id' => 'required',
         'orderProducts.*.quantity' => 'required|numeric|min:1',
+        'orderProducts.*.tn_total' => 'required|numeric|min:0',
+        'orderProducts.*.tn_price' => 'required|numeric|min:0',
     ];
 
     public function mount()
     {
-        $this->suppliers = Supplier::orderBy('business_name')->get();
+        $allSuppliers = Supplier::orderBy('business_name')->get();
+        $this->createForm['registration_date'] = date('Y-m-d');
+
+        foreach ($allSuppliers as $supplier) {
+            $this->suppliers[] = [
+                'id' => $supplier->id,
+                'name' => $supplier->business_name,
+                'iva_condition' => $supplier->iva_condition->name,
+                'discriminates_iva' => $supplier->iva_condition->discriminate ? 'Discrimina' : 'No discrimina'
+            ];
+        }
+
         $this->allProducts = Product::where('is_buyable', true)->orderBy('name')->get();
         $this->orderProducts = [
-            ['product_id' => '', 'quantity' => 1, 'price' => 0, 'subtotal' => '0']
+            ['product_id' => '', 'quantity' => 1, 'tn_total' => 0, 'tn_price' => 0, 'subtotal' => 0]
         ];
     }
 
@@ -52,18 +74,63 @@ class CreatePurchaseOrder extends Component
         $supplier = Supplier::find($value);
         $this->supplier_iva_condition = $supplier->iva_condition->name;
         $this->supplier_discriminates_iva = $supplier->iva_condition->discriminate ? true : false;
-        $this->updatedOrderProducts();
+
+        $this->orderProducts = [
+            ['product_id' => '', 'quantity' => 1, 'tn_total' => 0, 'tn_price' => 0, 'subtotal' => 0]
+        ];
+
+        $this->createForm = [
+            'supplier_id' => $value,
+            'registration_date' => date('Y-m-d'),
+            'subtotal' => 0,
+            'iva' => 0,
+            'total' => 0,
+        ];
+
+        $this->weightForm = [
+            'totalTn' => 0,
+            'priceTn' => 0
+        ];
+    }
+
+    public function updatedTypeOfPurchase()
+    {
+        $this->orderProducts = [
+            ['product_id' => '', 'quantity' => 1, 'tn_total' => 0, 'tn_price' => 0, 'subtotal' => 0]
+        ];
+
+        $this->createForm = [
+            'supplier_id' => $this->createForm['supplier_id'],
+            'registration_date' => date('Y-m-d'),
+            'subtotal' => 0,
+            'iva' => 0,
+            'total' => 0,
+        ];
+
+        $this->weightForm = [
+            'totalTn' => 0,
+            'priceTn' => 0
+        ];
     }
 
     // ADD PRODUCT
     public function addProduct()
     {
+        if (empty($this->orderProducts)) {
+            $this->reset('weightForm');
+            $this->createForm = [
+                'subtotal' => 0,
+                'iva' => 0,
+                'total' => 0,
+            ];
+        }
+
         if (count($this->orderProducts) == count($this->allProducts)) {
             return;
         }
 
         if (!empty($this->orderProducts[count($this->orderProducts) - 1]['product_id']) || count($this->orderProducts) == 0) {
-            $this->orderProducts[] = ['product_id' => '', 'quantity' => 1, 'price' => 0, 'subtotal' => '0'];
+            $this->orderProducts[] = ['product_id' => '', 'quantity' => 1, 'tn_total' => 0, 'tn_price' => 0, 'subtotal' => 0];
         }
     }
 
@@ -90,61 +157,129 @@ class CreatePurchaseOrder extends Component
     public function updatedOrderProducts()
     {
         $subtotal = 0;
+        $tn_final = 0;
 
-        foreach ($this->orderProducts as $index => $product) {
-            $this->orderProducts[$index]['subtotal'] = number_format($product['quantity'] * $product['price'], 2, '.', '');
-            $subtotal += $this->orderProducts[$index]['subtotal'];
+        if ($this->type_of_purchase == 1) {
+            foreach ($this->orderProducts as $index => $product) {
+                if (empty($product['tn_total'])) {
+                    $this->orderProducts[$index]['subtotal'] = 0;
+                } else {
+                    $aux = $product['tn_total'] * $product['tn_price'];
+                    $this->orderProducts[$index]['subtotal'] = number_format($aux, 2, '.', '');
+                    $tn_final += $this->orderProducts[$index]['tn_total'];
+                    $subtotal += $this->orderProducts[$index]['subtotal'];
+                }
+            }
         }
 
-        // Subtotal format to 2 decimals
-        if ($this->supplier_discriminates_iva) {
-            $this->createForm['subtotal'] = number_format($subtotal, 2, '.', '');
-            $this->createForm['iva'] = number_format($subtotal * 0.21, 2, '.', '');
-            $this->createForm['total'] = number_format($subtotal * 1.21, 2, '.', '');
+        // Resumen de la venta
+        if ($this->type_of_purchase == 1) {
+
+            if ($this->supplier_discriminates_iva) {
+                $this->createForm['subtotal'] = number_format($subtotal, 2, '.', '');
+                $this->createForm['iva'] = number_format($subtotal * 0.21, 2, '.', '');
+                $this->createForm['total'] = number_format($subtotal * 1.21, 2, '.', '');
+            } else {
+                $this->createForm['subtotal'] = number_format($subtotal / 1.21, 2, '.', '');
+                $this->createForm['iva'] = number_format($subtotal / 1.21 * 0.21, 2, '.', '');
+                $this->createForm['total'] = number_format($subtotal, 2, '.', '');
+            }
+            $this->tn_final = $tn_final;
+        }
+    }
+
+    public function updatedWeightForm()
+    {
+        if (!empty($this->weightForm['totalTn']) && $this->weightForm['priceTn'] > 0) {
+            $subtotal = $this->weightForm['totalTn'] * $this->weightForm['priceTn'];
+            if ($this->supplier_discriminates_iva) {
+                $this->createForm['subtotal'] = number_format($subtotal, 2, '.', '');
+                $this->createForm['iva'] = number_format($subtotal * 0.21, 2, '.', '');
+                $this->createForm['total'] = number_format($subtotal * 1.21, 2, '.', '');
+            } else {
+                $this->createForm['subtotal'] = number_format($subtotal / 1.21, 2, '.', '');
+                $this->createForm['iva'] = number_format($subtotal / 1.21 * 0.21, 2, '.', '');
+                $this->createForm['total'] = number_format($subtotal, 2, '.', '');
+            }
         } else {
-            $this->createForm['total'] = number_format($subtotal, 2, '.', '');
+            $this->createForm['subtotal'] = 0;
+            $this->createForm['iva'] = 0;
+            $this->createForm['total'] = 0;
         }
     }
 
     // CREATE PURCHASE ORDER
     public function save()
     {
+        $this->createForm['user_id'] = auth()->user()->id;
+
         $this->validate();
 
-        $purchaseOrder = PurchaseOrder::create($this->createForm);
+        try {
 
-        foreach ($this->orderProducts as $product) {
-            $purchaseOrder->products()->attach($product['product_id'], [
-                'quantity' => $product['quantity'],
-                'price' => $product['price'],
-                'subtotal' => $product['quantity'] * $product['price']
-            ]);
+            $purchaseOrder = PurchaseOrder::create($this->createForm);
+
+            if ($this->type_of_purchase == 1) {
+                if ($this->supplier_discriminates_iva) {
+                    foreach ($this->orderProducts as $product) {
+                        $purchaseOrder->products()->attach($product['product_id'], [
+                            'quantity' => $product['quantity'],
+                            'tn_total' => $product['tn_total'],
+                            'tn_price' => $product['tn_price'],
+                            'subtotal' => $product['subtotal'],
+                        ]);
+                    }
+                } else {
+                    foreach ($this->orderProducts as $product) {
+                        $purchaseOrder->products()->attach($product['product_id'], [
+                            'quantity' => $product['quantity'],
+                            'tn_total' => $product['tn_total'],
+                            'tn_price' => $product['tn_price'] / 1.21,
+                            'subtotal' => $product['subtotal'] / 1.21,
+                        ]);
+                    }
+                }
+            } elseif ($this->type_of_purchase == 2) {
+                if ($this->supplier_discriminates_iva) {
+
+                    // Calculamos el peso aproximado de cada producto basado en la cantidad de cada uno $product['quantity] y el total de toneladas $weightForm['totalTn']
+                    $totalQuantity = collect($this->orderProducts)->sum('quantity');
+                    $totalTn = $this->weightForm['totalTn'];
+
+                    foreach ($this->orderProducts as $product) {
+                        $tn = ($product['quantity'] * $totalTn) / $totalQuantity;
+                        $purchaseOrder->products()->attach($product['product_id'], [
+                            'quantity' => $product['quantity'],
+                            'tn_total' => $tn,
+                            'tn_price' => $this->weightForm['priceTn'],
+                            'subtotal' => $tn * $this->weightForm['priceTn'],
+                        ]);
+                    }
+                } else {
+
+                    $totalQuantity = collect($this->orderProducts)->sum('quantity');
+                    $totalTn = $this->weightForm['totalTn'];
+
+                    foreach ($this->orderProducts as $product) {
+                        $tn = ($product['quantity'] * $totalTn) / $totalQuantity;
+                        $purchaseOrder->products()->attach($product['product_id'], [
+                            'quantity' => $product['quantity'],
+                            'tn_total' => $tn,
+                            'tn_price' => $this->weightForm['priceTn'] / 1.21,
+                            'subtotal' => ($tn * $this->weightForm['priceTn']) / 1.21,
+                        ]);
+                    }
+                }
+            }
+
+            // Retornamos a la vista de compras
+            $id = $purchaseOrder->id;
+            $message = '¡La orden de compra se ha creado correctamente! Su ID es: ' . $id;
+            session()->flash('flash.banner', $message);
+            return redirect()->route('admin.purchase-orders.index');
+        } catch (\Throwable $th) {
+            $this->emit('error', '¡Ha ocurrido un error! Por favor, inténtelo de nuevo.');
         }
-
-        // Obtenemos el subtotal de la compra
-        $subtotal = $purchaseOrder->products->sum(function ($product) {
-            return $product->pivot->subtotal;
-        });
-
-        // IVA
-        $iva = $subtotal * 0.21;
-
-        // Actualizamos el subtotal, iva y total de la compra
-        if ($this->supplier_discriminates_iva) {
-            $purchaseOrder->subtotal = $subtotal;
-            $purchaseOrder->iva = $iva;
-            $purchaseOrder->total = $subtotal + $iva;
-        } else {
-            $purchaseOrder->subtotal = $subtotal;
-            $purchaseOrder->iva = 0;
-            $purchaseOrder->total = $subtotal;
-        }
-
-        // Retornamos a la vista de compras
-        $id = $purchaseOrder->id;
-        $message = '¡La orden de compra se ha creado correctamente! Su ID es: ' . $id;
-        session()->flash('flash.banner', $message);
-        return redirect()->route('admin.purchase-orders.index');
     }
 
     public function render()
