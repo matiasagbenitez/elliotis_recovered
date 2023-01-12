@@ -22,23 +22,23 @@
     </x-slot>
 
     @if (!$sale->is_active)
-        <div
-            class="max-w-5xl mx-auto flex items-center p-4 mb-4 text-sm text-red-700 bg-red-100 rounded-lg dark:bg-red-200 dark:text-red-800 border-2 border-red-600">
-            <i class="fas fa-info-circle text-lg mr-2"></i>
-            <div>
-                <span class="font-bold uppercase">Atención!</span>
-                El detalle de esta venta no es válida ya que la misma fue cancelada por
-                {{ $user_who_cancelled }}
-                el día
-                {{ Date::parse($sale->canceled_at)->format('d-m-Y') }}
-                a las
-                {{ Date::parse($sale->canceled_at)->format('H:i') }}.
+        <div class="max-w-6xl mx-auto bg-red-100 flex justify-center items-center text-red-700 px-4 py-3 rounded relative gap-4 mb-5"
+            role="alert">
+            {{-- <div> --}}
+            <i class="fas fa-ban text-5xl"></i>
+            {{-- </div> --}}
+            <div class="flex flex-col">
+                <p class="font-bold font-mono uppercase">Venta anulada</p>
+                <p class="font-mono text-sm">
+                    El presente detalle de venta no es válido ya que la misma fue anulada por {{ $user_who_cancelled }}
+                    el día {{ $sale->cancelled_at }}.
+                </p>
             </div>
         </div>
     @endif
 
     {{-- Purchase detail --}}
-    <div class="max-w-5xl mx-auto bg-white p-10 rounded-lg border-2">
+    <div class="max-w-6xl mx-auto bg-white p-10 rounded-lg border-2">
         <h2 class=" font-mono font-semibold text-2xl text-gray-800 leading-tight mb-4 uppercase text-center">
             Detalle de venta N° {{ $sale->id }}
         </h2>
@@ -77,13 +77,14 @@
                             class="font-normal">{{ $sale->payment_method->name }}</span></p>
                     <p class="text-sm  font-mono font-bold">Condición de pago: <span
                             class="font-normal">{{ $sale->payment_condition->name }}</span></p>
-                            @if ($sale->client_order_id)
-                            <p class="text-sm  font-mono font-bold">
-                                Orden de venta:
-                                <span class="font-normal">#{{ $sale->client_order_id }}</span>
-                                <a href="{{ route('admin.sale-orders.show-detail', $sale->client_order_id) }}" class="text-xs italic font-normal text-blue-500">(ver detalle)</a>
-                            </p>
-                        @endif
+                    @if ($sale->client_order_id)
+                        <p class="text-sm  font-mono font-bold">
+                            Orden de venta:
+                            <span class="font-normal">#{{ $sale->client_order_id }}</span>
+                            <a href="{{ route('admin.sale-orders.show-detail', $sale->client_order_id) }}"
+                                class="text-xs italic font-normal text-blue-500">(ver detalle)</a>
+                        </p>
+                    @endif
                 </div>
                 <div class="w-1/2 space-y-2">
                     <p class="text-sm font-mono font-bold">Tipo de comprobante: <span
@@ -101,72 +102,75 @@
 
             {{-- Table for product_purchase --}}
             <div class="mt-5">
-                <table class="min-w-full divide-y border">
-                    <thead>
-                        <tr class="text-center text-gray-500 uppercase text-sm  font-mono font-thin">
-                            <th scope="col" class="px-6 py-1 text-left">
-                                Producto
-                            </th>
-                            <th scope="col" class="px-6 py-1">
-                                Cantidad
-                            </th>
-                            <th scope="col" class="px-6 py-1">
-                                Precio unitario
-                            </th>
-                            <th scope="col" class="px-6 py-1 text-right">
-                                Subtotal
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($sale->products as $product)
-                            <tr class="uppercase text-sm font-mono">
-                                <td class="px-6 py-3 whitespace-nowrap">
-                                    <p>
-                                        {{ $product->name }}
-                                    </p>
-                                </td>
-                                <td class="px-6 py-3 whitespace-nowrap text-center">
-                                    <p>
-                                        {{ $product->pivot->quantity }}
-                                    </p>
-                                </td>
-                                <td class="px-6 py-3 whitespace-nowrap text-center">
-                                    <p>
-                                        {{-- Decimal format --}}
-                                        @php
-                                            $price_with_iva = $product->pivot->price * 1.21;
-                                            $price_with_iva = number_format($price_with_iva, 2, ',', '.');
-                                        @endphp
-
-                                        @if ($sale->client->iva_condition->discriminate)
-                                            ${{ number_format($product->pivot->price, 2, ',', '.') }}
-                                        @else
-                                            ${{ $price_with_iva }}
-                                        @endif
-                                    </p>
-                                </td>
-                                <td class="px-6 py-3 whitespace-nowrap text-right">
-                                    <p>
-                                        @php
-                                            $subtotal_with_iva = $product->pivot->quantity * $product->pivot->price * 1.21;
-                                            $subtotal_with_iva = number_format($subtotal_with_iva, 2, ',', '.');
-                                        @endphp
-
-                                        @if ($sale->client->iva_condition->discriminate)
-                                            ${{ number_format($product->pivot->quantity * $product->pivot->price, 2, ',', '.') }}
-                                        @else
-                                            ${{ $subtotal_with_iva }}
-                                        @endif
-                                    </p>
-                                </td>
+                <x-responsive-table>
+                    <table class="min-w-full divide-y border">
+                        <thead>
+                            <tr class="text-center text-gray-500 uppercase text-sm  font-mono font-thin">
+                                <th scope="col" class="px-3 py-3 whitespace-nowrap">
+                                    Producto
+                                </th>
+                                <th scope="col" class="px-3 py-3 whitespace-nowrap">
+                                    M2 unitario
+                                </th>
+                                <th scope="col" class="px-3 py-3 whitespace-nowrap">
+                                    Unidades
+                                </th>
+                                <th scope="col" class="px-3 py-3 whitespace-nowrap">
+                                    M2 totales
+                                </th>
+                                <th scope="col" class="px-3 py-3 whitespace-nowrap">
+                                    @if ($client_discriminates_iva)
+                                        Precio M2
+                                    @else
+                                        Precio M2 (+ IVA)
+                                    @endif
+                                </th>
+                                <th scope="col" class="px-6 py-3">
+                                    Subtotal
+                                </th>
                             </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            @foreach ($stats as $stat)
+                                <tr class="text-sm font-mono">
+                                    <td class="px-6 py-3">
+                                        <p>
+                                            {{ $stat['name'] }}
+                                        </p>
+                                    </td>
+                                    <td class="px-6 py-3 text-center whitespace-nowrap">
+                                        <p>
+                                            {{ $stat['m2_unitary'] }} m²
+                                        </p>
+                                    </td>
+                                    <td class="px-6 py-3 text-center whitespace-nowrap">
+                                        <p>
+                                            {{ $stat['quantity'] }}
+                                        </p>
+                                    </td>
+                                    <td class="px-6 py-3 text-center whitespace-nowrap">
+                                        <p>
+                                            {{ $stat['m2_total'] }} m²
+                                        </p>
+                                    </td>
+                                    <td class="px-6 py-3 text-center whitespace-nowrap">
+                                        <p>
+                                            ${{ number_format($stat['m2_price'], 2, ',', '.') }}
+                                        </p>
+                                    </td>
+                                    <td class="px-6 py-3 text-center whitespace-nowrap">
+                                        <p>
+                                            ${{ number_format($stat['subtotal'], 2, ',', '.') }}
+                                        </p>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </x-responsive-table>
             </div>
 
-            @if ($sale->client->iva_condition->discriminate)
+            @if ($client_discriminates_iva)
                 {{-- Totales --}}
                 <div class="mt-5 flex flex-col items-end px-6 space-y-2">
                     <p class="text-sm font-mono font-bold">
@@ -193,7 +197,7 @@
             @endif
 
             <div class="mt-2 p-2 text-xs border-1 border uppercase text-center">
-                Detalle de venta para uso interno. Documento no válido como factura.
+                Detalle de orden venta para uso interno. Documento no válido como factura.
             </div>
 
         </div>
