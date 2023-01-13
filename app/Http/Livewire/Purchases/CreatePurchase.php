@@ -41,7 +41,7 @@ class CreatePurchase extends Component
         'user_id' => '',
         'date' => '',
         'supplier_id' => '',
-        'supplier_order_id' => '',
+        'supplier_order_id' => null,
         'payment_condition_id' => '',
         'payment_method_id' => '',
         'voucher_type_id' => '',
@@ -123,6 +123,7 @@ class CreatePurchase extends Component
 
         $this->createForm = [
             'supplier_id' => $value,
+            'supplier_order_id' => null,
             'date' => date('Y-m-d'),
             'subtotal' => 0,
             'iva' => 0,
@@ -318,11 +319,13 @@ class CreatePurchase extends Component
         }
 
         // Actualizamos la orden de compra
-        if ($this->createForm['supplier_order_id'] != null) {
+        if ($this->createForm['supplier_order_id'] != '') {
             $purchaseOrder = PurchaseOrder::find($purchase->supplier_order_id);
-            $purchaseOrder->update([
-                'its_done' => true
-            ]);
+            if ($purchaseOrder) {
+                $purchaseOrder->update([
+                    'its_done' => true
+                ]);
+            }
         }
 
         // Añadimos 1 compra al proveedor
