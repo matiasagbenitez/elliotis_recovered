@@ -11,7 +11,6 @@ use Illuminate\Support\Facades\Auth;
 class CreatePurchaseOrder extends Component
 {
     public $suppliers = [], $supplier_iva_condition = '', $supplier_discriminates_iva;
-    public $type_of_purchase = 1;
 
     public $tn_final = 0;
 
@@ -32,7 +31,9 @@ class CreatePurchaseOrder extends Component
         'subtotal' => 0,
         'iva' => 0,
         'total' => 0,
+        'total_weight' => 0,
         'observations' => '',
+        'type_of_purchase' => 1,
     ];
 
     // VALIDATION
@@ -43,6 +44,7 @@ class CreatePurchaseOrder extends Component
         'createForm.iva' => 'required',
         'createForm.total' => 'required',
         'createForm.observations' => 'nullable|string',
+        'createForm.type_of_purchase' => 'required|integer|in:1,2',
         'orderProducts.*.product_id' => 'required',
         'orderProducts.*.quantity' => 'required|numeric|min:1',
         'orderProducts.*.tn_total' => 'required|numeric|min:0',
@@ -85,6 +87,8 @@ class CreatePurchaseOrder extends Component
             'subtotal' => 0,
             'iva' => 0,
             'total' => 0,
+            'total_weight' => 0,
+            'type_of_purchase' => $this->createForm['type_of_purchase'],
         ];
 
         $this->weightForm = [
@@ -105,6 +109,8 @@ class CreatePurchaseOrder extends Component
             'subtotal' => 0,
             'iva' => 0,
             'total' => 0,
+            'total_weight' => 0,
+            'type_of_purchase' => $this->createForm['type_of_purchase'],
         ];
 
         $this->weightForm = [
@@ -159,7 +165,7 @@ class CreatePurchaseOrder extends Component
         $subtotal = 0;
         $tn_final = 0;
 
-        if ($this->type_of_purchase == 1) {
+        if ($this->createForm['type_of_purchase'] == 1) {
             foreach ($this->orderProducts as $index => $product) {
                 if (empty($product['tn_total'])) {
                     $this->orderProducts[$index]['subtotal'] = 0;
@@ -173,7 +179,7 @@ class CreatePurchaseOrder extends Component
         }
 
         // Resumen de la venta
-        if ($this->type_of_purchase == 1) {
+        if ($this->createForm['type_of_purchase'] == 1) {
 
             if ($this->supplier_discriminates_iva) {
                 $this->createForm['subtotal'] = number_format($subtotal, 2, '.', '');
@@ -213,13 +219,20 @@ class CreatePurchaseOrder extends Component
     {
         $this->createForm['user_id'] = auth()->user()->id;
 
+        if ($this->createForm['type_of_purchase'] == 1) {
+            $this->createForm['total_weight'] = $this->tn_final;
+        } elseif ($this->createForm['type_of_purchase'] == 2) {
+            $this->createForm['total_weight'] = $this->weightForm['totalTn'];
+        }
+
         $this->validate();
+
+        $purchaseOrder = PurchaseOrder::create($this->createForm);
 
         try {
 
-            $purchaseOrder = PurchaseOrder::create($this->createForm);
+            if ($this->createForm['type_of_purchase'] == 1) {
 
-            if ($this->type_of_purchase == 1) {
                 if ($this->supplier_discriminates_iva) {
                     foreach ($this->orderProducts as $product) {
                         $purchaseOrder->products()->attach($product['product_id'], [
@@ -239,10 +252,13 @@ class CreatePurchaseOrder extends Component
                         ]);
                     }
                 }
-            } elseif ($this->type_of_purchase == 2) {
+
+            } elseif ($this->createForm['type_of_purchase'] == 2) {
+
+                $this->createForm['total_weight'] = $this->weightForm['totalTn'];
+
                 if ($this->supplier_discriminates_iva) {
 
-                    // Calculamos el peso aproximado de cada producto basado en la cantidad de cada uno $product['quantity] y el total de toneladas $weightForm['totalTn']
                     $totalQuantity = collect($this->orderProducts)->sum('quantity');
                     $totalTn = $this->weightForm['totalTn'];
 
@@ -276,7 +292,9 @@ class CreatePurchaseOrder extends Component
             $id = $purchaseOrder->id;
             $message = '¡La orden de compra se ha creado correctamente! Su ID es: ' . $id;
             session()->flash('flash.banner', $message);
+
             return redirect()->route('admin.purchase-orders.index');
+
         } catch (\Throwable $th) {
             $this->emit('error', '¡Ha ocurrido un error! Por favor, inténtelo de nuevo.');
         }

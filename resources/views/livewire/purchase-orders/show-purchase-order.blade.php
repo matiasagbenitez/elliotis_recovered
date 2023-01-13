@@ -21,8 +21,38 @@
         </div>
     </x-slot>
 
+    @if (!$purchaseOrder->is_active)
+        <div class="max-w-6xl mx-auto bg-red-100 flex justify-center items-center text-red-700 px-4 py-3 rounded relative gap-4 mb-5"
+            role="alert">
+            {{-- <div> --}}
+            <i class="fas fa-ban text-5xl"></i>
+            {{-- </div> --}}
+            <div class="flex flex-col">
+                <p class="font-bold font-mono uppercase">Orden de compra anulada</p>
+                <p class="font-mono text-sm">
+                    La presente orden de compra no es válida ya que fue anulada por {{ $user_who_cancelled }}
+                    el día {{ $purchaseOrder->updated_at->format('d-m-Y') }} a las
+                    {{ $purchaseOrder->updated_at->format('H:i') }}.
+                </p>
+            </div>
+        </div>
+    @elseif ($purchaseOrder->its_done)
+        <div class="max-w-6xl mx-auto bg-green-100 flex justify-center items-center text-green-700 px-4 py-3 rounded relative gap-4 mb-5""
+            role="alert">
+            {{-- <div> --}}
+            <i class="fas fa-ban text-5xl"></i>
+            {{-- </div> --}}
+            <div class="flex flex-col">
+                <p class="font-bold font-mono uppercase">Orden de compra procesada correctamente</p>
+                <a href="{{ route('admin.sales.show-detail', $sale->id) }}" class="font-mono text-sm">
+                    La presente orden fue procesada correctamente y asociada a la compra #{{ $sale->id }}
+                </a>
+            </div>
+        </div>
+    @endif
+
     {{-- Purchase detail --}}
-    <div class="max-w-5xl mx-auto bg-white p-10 rounded-lg border-2">
+    <div class="max-w-6xl mx-auto bg-white p-10 rounded-lg border-2">
         <h2 class=" font-mono font-semibold text-2xl text-gray-800 leading-tight mb-4 uppercase text-center">
             Detalle de orden de compra N° {{ $purchaseOrder->id }}
         </h2>
@@ -32,49 +62,28 @@
             <p class="font-mono font-bold text-xl">Datos de la orden</p>
             <hr class="w-full">
             <div class="flex justify-between my-2">
-                <div class="w-1/2 space-y-2">
+                <div class="space-y-1">
                     <p class="text-sm font-mono font-bold">
                         Razón social:
-                        <span class="font-normal">
-                            {{ $purchaseOrder->supplier->business_name }}
-                            ({{ $purchaseOrder->supplier->iva_condition->name }})
-                        </span>
+                        <span class="font-normal">{{ $data['supplier']}}</span>
                     </p>
                     <p class="text-sm font-mono font-bold">
-                        Fecha comprobante:
-                        <span class="font-normal"> {{ Date::parse($purchaseOrder->registration_date)->format('d-m-Y') }} </span>
+                        Condición ante IVA:
+                        <span class="font-normal">{{ $data['iva_condition'] }} ({{ $data['discriminate'] }})</span>
+                    </p>
+                    <p class="text-sm font-mono font-bold">
+                        Fecha registro:
+                        <span class="font-normal">{{ $data['date'] }}</span>
+                    </p>
+                    <p class="text-sm font-mono font-bold">
+                        Peso total:
+                        <span class="font-normal">{{ $data['total_weight'] }}</span>
+                    </p>
+                    <p class="text-sm font-mono font-bold">
+                        Tipo de compra:
+                        <span class="font-normal">{{ $data['type_of_purchase'] }}</span>
                     </p>
                 </div>
-                @if (!$purchaseOrder->is_active)
-                    <div class="w-1/2 flex justify-center items-center border border-red-700 text-red-700 px-4 py-3 rounded relative gap-4"
-                        role="alert">
-                        {{-- <div> --}}
-                        <i class="fas fa-ban text-5xl"></i>
-                        {{-- </div> --}}
-                        <div class="flex flex-col">
-                            <p class="font-bold font-mono uppercase">Orden de compra anulada</p>
-                            <p class="font-mono text-sm">
-                                La presente orden de compra no es válida ya que fue anulada por
-                                {{ $user_who_cancelled }}
-                                el día {{ $purchaseOrder->updated_at->format('d-m-Y') }} a las
-                                {{ $purchaseOrder->updated_at->format('H:i:s') }} hs
-                            </p>
-                        </div>
-                    </div>
-                @elseif ($purchaseOrder->its_done)
-                    <div class="w-1/2 flex justify-center items-center border border-green-700 text-green-700 px-4 py-3 rounded relative gap-4"
-                        role="alert">
-                        {{-- <div> --}}
-                        <i class="fas fa-ban text-5xl"></i>
-                        {{-- </div> --}}
-                        <div class="flex flex-col">
-                            <p class="font-bold font-mono uppercase">Orden de compra procesada correctamente</p>
-                            <a href="{{ route('admin.purchases.show-detail', $purchase->id) }}" class="font-mono text-sm">
-                                La presente orden fue procesada correctamente y asociada a la compra #{{ $purchase->id }}
-                            </a>
-                        </div>
-                    </div>
-                @endif
             </div>
         </div>
 
@@ -85,85 +94,67 @@
 
             {{-- Table for product_purchase --}}
             <div class="mt-5">
-                <table class="min-w-full divide-y border">
-                    <thead>
-                        <tr class="text-center text-gray-500 uppercase text-sm  font-mono font-thin">
-                            <th scope="col" class="px-6 py-1 text-left">
-                                Producto
-                            </th>
-                            <th scope="col" class="px-6 py-1">
-                                Cantidad
-                            </th>
-                            <th scope="col" class="px-6 py-1">
-                                Precio unitario
-                            </th>
-                            <th scope="col" class="px-6 py-1 text-right">
-                                Subtotal
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($purchaseOrder->products as $product)
-                            <tr class="uppercase text-sm font-mono">
-                                <td class="px-6 py-3 whitespace-nowrap">
-                                    <p>
-                                        {{ $product->name }}
-                                    </p>
-                                </td>
-                                <td class="px-6 py-3 whitespace-nowrap text-center">
-                                    <p>
-                                        {{ $product->pivot->quantity }}
-                                    </p>
-                                </td>
-                                <td class="px-6 py-3 whitespace-nowrap text-center">
-                                    <p>
-                                        {{-- Decimal format --}}
-                                        {{-- @php
-                                            $price_with_iva = $product->pivot->price * 1.21;
-                                            $price_with_iva = number_format($price_with_iva, 2, ',', '.');
-                                        @endphp --}}
-
-                                        {{-- @if ($purchaseOrder->supplier->iva_condition->discriminate) --}}
-                                            ${{ number_format($product->pivot->price, 2, ',', '.') }}
-                                        {{-- @else --}}
-                                            {{-- ${{ $price_with_iva }} --}}
-                                        {{-- @endif --}}
-                                    </p>
-                                </td>
-                                <td class="px-6 py-3 whitespace-nowrap text-right">
-                                    <p>
-                                        {{-- @php
-                                            $subtotal_with_iva = $product->pivot->quantity * $product->pivot->price * 1.21;
-                                            $subtotal_with_iva = number_format($subtotal_with_iva, 2, ',', '.');
-                                        @endphp --}}
-
-                                        {{-- @if ($purchaseOrder->supplier->iva_condition->discriminate) --}}
-                                            ${{ number_format($product->pivot->subtotal, 2, ',', '.') }}
-                                        {{-- @else --}}
-                                            {{-- ${{ $subtotal_with_iva }} --}}
-                                        {{-- @endif --}}
-                                    </p>
-                                </td>
+                <x-responsive-table>
+                    <table class="min-w-full divide-y border">
+                        <thead>
+                            <tr
+                                class="text-center text-gray-500 uppercase text-sm  font-mono font-thin whitespace-nowrap">
+                                <th scope="col" class="px-6 py-2 w-1/5">
+                                    {{ $titles['product'] }}
+                                </th>
+                                <th scope="col" class="px-6 py-2 w-1/5">
+                                    {{ $titles['quantity'] }}
+                                </th>
+                                <th scope="col" class="px-6 py-2 w-1/5">
+                                    {{ $titles['tn_total'] }}
+                                </th>
+                                <th scope="col" class="px-6 py-2 w-1/5">
+                                    {{ $titles['tn_price'] }}
+                                </th>
+                                <th scope="col" class="px-6 py-2 w-1/5">
+                                    {{ $titles['subtotal'] }}
+                                </th>
                             </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            @foreach ($stats as $product)
+                                <tr class="uppercase text-sm font-mono">
+                                    <td class="px-6 py-3 whitespace-nowrap">
+                                        {{ $product['name'] }}
+                                    </td>
+                                    <td class="px-6 py-3 whitespace-nowrap text-center">
+                                        {{ $product['quantity'] }}
+                                    </td>
+                                    <td class="px-6 py-3 whitespace-nowrap text-center">
+                                        {{ $product['tn_total'] }}
+                                    </td>
+                                    <td class="px-6 py-3 whitespace-nowrap text-center">
+                                        {{ $product['tn_price'] }}
+                                    </td>
+                                    <td class="px-6 py-3 whitespace-nowrap text-center">
+                                        {{ $product['subtotal'] }}
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </x-responsive-table>
             </div>
 
-            @if ($purchaseOrder->supplier->iva_condition->discriminate)
+            @if ($supplier_discriminates_iva)
                 {{-- Totales --}}
                 <div class="mt-5 flex flex-col items-end px-6 space-y-2">
                     <p class="text-sm font-mono font-bold">
                         Subtotal:
-                        <span class="font-normal">${{ number_format($purchaseOrder->subtotal, 2, ',', '.') }}</span>
+                        <span class="font-normal">{{ $totals['subtotal'] }}</span>
                     </p>
                     <p class="text-sm font-mono font-bold">
                         IVA:
-                        <span class="font-normal">${{ number_format($purchaseOrder->iva, 2, ',', '.') }}</span>
+                        <span class="font-normal">{{ $totals['iva'] }}</span>
                     </p>
                     <p class="font-mono font-bold text-lg">
                         Total:
-                        <span>${{ number_format($purchaseOrder->total, 2, ',', '.') }}</span>
+                        <span>{{ $totals['total'] }}</span>
                     </p>
                 </div>
             @else
@@ -171,13 +162,13 @@
                 <div class="mt-5 flex flex-col items-end px-6 space-y-2">
                     <p class="font-mono font-bold text-lg">
                         Total:
-                        <span>${{ number_format($purchaseOrder->total, 2, ',', '.') }}</span>
+                        <span>{{ $totals['total'] }}</span>
                     </p>
                 </div>
             @endif
 
             <div class="mt-2 p-2 text-xs border-1 border uppercase text-center">
-                Detalle de orden venta para uso interno. Documento no válido como factura.
+                Detalle de orden compra para uso interno. Documento no válido como factura.
             </div>
 
         </div>

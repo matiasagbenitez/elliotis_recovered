@@ -39,7 +39,7 @@
 
         <div class="col-span-6">
             <x-jet-label value="Tipo de compra a realizar" class="mb-2" />
-            <select wire:model="type_of_purchase" class="input-control w-full">
+            <select wire:model="createForm.type_of_purchase" class="input-control w-full">
                 <option value="1">Compra detallada</option>
                 <option value="2">Compra mixta</option>
             </select>
@@ -65,7 +65,7 @@
             @if ($orderProducts)
                 <div class="grid grid-cols-8 w-full text-center text-sm uppercase font-bold text-gray-600">
                     <div class="col-span-4 py-1">Producto</div>
-                    @if ($type_of_purchase == 1)
+                    @if ($createForm['type_of_purchase'] == 1)
                         <div class="py-1">Unidades</div>
                         <div class="py-1">Toneladas (TN)</div>
                         <div class="py-1">
@@ -76,7 +76,7 @@
                             @endif
                         </div>
                         <div class="py-1">Subtotal</div>
-                    @elseif ($type_of_purchase == 2)
+                    @elseif ($createForm['type_of_purchase'] == 2)
                         <div class="col-span-4 py-1">Unidades</div>
                     @endif
                 </div>
@@ -100,7 +100,7 @@
                             </select>
                         </div>
 
-                        @if ($type_of_purchase == 1)
+                        @if ($createForm['type_of_purchase'] == 1)
                             <div class="col-span-1">
                                 <x-jet-input type="number" min="1"
                                     name="orderProducts[{{ $index }}][quantity]"
@@ -126,7 +126,7 @@
                                     wire:model.lazy="orderProducts.{{ $index }}.subtotal"
                                     class="input-control w-full p-1 text-center border-none shadow-none" />
                             </div>
-                        @elseif ($type_of_purchase == 2)
+                        @elseif ($createForm['type_of_purchase'] == 2)
                             <div class="col-span-4">
                                 <x-jet-input type="number" min="1"
                                     name="orderProducts[{{ $index }}][quantity]"
@@ -164,7 +164,7 @@
 
                 {{-- PARTE DERECHA --}}
                 @if ($orderProducts)
-                    @if ($type_of_purchase == 1)
+                    @if ($createForm['type_of_purchase'] == 1)
                         <div
                             class="col-span-1 flex flex-col justify-between text-center my-1 py-1 text-sm uppercase font-bold text-gray-600">
                             <span>Total TN</span>
@@ -221,7 +221,7 @@
                                 <x-jet-input-error for="createForm.total" class="mt-2" />
                             </div>
                         </div>
-                    @elseif($type_of_purchase == 2)
+                    @elseif($createForm['type_of_purchase'] == 2)
                         <div
                             class="col-span-2 flex flex-col gap-2 text-right justify-evenly my-1 pr-3 py-1 text-sm uppercase font-bold text-gray-600">
                             <span>Total toneladas (TN)</span>

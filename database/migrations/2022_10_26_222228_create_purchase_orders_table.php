@@ -25,6 +25,10 @@ return new class extends Migration
             $table->float('total', 10, 2)->required();
             $table->text('observations')->nullable();
 
+            $table->enum('type_of_purchase', [1, 2])->default(1);
+
+            $table->float('total_weight', 10, 2);
+
             $table->boolean('is_active')->default(true);
             $table->integer('cancelled_by')->nullable();
             $table->date('cancelled_at')->nullable();
