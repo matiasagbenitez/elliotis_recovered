@@ -26,6 +26,10 @@ return new class extends Migration
             $table->float('iva', 10, 2)->required();
             $table->float('total', 10, 2)->required();
 
+            $table->enum('type_of_purchase', [1, 2])->default(1);
+
+            $table->float('total_weight', 10, 2);
+
             $table->unsignedBigInteger('payment_condition_id')->required();
             $table->foreign('payment_condition_id')->references('id')->on('payment_conditions');
 
@@ -36,7 +40,6 @@ return new class extends Migration
             $table->foreign('voucher_type_id')->references('id')->on('voucher_types');
             $table->integer('voucher_number')->required()->unique();
 
-            $table->decimal('weight', 10, 2)->required();
             $table->string('weight_voucher')->nullable();
 
             $table->text('observations')->nullable();

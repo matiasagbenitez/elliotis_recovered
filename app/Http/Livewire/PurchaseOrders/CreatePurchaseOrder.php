@@ -293,7 +293,7 @@ class CreatePurchaseOrder extends Component
             $message = '¡La orden de compra se ha creado correctamente! Su ID es: ' . $id;
             session()->flash('flash.banner', $message);
 
-            return redirect()->route('admin.purchase-orders.index');
+            return redirect()->route('admin.purchase-orders.show-detail', $purchaseOrder);
 
         } catch (\Throwable $th) {
             $this->emit('error', '¡Ha ocurrido un error! Por favor, inténtelo de nuevo.');

@@ -23,8 +23,6 @@ class CreatePurchase extends Component
     public $payment_conditions = [], $payment_methods = [], $voucher_types = [], $suppliers = [];
     public $supplier_iva_condition = '', $supplier_discriminates_iva, $has_order_associated = 0, $supplier_orders = [];
 
-    public $type_of_purchase = 1;
-
     public $tn_final = 0;
 
     public $weightForm = [
@@ -49,9 +47,10 @@ class CreatePurchase extends Component
         'subtotal' => 0,
         'iva' => 0,
         'total' => 0,
-        'weight' => 0,
         'weight_voucher' => '',
         'observations' => '',
+        'total_weight' => 0,
+        'type_of_purchase' => 1
     ];
 
     // VALIDATION
@@ -66,9 +65,9 @@ class CreatePurchase extends Component
         'createForm.subtotal' => 'required',
         'createForm.iva' => 'required',
         'createForm.total' => 'required',
-        'createForm.weight' => 'nullable|numeric',
         'createForm.weight_voucher' => 'nullable|image|max:1024',
         'createForm.observations' => 'nullable|string',
+        'createForm.type_of_purchase' => 'required|integer',
         'orderProducts.*.product_id' => 'required',
         'orderProducts.*.quantity' => 'required|numeric|min:1'
     ];
@@ -128,6 +127,8 @@ class CreatePurchase extends Component
             'subtotal' => 0,
             'iva' => 0,
             'total' => 0,
+            'total_weight' => 0,
+            'type_of_purchase' => $this->createForm['type_of_purchase']
         ];
 
         $this->weightForm = [
@@ -207,7 +208,7 @@ class CreatePurchase extends Component
         $subtotal = 0;
         $tn_final = 0;
 
-        if ($this->type_of_purchase == 1) {
+        if ($this->createForm['type_of_purchase'] == 1) {
             foreach ($this->orderProducts as $index => $product) {
                 if (empty($product['tn_total'])) {
                     $this->orderProducts[$index]['subtotal'] = 0;
@@ -221,7 +222,7 @@ class CreatePurchase extends Component
         }
 
         // Resumen de la venta
-        if ($this->type_of_purchase == 1) {
+        if ($this->createForm['type_of_purchase'] == 1) {
 
             if ($this->supplier_discriminates_iva) {
                 $this->createForm['subtotal'] = number_format($subtotal, 2, '.', '');
@@ -261,11 +262,17 @@ class CreatePurchase extends Component
     {
         $this->createForm['user_id'] = auth()->user()->id;
 
+        if ($this->createForm['type_of_purchase'] == 1) {
+            $this->createForm['total_weight'] = $this->tn_final;
+        } elseif ($this->createForm['type_of_purchase'] == 2) {
+            $this->createForm['total_weight'] = $this->weightForm['totalTn'];
+        }
+
         $this->validate();
 
         $purchase = Purchase::create($this->createForm);
 
-        if ($this->type_of_purchase == 1) {
+        if ($this->createForm['type_of_purchase'] == 1) {
             if ($this->supplier_discriminates_iva) {
                 foreach ($this->orderProducts as $product) {
                     $purchase->products()->attach($product['product_id'], [
@@ -285,7 +292,7 @@ class CreatePurchase extends Component
                     ]);
                 }
             }
-        } elseif ($this->type_of_purchase == 2) {
+        } elseif ($this->createForm['type_of_purchase'] == 2) {
             if ($this->supplier_discriminates_iva) {
 
                 // Calculamos el peso aproximado de cada producto basado en la cantidad de cada uno $product['quantity] y el total de toneladas $weightForm['totalTn']
@@ -338,7 +345,7 @@ class CreatePurchase extends Component
         $id = $purchase->id;
         $message = '¡La compra se ha creado correctamente! Su ID es: ' . $id;
         session()->flash('flash.banner', $message);
-        return redirect()->route('admin.purchases.index');
+        return redirect()->route('admin.purchases.show-detail', $purchase);
 
     }
 
