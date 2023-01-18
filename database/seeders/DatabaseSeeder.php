@@ -32,7 +32,12 @@ class DatabaseSeeder extends Seeder
         $this->call(WoodTypeSeeder::class);
         $this->call(PhaseSeeder::class);
         $this->call(ProductSeeder::class);
-        // $this->call(PurchaseSeeder::class);
+
+        $this->call(Purchase1Seeder::class);
+        $this->call(Purchase2Seeder::class);
+        $this->call(Purchase3Seeder::class);
+        $this->call(Purchase4Seeder::class);
+
         $this->call(SaleSeeder::class);
 
         $this->call(PreviousProductSeeder::class);
@@ -42,6 +47,7 @@ class DatabaseSeeder extends Seeder
         $this->call(PurchaseOrder1Seeder::class);
         $this->call(PurchaseOrder2Seeder::class);
         $this->call(PurchaseOrder3Seeder::class);
+        $this->call(PurchaseOrder4Seeder::class);
 
         // $this->call(TenderingSeeder::class);
 
