@@ -38,8 +38,12 @@ class DatabaseSeeder extends Seeder
         $this->call(PreviousProductSeeder::class);
 
         $this->call(SaleOrderSeeder::class);
-        // $this->call(PurchaseOrderSeeder::class);
-        $this->call(TenderingSeeder::class);
+
+        $this->call(PurchaseOrder1Seeder::class);
+        $this->call(PurchaseOrder2Seeder::class);
+        $this->call(PurchaseOrder3Seeder::class);
+
+        // $this->call(TenderingSeeder::class);
 
         // Producción
         $this->call(TaskStatusSeeder::class);
