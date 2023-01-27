@@ -46,7 +46,7 @@ class ShowPurchase extends Component
             'type_of_purchase' => $this->purchase->type_of_purchase == '1' ? 'Detallada' : 'Mixta',
             'payment_method' => $this->purchase->payment_method->name,
             'payment_condition' => $this->purchase->payment_condition->name,
-            'purchase_order_id' => $this->purchase->purchase_order_id ? $this->purchase->purchase_order_id : 'No tiene',
+            'purchase_order_id' => $this->purchase->supplier_order_id ? $this->purchase->supplier_order_id : 'No tiene',
             'voucher_type' => $this->purchase->voucher_type->name,
             'voucher_number' => $this->purchase->voucher_number,
         ];

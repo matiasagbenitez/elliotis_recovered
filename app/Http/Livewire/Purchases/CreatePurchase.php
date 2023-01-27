@@ -135,6 +135,9 @@ class CreatePurchase extends Component
             'totalTn' => 0,
             'priceTn' => 0
         ];
+
+        $this->has_order_associated = 0;
+        $this->supplier_orders = [];
     }
 
     // TOGGLE DIV
@@ -151,8 +154,36 @@ class CreatePurchase extends Component
     // SUPPLIER ORDER
     public function updatedCreateFormSupplierOrderId($value)
     {
+        if ($value == '') {
+            $this->resetOrderProducts();
+            return;
+        }
+
+        $purchaseOrder = PurchaseOrder::find($value);
+
+        $this->createForm['type_of_purchase'] = $purchaseOrder->type_of_purchase;
+
         $this->orderProducts = [];
         $this->orderProducts = ProductPurchaseOrder::where('purchase_order_id', $value)->get()->toArray();
+
+        if ($this->createForm['type_of_purchase'] == 1 && $this->supplier_discriminates_iva == false) {
+            foreach ($this->orderProducts as $key => $orderProduct) {
+                $this->orderProducts[$key]['tn_price'] = round($orderProduct['tn_price'] * 1.21);
+            }
+        }
+
+        if ($this->createForm['type_of_purchase'] == 2) {
+            $this->weightForm = [
+                'totalTn' => $purchaseOrder->total_weight,
+                'priceTn' => $this->supplier_discriminates_iva ? $purchaseOrder->products->first()->pivot->tn_price : round($purchaseOrder->products->first()->pivot->tn_price * 1.21)
+            ];
+
+            $this->createForm['total_weight'] = $purchaseOrder->total_weight;
+            $this->createForm['subtotal'] = $purchaseOrder->subtotal;
+            $this->createForm['iva'] = $purchaseOrder->iva;
+            $this->createForm['total'] = $purchaseOrder->total;
+        }
+
         $this->updatedOrderProducts();
     }
 
@@ -346,7 +377,6 @@ class CreatePurchase extends Component
         $message = '¡La compra se ha creado correctamente! Su ID es: ' . $id;
         session()->flash('flash.banner', $message);
         return redirect()->route('admin.purchases.show-detail', $purchase);
-
     }
 
     public function render()

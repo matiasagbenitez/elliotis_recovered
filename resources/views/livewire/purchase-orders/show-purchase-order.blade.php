@@ -44,8 +44,8 @@
             {{-- </div> --}}
             <div class="flex flex-col">
                 <p class="font-bold font-mono uppercase">Orden de compra procesada correctamente</p>
-                <a href="{{ route('admin.sales.show-detail', $sale->id) }}" class="font-mono text-sm">
-                    La presente orden fue procesada correctamente y asociada a la compra #{{ $sale->id }}
+                <a href="{{ route('admin.purchases.show-detail', $purchase->id) }}" class="font-mono text-sm">
+                    La presente orden fue procesada correctamente y asociada a la compra #{{ $purchase->id }}
                 </a>
             </div>
         </div>
