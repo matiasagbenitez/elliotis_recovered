@@ -102,8 +102,9 @@ class CreatePurchase extends Component
     public function resetOrderProducts()
     {
         $this->orderProducts = [
-            ['product_id' => '', 'quantity' => 1, 'price' => 0, 'subtotal' => '0']
+            ['product_id' => '', 'quantity' => 1, 'tn_total' => 0, 'tn_price' => 0, 'subtotal' => 0]
         ];
+        $this->reset('weightForm', 'tn_final');
         $this->createForm['subtotal'] = 0;
         $this->createForm['iva'] = 0;
         $this->createForm['total'] = 0;
@@ -116,9 +117,7 @@ class CreatePurchase extends Component
         $this->supplier_iva_condition = $supplier->iva_condition->name;
         $this->supplier_discriminates_iva = $supplier->iva_condition->discriminate ? true : false;
 
-        $this->orderProducts = [
-            ['product_id' => '', 'quantity' => 1, 'tn_total' => 0, 'tn_price' => 0, 'subtotal' => 0]
-        ];
+        $this->resetOrderProducts();
 
         $this->createForm = [
             'supplier_id' => $value,
@@ -147,8 +146,13 @@ class CreatePurchase extends Component
             $this->supplier_orders = [];
             $this->resetOrderProducts();
         } else {
-            $this->supplier_orders = PurchaseOrder::where('supplier_id', $this->createForm['supplier_id'])->where('is_active', true)->get();
+            $this->supplier_orders = PurchaseOrder::where('supplier_id', $this->createForm['supplier_id'])->where('its_done', false)->get();
         }
+    }
+
+    public function updatedCreateFormTypeOfPurchase()
+    {
+        $this->resetOrderProducts();
     }
 
     // SUPPLIER ORDER
