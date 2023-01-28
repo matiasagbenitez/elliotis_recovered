@@ -15,27 +15,35 @@ class Task3Seeder extends Seeder
 {
     public function run()
     {
+        $sublots = Sublot::where('phase_id', 2)->where('area_id', 2)->where('available', true)->get();
+        $cant = rand(4, 5);
+        if ($sublots->count() < $cant) {
+            return;
+        }
+        $sublots = $sublots->random($cant);
+
+        $start_date = TaskService::getStartDate();
+
         $task = Task::create([
             'type_of_task_id' => 3,
             'task_status_id' => 1,
-            'started_at' => Date::now(),
+            'started_at' => $start_date,
             'started_by' => 1,
         ]);
 
-        $sublots = Sublot::where('phase_id', $task->typeOfTask->initial_phase_id)->where('area_id', $task->typeOfTask->origin_area_id)->where('available', true)->get();
-        $cant = rand(2, 3);
-        $sublots = $sublots->random($cant);
-
         foreach ($sublots as $sublot) {
-            $rand = RandomNumberService::highProbability();
-            if ($rand == 1) {
+            // $rand = RandomNumberService::highProbability();
+            // if ($rand == 1) {
                 $consumed_quantity = $sublot->actual_quantity;
-            } else {
-                $rounded_half = round($sublot->actual_quantity / 2);
-                // rounded_half to int
-                $rounded_half = (int) $rounded_half;
-                $consumed_quantity = rand($rounded_half, $sublot->actual_quantity);
-            }
+            // } else {
+            //     if ($sublot->actual_quantity < $sublot->initial_quantity) {
+            //         $consumed_quantity = $sublot->actual_quantity;
+            //     } else {
+            //         $rounded_half = round($sublot->actual_quantity / 2);
+            //         $rounded_half = (int) $rounded_half;
+            //         $consumed_quantity = rand($rounded_half, $sublot->actual_quantity);
+            //     }
+            // }
 
             $inputSelects[] = [
                 'sublot_id' => $sublot->id,
@@ -80,7 +88,7 @@ class Task3Seeder extends Seeder
         // Actualizamos la tarea
         $task->update([
             'task_status_id' => 2,
-            'finished_at' => now(),
+            'finished_at' => TaskService::getEndDate($start_date),
             'finished_by' => 1,
         ]);
     }

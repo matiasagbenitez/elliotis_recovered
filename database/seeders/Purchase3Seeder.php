@@ -39,14 +39,19 @@ class Purchase3Seeder extends Seeder
 
         $purchase = \App\Models\Purchase::create($createForm);
 
-        for ($i = 0; $i < rand(1, 4); $i++) {
+        $aux = rand(1, 4);
 
-            $product = \App\Models\Product::where('is_buyable', true)
-                ->whereDoesntHave('purchaseOrders', function ($query) use ($purchase) {
-                    $query->where('purchase_order_id', $purchase->id);
-                })
-                ->inRandomOrder()
-                ->first();
+        // Get $aux products that are buyable and not repeated
+        $products = \App\Models\Product::where('is_buyable', true)
+            ->whereDoesntHave('purchaseOrders', function ($query) use ($purchase) {
+                $query->where('purchase_order_id', $purchase->id);
+            })
+            ->inRandomOrder()
+            ->take($aux)
+            ->get();
+
+
+        foreach ($products as $product) {
 
             $quantity = rand(18, 30);
             $tn_total = $quantity * 1.18;

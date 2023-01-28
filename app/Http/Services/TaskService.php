@@ -2,6 +2,8 @@
 
 namespace App\Http\Services;
 
+use DateTime;
+use DateInterval;
 use App\Models\Lot;
 use App\Models\Task;
 use App\Models\User;
@@ -105,5 +107,44 @@ class TaskService
         $totals = array_unique($totals, SORT_REGULAR);
 
         return $totals;
+    }
+
+    public static function getStartDate()
+    {
+        $endTime = '17:30:00';
+        $nextDayStart = '08:30:00';
+
+        $task = Task::latest()->first();
+
+        if ($task) {
+            $lastDate = Date::parse($task->started_at);
+        } else {
+            $lastDate = Date::create(2023, 01, 02, 8, 30, 0);
+        }
+
+        $startDate = $lastDate->addHours(rand(2, 3))->addMinutes(rand(0, 59));
+
+        if ($startDate->format('N') >= 6){
+            $startDate->modify('next monday ' . $nextDayStart);
+        }
+
+        if ($startDate->format('H:i:s') > $endTime) {
+            $startDate->modify('+1 day ' . $nextDayStart);
+        }
+
+        if (Task::whereDate('created_at', $startDate->format('Y-m-d'))->count() >= 4) {
+            $startDate->modify('+1 day ' . $nextDayStart);
+        }
+
+        return $startDate;
+    }
+
+    public static function getEndDate($start_date)
+    {
+
+        $end_date = Date::parse($start_date)->addHours(rand(2, 3))->addMinutes(rand(0, 59));
+
+        return $end_date;
+
     }
 }

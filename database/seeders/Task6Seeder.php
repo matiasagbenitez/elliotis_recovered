@@ -13,33 +13,39 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 class Task6Seeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     *
-     * @return void
-     */
+
     public function run()
     {
+
+        $sublots = Sublot::where('phase_id', 3)->where('area_id', 5)->where('available', true)->get();
+        $cant = rand(4, 5);
+        if ($sublots->count() < $cant) {
+            return;
+        }
+        $sublots = $sublots->random($cant);
+
+        $start_date = TaskService::getStartDate();
+
         $task = Task::create([
             'type_of_task_id' => 6,
             'task_status_id' => 1,
-            'started_at' => Date::now(),
+            'started_at' => $start_date,
             'started_by' => 1,
         ]);
 
-        $sublots = Sublot::where('phase_id', $task->typeOfTask->initial_phase_id)->where('area_id', $task->typeOfTask->origin_area_id)->where('available', true)->get();
-        $cant = rand(1, 2);
-        $sublots = $sublots->random($cant);
-
         foreach ($sublots as $sublot) {
-            $rand = RandomNumberService::highProbability();
-            if ($rand == 1) {
+            // $rand = RandomNumberService::highProbability();
+            // if ($rand == 1) {
                 $consumed_quantity = $sublot->actual_quantity;
-            } else {
-                $rounded_half = round($sublot->actual_quantity / 2);
-                $rounded_half = (int) $rounded_half;
-                $consumed_quantity = rand($rounded_half, $sublot->actual_quantity);
-            }
+            // } else {
+            //     if ($sublot->actual_quantity < $sublot->initial_quantity) {
+            //         $consumed_quantity = $sublot->actual_quantity;
+            //     } else {
+            //         $rounded_half = round($sublot->actual_quantity / 2);
+            //         $rounded_half = (int) $rounded_half;
+            //         $consumed_quantity = rand($rounded_half, $sublot->actual_quantity);
+            //     }
+            // }
 
             $inputSelects[] = [
                 'sublot_id' => $sublot->id,
@@ -101,7 +107,7 @@ class Task6Seeder extends Seeder
         // Actualizamos la tarea
         $task->update([
             'task_status_id' => 2,
-            'finished_at' => Date::now(),
+            'finished_at' => TaskService::getEndDate($start_date),
             'finished_by' => 1,
         ]);
     }
