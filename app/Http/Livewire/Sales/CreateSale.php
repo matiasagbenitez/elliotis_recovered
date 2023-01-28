@@ -68,6 +68,8 @@ class CreateSale extends Component
         'orderSublots.*.m2_price' => 'required|numeric|min:1',
     ];
 
+    protected $listeners = ['bestTry'];
+
     public function mount()
     {
         $allClients = Client::orderBy('business_name')->get();
@@ -94,7 +96,7 @@ class CreateSale extends Component
             $this->allSublotsFormated[] = [
                 'id' => $sublot->id,
                 'product_id' => $sublot->product_id,
-                'text' => '[' . $sublot->actual_quantity . '] ' . $sublot->product->name . ' - Sublote: ' . $sublot->code . ' - Lote: ' . $sublot->lot->code
+                'text' => $sublot->product->name . ' - Sublote: ' . $sublot->code . ' - Lote: ' . $sublot->lot->code . ' [' . $sublot->actual_quantity . ' unidades disponibles]'
             ];
         }
 
@@ -147,23 +149,97 @@ class CreateSale extends Component
     // CLIENT ORDERS
     public function updatedCreateFormClientOrderId($value)
     {
-        dd('falta implementar');
-        // $this->orderSublots = [];
+        $this->orderSublots = [];
 
-        // $orderDetail = ProductSaleOrder::where('sale_order_id', $value)->get()->toArray();
+        $orderDetail = ProductSaleOrder::where('sale_order_id', $value)->get()->toArray();
 
-        // foreach ($orderDetail as $product) {
-        //     $this->orderSublots[] = [
-        //         'product_id' => $product['product_id'],
-        //         'm2_unitary' => $product['m2_unitary'],
-        //         'quantity' => $product['quantity'],
-        //         'm2_total' => $product['m2_total'],
-        //         'm2_price' => $this->client_discriminates_iva ? $product['m2_price'] : $product['m2_price'] * 1.21,
-        //         'subtotal' => $this->client_discriminates_iva ? $product['subtotal'] : $product['subtotal'] * 1.21,
-        //     ];
-        // }
+        foreach ($orderDetail as $product) {
 
-        // $this->updatedOrderSublots();
+            $sublots = Sublot::where('product_id', $product['product_id'])->where('available', true)->where('area_id', 8)->whereHas('product', function ($query) {
+                $query->where('is_salable', true);
+            })->get();
+
+            $quantity = $product['quantity'];
+
+            foreach ($sublots as $sublot) {
+                if ($sublot->actual_quantity >= $quantity) {
+                    $this->orderSublots[] = [
+                        'sublot_id' => $sublot->id,
+                        'product_id' => $sublot->product_id,
+                        'm2_unitary' => $sublot->product->m2,
+                        'quantity' => $quantity,
+                        'm2_total' => $sublot->product->m2 * $quantity,
+                        'm2_price' => $this->client_discriminates_iva ? $sublot->product->m2_price : $sublot->product->m2_price * 1.21,
+                        'subtotal' => 0
+                    ];
+                    $quantity = 0;
+                    break;
+                } else {
+                    $this->orderSublots[] = [
+                        'sublot_id' => $sublot->id,
+                        'product_id' => $sublot->product_id,
+                        'm2_unitary' => $sublot->product->m2,
+                        'quantity' => $sublot->actual_quantity,
+                        'm2_total' => $sublot->product->m2 * $sublot->actual_quantity,
+                        'm2_price' => $this->client_discriminates_iva ? $sublot->product->m2_price : $sublot->product->m2_price * 1.21,
+                        'subtotal' => 0
+                    ];
+                    $quantity -= $sublot->actual_quantity;
+                }
+            }
+
+            if ($quantity > 0) {
+                $this->resetOrderSublots();
+                $this->emit('quantitiesError', 'No es posible completar la orden de venta porque no hay suficientes sublotes con stock disponible. ¿Desea completar lo máximo posible con el stock disponible o cancelar la venta?');
+            }
+        }
+
+        $this->updatedOrderSublots();
+    }
+
+    public function bestTry()
+    {
+        $this->orderSublots = [];
+
+        $orderDetail = ProductSaleOrder::where('sale_order_id', $this->createForm['client_order_id'])->get()->toArray();
+
+        foreach ($orderDetail as $product) {
+            $sublots = Sublot::where('product_id', $product['product_id'])->where('available', true)->where('area_id', 8)->whereHas('product', function ($query) {
+                $query->where('is_salable', true);
+            })->get();
+
+            $quantity = $product['quantity'];
+
+            foreach ($sublots as $sublot) {
+                if ($quantity > 0) {
+                    if ($sublot->actual_quantity >= $quantity) {
+                        $this->orderSublots[] = [
+                            'sublot_id' => $sublot->id,
+                            'product_id' => $sublot->product_id,
+                            'm2_unitary' => $sublot->product->m2,
+                            'quantity' => $quantity,
+                            'm2_total' => $sublot->product->m2 * $quantity,
+                            'm2_price' => $this->client_discriminates_iva ? $sublot->product->m2_price : $sublot->product->m2_price * 1.21,
+                            'subtotal' => 0
+                        ];
+                        $quantity = 0;
+                    } else {
+                        $this->orderSublots[] = [
+                            'sublot_id' => $sublot->id,
+                            'product_id' => $sublot->product_id,
+                            'm2_unitary' => $sublot->product->m2,
+                            'quantity' => $sublot->actual_quantity,
+                            'm2_total' => $sublot->product->m2 * $sublot->actual_quantity,
+                            'm2_price' => $this->client_discriminates_iva ? $sublot->product->m2_price : $sublot->product->m2_price * 1.21,
+                            'subtotal' => 0
+                        ];
+                        $quantity -= $sublot->actual_quantity;
+                    }
+                }
+            }
+
+            $this->updatedOrderSublots();
+        }
     }
 
     // ADD PRODUCT

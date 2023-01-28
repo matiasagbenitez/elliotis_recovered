@@ -61,7 +61,8 @@
 
                 @foreach ($client_orders as $order)
                     <option value="{{ $order->id }}">Orden #{{ $order->id }}
-                        ({{ Date::parse($order->registration_date)->format('d-m-Y') }})</option>
+                        ({{ Date::parse($order->registration_date)->format('d-m-Y') }})
+                    </option>
                 @endforeach
             </select>
             <x-jet-input-error for="createForm.client_order_id" class="mt-2" />
@@ -310,6 +311,53 @@
                 showConfirmButton: true,
                 confirmButtonColor: '#1f2937',
             });
+        });
+    </script>
+
+    <script>
+        Livewire.on('quantitiesError', message => {
+            Swal.fire({
+                title: '¡No hay suficiente stock!',
+                text: message,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#1f2937',
+                cancelButtonColor: '#dc2626',
+                confirmButtonText: 'Sí, completar con lo disponible',
+                cancelButtonText: 'Cancelar venta'
+            }).then((result) => {
+                if (result.isConfirmed) {
+
+                    Livewire.emitTo('sales.create-sale', 'bestTry');
+
+                    Livewire.on('success', message => {
+                        const Toast = Swal.mixin({
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 3000,
+                            timerProgressBar: true,
+                        });
+
+                        Toast.fire({
+                            icon: 'success',
+                            title: message
+                        });
+                    });
+
+                    Livewire.on('error', message => {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: message,
+                            showConfirmButton: true,
+                            confirmButtonColor: '#1f2937',
+                        });
+                    });
+                } else {
+                    Livewire.emitTo('sales.create-sale', 'cancelSale');
+                }
+            })
         });
     </script>
 @endpush
