@@ -4,12 +4,15 @@ namespace App\Http\Livewire\Products;
 
 use App\Models\Product;
 use App\Models\ProductSale;
+use App\Models\Sublot;
 use Livewire\Component;
 
 class AddProductsComponent extends Component
 {
-    public $allProducts = [];
+    public $allSublots = [];
     public $type_of_purchase = 2;
+
+    public $allSublotsFormated = [];
 
     public $orderProducts = [];
     public $totalWeight = 0;
@@ -28,7 +31,24 @@ class AddProductsComponent extends Component
 
     public function mount()
     {
-        $this->allProducts = Product::where('is_buyable', true)->get();
+        // Get sublots where available is true and where sublot->product is_salable is true
+        $this->allSublots = Sublot::where('available', true)->where('area_id', 8)->whereHas('product', function ($query) {
+            $query->where('is_salable', true);
+        })->get();
+
+        // dd($this->allSublots);
+
+        foreach ($this->allSublots as $sublot) {
+            $this->allSublotsFormated[] = [
+                'id' => $sublot->id,
+                'text' => '[' . $sublot->actual_quantity . '] ' . $sublot->product->name . ' - Sublote: ' . $sublot->code . ' - Lote: ' . $sublot->lot->code
+            ];
+        }
+
+        // dd($this->allSublotsFormated);
+
+        // $this->allSublots = Product::where('is_salable', true)->get();
+
         $this->orderProducts = [
             ['product_id' => '', 'unities' => 1, 'quantity' => 0, 'price_quantity' => 0, 'subtotal' => 0],
         ];
@@ -49,7 +69,7 @@ class AddProductsComponent extends Component
 
     public function addProduct()
     {
-        if (count($this->orderProducts) == count($this->allProducts)) {
+        if (count($this->orderProducts) == count($this->allSublots)) {
             return;
         }
 

@@ -4,10 +4,12 @@ namespace App\Http\Livewire\Sales;
 
 use App\Models\Sale;
 use App\Models\Client;
+use App\Models\Sublot;
 use App\Models\Product;
 use Livewire\Component;
 use App\Models\Supplier;
 use App\Models\SaleOrder;
+use Termwind\Components\Dd;
 use App\Models\VoucherTypes;
 use Livewire\WithFileUploads;
 use App\Models\PaymentMethods;
@@ -15,7 +17,6 @@ use App\Models\ProductSaleOrder;
 use App\Models\PaymentConditions;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Services\NecessaryProductionService;
-use Termwind\Components\Dd;
 
 class CreateSale extends Component
 {
@@ -27,8 +28,9 @@ class CreateSale extends Component
     public $client_discriminates_iva, $has_order_associated = '', $client_orders = [];
 
     // PRODUCTS
-    public $orderProducts = [];
-    public $allProducts = [];
+    public $orderSublots = [];
+    public $allSublots = [];
+    public $allSublotsFormated = [];
 
     // CREATE FORM
     public $createForm = [
@@ -59,11 +61,11 @@ class CreateSale extends Component
         'createForm.iva' => 'required',
         'createForm.total' => 'required',
         'createForm.observations' => 'nullable|string',
-        'orderProducts.*.product_id' => 'required',
-        'orderProducts.*.m2_unitary' => 'required|numeric|min:1',
-        'orderProducts.*.quantity' => 'required|numeric|min:1',
-        'orderProducts.*.m2_total' => 'required|numeric|min:1',
-        'orderProducts.*.m2_price' => 'required|numeric|min:1',
+        'orderSublots.*.product_id' => 'required',
+        'orderSublots.*.m2_unitary' => 'required|numeric|min:1',
+        'orderSublots.*.quantity' => 'required|numeric|min:1',
+        'orderSublots.*.m2_total' => 'required|numeric|min:1',
+        'orderSublots.*.m2_price' => 'required|numeric|min:1',
     ];
 
     public function mount()
@@ -84,17 +86,28 @@ class CreateSale extends Component
         $this->payment_methods = PaymentMethods::orderBy('name')->get();
         $this->voucher_types = VoucherTypes::orderBy('name')->get();
 
-        $this->allProducts = Product::where('is_salable', true)->orderBy('name')->get();
-        $this->orderProducts = [
-            ['product_id' => '', 'm2_unitary' => 0, 'quantity' => 1, 'm2_total' => 0, 'm2_price' => 0, 'subtotal' => 0]
+        $this->allSublots = Sublot::where('available', true)->where('area_id', 8)->whereHas('product', function ($query) {
+            $query->where('is_salable', true);
+        })->get();
+
+        foreach ($this->allSublots as $sublot) {
+            $this->allSublotsFormated[] = [
+                'id' => $sublot->id,
+                'product_id' => $sublot->product_id,
+                'text' => '[' . $sublot->actual_quantity . '] ' . $sublot->product->name . ' - Sublote: ' . $sublot->code . ' - Lote: ' . $sublot->lot->code
+            ];
+        }
+
+        $this->orderSublots = [
+            ['sublot_id' => '', 'product_id' => '', 'm2_unitary' => 0, 'quantity' => 1, 'm2_total' => 0, 'm2_price' => 0, 'subtotal' => 0]
         ];
     }
 
     // RESET ORDER PRODUCTS
-    public function resetOrderProducts()
+    public function resetOrderSublots()
     {
-        $this->orderProducts = [
-            ['product_id' => '', 'm2_unitary' => 0, 'quantity' => 1, 'm2_total' => 0, 'm2_price' => 0, 'subtotal' => 0]
+        $this->orderSublots = [
+            ['sublot_id' => '', 'product_id' => '', 'm2_unitary' => 0, 'quantity' => 1, 'm2_total' => 0, 'm2_price' => 0, 'subtotal' => 0]
         ];
         $this->createForm['subtotal'] = 0;
         $this->createForm['iva'] = 0;
@@ -105,8 +118,8 @@ class CreateSale extends Component
     {
         $client = Client::find($value);
         $this->client_discriminates_iva = $client->iva_condition->discriminate ? true : false;
-        $this->orderProducts = [
-            ['product_id' => '', 'm2_unitary' => 0, 'quantity' => 1, 'm2_total' => 0, 'm2_price' => 0, 'subtotal' => 0]
+        $this->orderSublots = [
+            ['sublot_id' => '', 'product_id' => '', 'm2_unitary' => 0, 'quantity' => 1, 'm2_total' => 0, 'm2_price' => 0, 'subtotal' => 0]
         ];
         $this->createForm = [
             'user_id' => 1,
@@ -124,7 +137,7 @@ class CreateSale extends Component
     {
         if ($this->has_order_associated == 0) {
             $this->reset('client_orders');
-            $this->resetOrderProducts();
+            $this->resetOrderSublots();
         } else {
             $this->reset('client_orders');
             $this->client_orders = SaleOrder::where('client_id', $this->createForm['client_id'])->where('is_active', true)->get();
@@ -134,41 +147,42 @@ class CreateSale extends Component
     // CLIENT ORDERS
     public function updatedCreateFormClientOrderId($value)
     {
-        $this->orderProducts = [];
+        dd('falta implementar');
+        // $this->orderSublots = [];
 
-        $orderDetail = ProductSaleOrder::where('sale_order_id', $value)->get()->toArray();
+        // $orderDetail = ProductSaleOrder::where('sale_order_id', $value)->get()->toArray();
 
-        foreach ($orderDetail as $product) {
-            $this->orderProducts[] = [
-                'product_id' => $product['product_id'],
-                'm2_unitary' => $product['m2_unitary'],
-                'quantity' => $product['quantity'],
-                'm2_total' => $product['m2_total'],
-                'm2_price' => $this->client_discriminates_iva ? $product['m2_price'] : $product['m2_price'] * 1.21,
-                'subtotal' => $this->client_discriminates_iva ? $product['subtotal'] : $product['subtotal'] * 1.21,
-            ];
-        }
+        // foreach ($orderDetail as $product) {
+        //     $this->orderSublots[] = [
+        //         'product_id' => $product['product_id'],
+        //         'm2_unitary' => $product['m2_unitary'],
+        //         'quantity' => $product['quantity'],
+        //         'm2_total' => $product['m2_total'],
+        //         'm2_price' => $this->client_discriminates_iva ? $product['m2_price'] : $product['m2_price'] * 1.21,
+        //         'subtotal' => $this->client_discriminates_iva ? $product['subtotal'] : $product['subtotal'] * 1.21,
+        //     ];
+        // }
 
-        $this->updatedOrderProducts();
+        // $this->updatedOrderSublots();
     }
 
     // ADD PRODUCT
     public function addProduct()
     {
-        if (count($this->orderProducts) == count($this->allProducts)) {
+        if (count($this->orderSublots) == count($this->allSublots)) {
             return;
         }
 
-        if (!empty($this->orderProducts[count($this->orderProducts) - 1]['product_id']) || count($this->orderProducts) == 0) {
-            $this->orderProducts[] = ['product_id' => '', 'quantity' => 1, 'price' => 0, 'subtotal' => '0'];
+        if (!empty($this->orderSublots[count($this->orderSublots) - 1]['sublot_id']) || count($this->orderSublots) == 0) {
+            $this->orderSublots[] = ['sublot_id' => '', 'product_id' => '', 'm2_unitary' => 0, 'quantity' => 1, 'm2_total' => 0, 'm2_price' => 0, 'subtotal' => 0];
         }
     }
 
     // IS PRODUCT IN ORDER
-    public function isProductInOrder($product_id)
+    public function isSublotInOrder($sublot_id)
     {
-        foreach ($this->orderProducts as $product) {
-            if ($product['product_id'] == $product_id) {
+        foreach ($this->orderSublots as $sublot) {
+            if ($sublot['sublot_id'] == $sublot_id) {
                 return true;
             }
         }
@@ -178,31 +192,32 @@ class CreateSale extends Component
     // REMOVE PRODUCT
     public function removeProduct($index)
     {
-        unset($this->orderProducts[$index]);
-        $this->orderProducts = array_values($this->orderProducts);
-        $this->updatedOrderProducts();
-    }
-
-    // SHOW PRODUCTS
-    public function showProducts()
-    {
-        dd($this->orderProducts);
+        unset($this->orderSublots[$index]);
+        $this->orderSublots = array_values($this->orderSublots);
+        $this->updatedOrderSublots();
     }
 
     // UPDATED ORDER PRODUCTS
-    public function updatedOrderProducts()
+    public function updatedOrderSublots()
     {
         $subtotal = 0;
 
-        foreach ($this->orderProducts as $index => $product) {
+        // Complete orderSublots['product_id']
+        foreach ($this->orderSublots as $index => $sublot) {
+            if (!empty($sublot['sublot_id'])) {
+                $this->orderSublots[$index]['product_id'] = Sublot::find($sublot['sublot_id'])->product_id;
+            }
+        }
+
+        foreach ($this->orderSublots as $index => $product) {
             if (empty($product['quantity']) || empty($product['m2_price'])) {
-                $this->orderProducts[$index]['subtotal'] = 0;
+                $this->orderSublots[$index]['subtotal'] = 0;
                 continue;
             } else {
-                $this->orderProducts[$index]['m2_unitary'] = Product::find($product['product_id'])->m2 ?? 0;
-                $this->orderProducts[$index]['m2_total'] = number_format($this->orderProducts[$index]['quantity'] * $this->orderProducts[$index]['m2_unitary'], 2, '.', '');
-                $this->orderProducts[$index]['subtotal'] = number_format($this->orderProducts[$index]['m2_total'] * $this->orderProducts[$index]['m2_price'], 2, '.', '');
-                $subtotal += $this->orderProducts[$index]['subtotal'];
+                $this->orderSublots[$index]['m2_unitary'] = Product::find($product['product_id'])->m2 ?? 0;
+                $this->orderSublots[$index]['m2_total'] = number_format($this->orderSublots[$index]['quantity'] * $this->orderSublots[$index]['m2_unitary'], 2, '.', '');
+                $this->orderSublots[$index]['subtotal'] = number_format($this->orderSublots[$index]['m2_total'] * $this->orderSublots[$index]['m2_price'], 2, '.', '');
+                $subtotal += $this->orderSublots[$index]['subtotal'];
             }
         }
 
@@ -220,14 +235,14 @@ class CreateSale extends Component
 
     public function updatePrice($index)
     {
-        $price = Product::find($this->orderProducts[$index]['product_id'])->m2_price ?? 0;
+        $price = Product::find($this->orderSublots[$index]['product_id'])->m2_price ?? 0;
 
         if (!$this->client_discriminates_iva) {
             $price = $price * 1.21;
         }
 
-        $this->orderProducts[$index]['m2_price'] = number_format($price, 2, '.', '');
-        $this->updatedOrderProducts();
+        $this->orderSublots[$index]['m2_price'] = number_format($price, 2, '.', '');
+        $this->updatedOrderSublots();
     }
 
 
@@ -248,10 +263,10 @@ class CreateSale extends Component
         $this->validate();
 
         // Controlamos que exista stock para todos los productos de la orden, caso contrario, mostramos un mensaje de error
-        foreach ($this->orderProducts as $orderProduct) {
-            $product = Product::find($orderProduct['product_id']);
-            if ($product->real_stock < $orderProduct['quantity']) {
-                $this->emit('error', 'No hay stock suficiente para el producto ' . $product->name);
+        foreach ($this->orderSublots as $orderSublot) {
+            $sublot = Sublot::find($orderSublot['sublot_id']);
+            if ($sublot->actual_quantity < $orderSublot['quantity']) {
+                $this->emit('error', 'No hay stock suficiente para el producto ' . $sublot->product->name . ' en el sublote ' . $sublot->code . '.' );
                 return;
             }
         }
@@ -263,13 +278,20 @@ class CreateSale extends Component
             $sale = Sale::create($this->createForm);
 
             // Creamos los productos de la venta en la tabla pivote
-            foreach ($this->orderProducts as $product) {
-                $sale->products()->attach($product['product_id'], [
-                    'm2_unitary' => $product['m2_unitary'],
-                    'quantity' => $product['quantity'],
-                    'm2_total' => $product['m2_total'],
-                    'm2_price' => $this->client_discriminates_iva ? $product['m2_price'] : $product['m2_price'] / 1.21,
-                    'subtotal' => $this->client_discriminates_iva ? $product['subtotal'] : $product['subtotal'] / 1.21,
+            foreach ($this->orderSublots as $sublot) {
+                $sale->products()->attach($sublot['product_id'], [
+                    'm2_unitary' => $sublot['m2_unitary'],
+                    'quantity' => $sublot['quantity'],
+                    'm2_total' => $sublot['m2_total'],
+                    'm2_price' => $this->client_discriminates_iva ? $sublot['m2_price'] : $sublot['m2_price'] / 1.21,
+                    'subtotal' => $this->client_discriminates_iva ? $sublot['subtotal'] : $sublot['subtotal'] / 1.21,
+                ]);
+
+                // Actualizamos el stock del sublote
+                $sublot_aux = Sublot::find($sublot['sublot_id']);
+                $sublot_aux->update([
+                    'actual_quantity' => $sublot_aux->actual_quantity - $sublot['quantity'],
+                    'available' => $sublot_aux->actual_quantity - $sublot['quantity'] > 0 ? true : false,
                 ]);
             }
 

@@ -84,7 +84,7 @@
         </div>
 
         <div class="col-span-6">
-            @if ($orderProducts)
+            @if ($orderSublots)
                 <div class="grid grid-cols-8 w-full text-center text-sm uppercase font-bold text-gray-600">
                     <div class="col-span-3 py-1">Producto</div>
                     <div class="py-1">M2 unitario</div>
@@ -101,58 +101,58 @@
                 </div>
 
                 <div class="grid grid-cols-8 w-full text-center text-sm uppercase text-gray-600 gap-2 items-center">
-                    @foreach ($orderProducts as $index => $orderProduct)
+                    @foreach ($orderSublots as $index => $orderProduct)
                         <div class="col-span-3 flex">
                             <button type="button" wire:click.prevent="removeProduct({{ $index }})">
                                 <i class="fas fa-trash mx-4 hover:text-red-600" title="Eliminar producto"></i>
                             </button>
-                            <select name="orderProducts[{{ $index }}][product_id]"
-                                wire:model.lazy="orderProducts.{{ $index }}.product_id"
+                            <select name="orderSublots[{{ $index }}][sublot_id]"
+                                wire:model.lazy="orderSublots.{{ $index }}.sublot_id"
+                                wire:model.lazy="orderSublots.{{ $index }}.product_id"
                                 wire:change="updatePrice({{ $index }})" class="input-control w-full p-1 pl-3">
                                 <option disabled value="">Seleccione un producto</option>
-                                @foreach ($allProducts as $product)
-                                    {{-- Disable product options that are already in the $orderProducts[][] --}}
-                                    <option value="{{ $product->id }}"
-                                        {{ $this->isProductInOrder($product->id) ? 'disabled' : '' }}>
-                                        {{ $product->name }}
+                                @foreach ($allSublotsFormated as $sublot)
+                                    <option value="{{ $sublot['id'] }}"
+                                        {{ $this->isSublotInOrder($sublot['id']) ? 'disabled' : '' }}>
+                                        {{ $sublot['text'] }}
                                     </option>
                                 @endforeach
                             </select>
                         </div>
                         <div class="col-span-1">
                             <x-jet-input readonly disabled type="number" min="1"
-                                name="orderProducts[{{ $index }}][m2_unitary]"
-                                wire:model.lazy="orderProducts.{{ $index }}.m2_unitary"
+                                name="orderSublots[{{ $index }}][m2_unitary]"
+                                wire:model.lazy="orderSublots.{{ $index }}.m2_unitary"
                                 class="border-none shadow-none w-full p-1 text-center" />
                         </div>
                         <div class="col-span-1">
                             <x-jet-input type="number" min="1"
-                                name="orderProducts[{{ $index }}][quantity]"
-                                wire:model.lazy="orderProducts.{{ $index }}.quantity"
+                                name="orderSublots[{{ $index }}][quantity]"
+                                wire:model.lazy="orderSublots.{{ $index }}.quantity"
                                 class="input-control w-full p-1 text-center" />
                         </div>
                         <div class="col-span-1">
                             <x-jet-input readonly disabled type="number" min="1"
-                                name="orderProducts[{{ $index }}][m2_total]"
-                                wire:model.lazy="orderProducts.{{ $index }}.m2_total"
+                                name="orderSublots[{{ $index }}][m2_total]"
+                                wire:model.lazy="orderSublots.{{ $index }}.m2_total"
                                 class="border-none shadow-none w-full p-1 text-center" />
                         </div>
                         <div class="col-span-1">
                             <x-jet-input type="number" min="1"
-                                name="orderProducts[{{ $index }}][m2_price]"
-                                wire:model="orderProducts.{{ $index }}.m2_price"
+                                name="orderSublots[{{ $index }}][m2_price]"
+                                wire:model="orderSublots.{{ $index }}.m2_price"
                                 class="input-control w-full p-1 text-center" />
                         </div>
                         <div class="col-span-1 flex items-center">
                             $
                             <x-jet-input disabled readonly type="number" min="1"
-                                name="orderProducts[{{ $index }}][subtotal]"
-                                wire:model.lazy="orderProducts.{{ $index }}.subtotal"
+                                name="orderSublots[{{ $index }}][subtotal]"
+                                wire:model.lazy="orderSublots.{{ $index }}.subtotal"
                                 class="input-control w-full p-1 text-center border-none shadow-none" />
                         </div>
                     @endforeach
                 </div>
-                <x-jet-input-error for="orderProducts.*.product_id" class="mt-2" />
+                <x-jet-input-error for="orderSublots.*.sublot_id" class="mt-2" />
             @else
                 <p class="text-center">¡No hay productos! Intenta agregar alguno con el botón <span
                         class="font-bold">"Agregar producto"</span>.</p>
@@ -165,28 +165,19 @@
         <div class="col-span-6">
             <hr>
             <div class="grid grid-cols-8 gap-2">
-
-                {{-- PARTE IZQUIERDA - BOTÓN AGREGAR PRODUCTO --}}
                 <div
-                    class="{{ $orderProducts ? 'col-span-6' : 'col-span-8' }}  mt-4 flex justify-center items-center gap-2">
+                    class="{{ $orderSublots ? 'col-span-6' : 'col-span-8' }}  mt-4 flex justify-center items-center gap-2">
                     <div>
                         <x-jet-button type="button" wire:click.prevent="addProduct" class="px-3">
                             <i class="fas fa-plus mr-2"></i>
                             Agregar producto
                         </x-jet-button>
                     </div>
-                    {{-- @if ($orderProducts)
-                        <div>
-                            <x-jet-secondary-button type="button" wire:click="showProducts" class="px-3">
-                                <i class="fas fa-cogs"></i>
-                            </x-jet-secondary-button>
-                        </div>
-                    @endif --}}
                 </div>
 
 
                 {{-- PARTE DERECHA --}}
-                @if ($orderProducts)
+                @if ($orderSublots)
                     <div
                         class="col-span-1 flex flex-col justify-between text-center my-1 py-1 text-sm uppercase font-bold text-gray-600">
                         @if ($client_discriminates_iva)

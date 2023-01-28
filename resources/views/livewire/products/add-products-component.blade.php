@@ -30,10 +30,9 @@
                                     wire:model="orderProducts.{{ $index }}.product_id"
                                     class="input-control w-full">
                                     <option disabled value="">Seleccione un producto</option>
-                                    @foreach ($allProducts as $product)
-                                        <option value="{{ $product->id }}"
-                                            {{ $this->isProductInOrder($product->id) ? 'disabled' : '' }}>
-                                            {{ $product->name }}
+                                    @foreach ($allSublotsFormated as $sublot)
+                                        <option value="{{ $sublot['id'] }}">
+                                            {{ $sublot['text'] }}
                                         </option>
                                     @endforeach
                                 </select>
@@ -149,10 +148,9 @@
                                     wire:model="orderProducts.{{ $index }}.product_id"
                                     class="input-control w-full">
                                     <option disabled value="">Seleccione un producto</option>
-                                    @foreach ($allProducts as $product)
-                                        <option value="{{ $product->id }}"
-                                            {{ $this->isProductInOrder($product->id) ? 'disabled' : '' }}>
-                                            {{ $product->name }}
+                                    @foreach ($allSublotsFormated as $sublot)
+                                        <option value="{{ $sublot['id'] }}">
+                                            {{ $sublot['text'] }}
                                         </option>
                                     @endforeach
                                 </select>

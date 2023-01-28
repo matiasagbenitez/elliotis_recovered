@@ -17,6 +17,8 @@ return new class extends Migration
             $table->unsignedBigInteger('product_id');
             $table->foreign('product_id')->references('id')->on('products');
 
+            $table->unsignedBigInteger('sublot_id')->nullable();
+
             $table->float('m2_unitary', 10, 2);
             $table->integer('quantity');
             $table->float('m2_total', 10, 2);
