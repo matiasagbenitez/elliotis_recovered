@@ -49,6 +49,10 @@ class Task9Seeder extends Seeder
             $previousProduct = $product->previousProduct;
             $sublots = Sublot::where('product_id', $previousProduct->id)->where('available', true)->get();
 
+            if ($sublots->count() == 0) {
+                return;
+            }
+
             // Completar el inputSelects con sublots, hasta que la suma de los consumed_quantity sea igual a $size
             $sum = 0;
 

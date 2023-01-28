@@ -122,7 +122,10 @@ class TaskService
             $lastDate = Date::create(2023, 01, 02, 8, 30, 0);
         }
 
-        $startDate = $lastDate->addHours(rand(2, 3))->addMinutes(rand(0, 59));
+        $hours = rand(2, 3);
+        $minutes = rand(0, 59);
+
+        $startDate = $lastDate->addHours($hours)->addMinutes($minutes);
 
         if ($startDate->format('N') >= 6){
             $startDate->modify('next monday ' . $nextDayStart);
