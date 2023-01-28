@@ -49,12 +49,12 @@ class NecessaryProductionService
                 'product_id' => $prod->id,
                 'name' => $prod->name,
                 'quantity' => $prod->real_stock,
-                'needed' => $product['quantity'] - $prod->real_stock,
+                'needed' => $product['quantity'] - $prod->real_stock < 0 ? 0 : $product['quantity'] - $prod->real_stock,
             ];
 
             if ($updateStock) {
                 $prod->update([
-                    'necessary_stock' => $product['quantity'] - $prod->real_stock
+                    'necessary_stock' => ($product['quantity'] - $prod->real_stock ) < 0 ? 0 : $product['quantity'] - $prod->real_stock
                 ]);
             }
 
