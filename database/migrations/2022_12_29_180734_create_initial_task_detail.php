@@ -18,6 +18,7 @@ return new class extends Migration
             $table->foreign('sublot_id')->references('id')->on('trunk_sublots');
 
             $table->integer('consumed_quantity')->min(0)->nullable();
+            $table->float('m2')->default(0);
 
             $table->timestamps();
         });

@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Http\Services\M2Service;
 use App\Models\Lot;
 use App\Models\Task;
 use App\Models\Sublot;
@@ -17,7 +18,8 @@ class Task2Seeder extends Seeder
     {
 
         $sublots = Sublot::where('phase_id', 1)->where('area_id', 2)->where('available', true)->get();
-        $cant = rand(4, 5);
+        // $cant = rand(4, 5);
+        $cant = rand(2, 3);
         if ($sublots->count() < $cant) {
             return;
         }
@@ -34,18 +36,8 @@ class Task2Seeder extends Seeder
         ]);
 
         foreach ($sublots as $sublot) {
-            // $rand = RandomNumberService::highProbability();
-            // if ($rand == 1) {
-                $consumed_quantity = $sublot->actual_quantity;
-            // } else {
-            //     if ($sublot->actual_quantity < $sublot->initial_quantity) {
-            //         $consumed_quantity = $sublot->actual_quantity;
-            //     } else {
-            //         $rounded_half = round($sublot->actual_quantity / 2);
-            //         $rounded_half = (int) $rounded_half;
-            //         $consumed_quantity = rand($rounded_half, $sublot->actual_quantity);
-            //     }
-            // }
+
+            $consumed_quantity = $sublot->actual_quantity;
 
             $inputSelects[] = [
                 'sublot_id' => $sublot->id,
@@ -82,6 +74,8 @@ class Task2Seeder extends Seeder
 
         foreach ($outputSelects as $item) {
 
+            $m2 = M2Service::calculateM2($item['product_id'], $item['produced_quantity']);
+
             $sublot = Sublot::create([
                 'code' => 'S' .  TaskService::getSublotCode($task->lot),
                 'lot_id' => $lot->id,
@@ -90,6 +84,8 @@ class Task2Seeder extends Seeder
                 'area_id' => $task->typeOfTask->destination_area_id,
                 'initial_quantity' => $item['produced_quantity'],
                 'actual_quantity' => $item['produced_quantity'],
+                'initial_m2' => $m2,
+                'actual_m2' => $m2,
             ]);
 
             $aux[] = [

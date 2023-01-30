@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Tasks;
 
+use App\Http\Services\M2Service;
 use App\Http\Services\NecessaryProductionService;
 use App\Models\Lot;
 use App\Models\Task;
@@ -102,7 +103,7 @@ class RegisterTask extends Component
         }
 
         $this->inputSelects = [
-            ['sublot_id' => '', 'consumed_quantity' => 1]
+            ['sublot_id' => '', 'consumed_quantity' => 1, 'm2' => 0]
         ];
     }
 
@@ -138,7 +139,7 @@ class RegisterTask extends Component
         }
 
         $this->outputSelects = [
-            ['product_id' => '', 'produced_quantity' => 1]
+            ['product_id' => '', 'produced_quantity' => 1, 'm2' => 0]
         ];
     }
 
@@ -156,7 +157,7 @@ class RegisterTask extends Component
         }
 
         if (!empty($this->inputSelects[count($this->inputSelects) - 1]['sublot_id']) || count($this->inputSelects) == 0) {
-            $this->inputSelects[] = ['sublot_id' => '', 'consumed_quantity' => 1];
+            $this->inputSelects[] = ['sublot_id' => '', 'consumed_quantity' => 1, 'm2' => 0];
         }
     }
 
@@ -168,7 +169,7 @@ class RegisterTask extends Component
         }
 
         if (!empty($this->outputSelects[count($this->outputSelects) - 1]['product_id']) || count($this->outputSelects) == 0) {
-            $this->outputSelects[] = ['product_id' => '', 'produced_quantity' => 1];
+            $this->outputSelects[] = ['product_id' => '', 'produced_quantity' => 1, 'm2' => 0];
         }
     }
 
@@ -314,7 +315,7 @@ class RegisterTask extends Component
             // Redireccionamos con flash message
             $name = Str::upper($this->task->typeOfTask->name);
             session()->flash('flash.banner', 'Tarea de tipo ' . $name . ' registrada correctamente.');
-            return redirect()->route('admin.tasks.index');
+            return redirect()->route('admin.tasks.show', $this->task->id);
         } catch (\Throwable $th) {
             dd($th);
         }
@@ -340,15 +341,25 @@ class RegisterTask extends Component
                 'outputSelects.*.produced_quantity' => 'required|numeric|min:1',
             ]);
 
+            // Calcular m2
+            foreach ($this->inputSelects as &$item) {
+                $product_id = Sublot::find($item['sublot_id'])->product_id;
+                $item['m2'] = M2Service::calculateM2($product_id, $item['consumed_quantity']);
+            }
+
             // Completamos la tabla intermedia (input_task_detail)
             $this->task->inputSublotsDetails()->sync($this->inputSelects);
 
             // Actualizamos los sublotes de entrada
-            foreach ($this->inputSelects as $item) {
+            foreach ($this->inputSelects as &$item) {
+
+                $product_id = Sublot::find($item['sublot_id'])->product_id;
+
                 $sublot = Sublot::find($item['sublot_id']);
                 $sublot->update([
                     'actual_quantity' => $sublot->actual_quantity - $item['consumed_quantity'],
-                    'available' => $sublot->actual_quantity - $item['consumed_quantity'] > 0 ? 1 : 0
+                    'available' => $sublot->actual_quantity - $item['consumed_quantity'] > 0 ? 1 : 0,
+                    'actual_m2' => $sublot->actual_m2 - M2Service::calculateM2($product_id, $item['consumed_quantity']),
                 ]);
 
                 $sublot->product->update([
@@ -366,6 +377,9 @@ class RegisterTask extends Component
 
             // Creamos los sublotes de salida
             foreach ($this->outputSelects as $item) {
+
+                $m2 = M2Service::calculateM2($item['product_id'], $item['produced_quantity']);
+
                 $sublot = Sublot::create([
                     'code' => 'S' .  TaskService::getSublotCode($this->task->lot),
                     'lot_id' => $lot->id,
@@ -374,11 +388,14 @@ class RegisterTask extends Component
                     'area_id' => $this->task->typeOfTask->destination_area_id,
                     'initial_quantity' => $item['produced_quantity'],
                     'actual_quantity' => $item['produced_quantity'],
+                    'initial_m2' => $m2,
+                    'actual_m2' => $m2,
                 ]);
 
                 $aux[] = [
                     'sublot_id' => $sublot->id,
                     'produced_quantity' => $sublot->initial_quantity,
+                    'm2' => $m2,
                 ];
 
                 $sublot->product->update([
@@ -398,7 +415,7 @@ class RegisterTask extends Component
             // Redireccionamos con flash message
             $name = Str::upper($this->task->typeOfTask->name);
             session()->flash('flash.banner', 'Tarea de tipo ' . $name . ' registrada correctamente.');
-            return redirect()->route('admin.tasks.index');
+            return redirect()->route('admin.tasks.show', $this->task->id);
         } catch (\Throwable $th) {
             dd($th);
         }
@@ -416,6 +433,13 @@ class RegisterTask extends Component
                 }
             }
 
+            foreach ($this->inputSelects as &$item) {
+                $product_id = Sublot::find($item['sublot_id'])->product_id;
+                $item['m2'] = M2Service::calculateM2($product_id, $item['consumed_quantity']);
+            }
+
+            // dd($this->inputSelects);
+
             // Validación
             $this->validate([
                 'inputSelects.*.sublot_id' => 'required',
@@ -431,17 +455,21 @@ class RegisterTask extends Component
                 'code' => 'L' . TaskService::getLotCode($this->task),
             ]);
 
+            // dd($this->inputSelects);
+
             // Actualizamos los sublotes de entrada
-            foreach ($this->inputSelects as $item) {
+            foreach ($this->inputSelects as &$item) {
+
+                $product_id = Sublot::find($item['sublot_id'])->product_id;
+
                 $input_sublot = Sublot::find($item['sublot_id']);
                 $input_sublot->update([
+                    'available' => $input_sublot->actual_quantity - $item['consumed_quantity'] > 0 ? 1 : 0,
                     'actual_quantity' => $input_sublot->actual_quantity - $item['consumed_quantity'],
-                    'available' => $input_sublot->actual_quantity - $item['consumed_quantity'] > 0 ? 1 : 0
+                    'actual_m2' => $input_sublot->actual_m2 - M2Service::calculateM2($product_id, $item['consumed_quantity']),
                 ]);
 
-                // $input_sublot->product->update([
-                //     'real_stock' => $input_sublot->product->real_stock - $item['consumed_quantity']
-                // ]);
+                $m2 = M2Service::calculateM2($product_id, $item['consumed_quantity']);
 
                 // Creamos el sublote de salida
                 $sublot = Sublot::create([
@@ -452,16 +480,15 @@ class RegisterTask extends Component
                     'area_id' => $this->task->typeOfTask->destination_area_id,
                     'initial_quantity' => $item['consumed_quantity'],
                     'actual_quantity' => $item['consumed_quantity'],
+                    'initial_m2' => $m2,
+                    'actual_m2' => $m2,
                 ]);
 
                 $aux[] = [
                     'sublot_id' => $sublot->id,
-                    'produced_quantity' => $sublot->initial_quantity,
+                    'produced_quantity' => $item['consumed_quantity'],
+                    'm2' => $m2,
                 ];
-
-                // $sublot->product->update([
-                //     'real_stock' => $sublot->product->real_stock + $sublot->initial_quantity
-                // ]);
 
             }
 
@@ -477,7 +504,7 @@ class RegisterTask extends Component
             // Redireccionamos con flash message
             $name = Str::upper($this->task->typeOfTask->name);
             session()->flash('flash.banner', 'Tarea de tipo ' . $name . ' registrada correctamente.');
-            return redirect()->route('admin.tasks.index');
+            return redirect()->route('admin.tasks.show', $this->task->id);
         } catch (\Throwable $th) {
             dd($th);
         }
@@ -501,17 +528,27 @@ class RegisterTask extends Component
                 'inputSelects.*.consumed_quantity' => 'required|numeric|min:1',
             ]);
 
+            // Calcular m2
+            foreach ($this->inputSelects as &$item) {
+                $product_id = Sublot::find($item['sublot_id'])->product_id;
+                $item['m2'] = M2Service::calculateM2($product_id, $item['consumed_quantity']);
+            }
+
             // Completamos la tabla intermedia (input_task_detail)
             $this->task->inputSublotsDetails()->sync($this->inputSelects);
 
             $outputProducts = [];
 
             // Actualizamos los sublotes de entrada
-            foreach ($this->inputSelects as $item) {
+            foreach ($this->inputSelects as &$item) {
+
+                $product_id = Sublot::find($item['sublot_id'])->product_id;
+
                 $input_sublot = Sublot::find($item['sublot_id']);
                 $input_sublot->update([
                     'actual_quantity' => $input_sublot->actual_quantity - $item['consumed_quantity'],
-                    'available' => $input_sublot->actual_quantity - $item['consumed_quantity'] > 0 ? 1 : 0
+                    'available' => $input_sublot->actual_quantity - $item['consumed_quantity'] > 0 ? 1 : 0,
+                    'actual_m2' => $input_sublot->actual_m2 - M2Service::calculateM2($product_id, $item['consumed_quantity']),
                 ]);
 
                 $input_sublot->product->update([
@@ -537,6 +574,9 @@ class RegisterTask extends Component
 
             // Creamos los sublotes de salida
             foreach ($outputProducts as $item) {
+
+                $m2 = M2Service::calculateM2($item['product_id'], $item['produced_quantity']);
+
                 $sublot = Sublot::create([
                     'code' => 'S' . TaskService::getSublotCode($this->task->lot),
                     'lot_id' => $lot->id,
@@ -545,11 +585,14 @@ class RegisterTask extends Component
                     'area_id' => $this->task->typeOfTask->destination_area_id,
                     'initial_quantity' => $item['produced_quantity'],
                     'actual_quantity' => $item['produced_quantity'],
+                    'initial_m2' => $m2,
+                    'actual_m2' => $m2,
                 ]);
 
                 $aux[] = [
                     'sublot_id' => $sublot->id,
                     'produced_quantity' => $sublot->initial_quantity,
+                    'm2' => $m2,
                 ];
 
                 $sublot->product->update([
@@ -569,7 +612,7 @@ class RegisterTask extends Component
             // Redireccionamos con flash message
             $name = Str::upper($this->task->typeOfTask->name);
             session()->flash('flash.banner', 'Tarea de tipo ' . $name . ' registrada correctamente.');
-            return redirect()->route('admin.tasks.index');
+            return redirect()->route('admin.tasks.show', $this->task->id);
         } catch (\Throwable $th) {
             dd($th);
         }
@@ -596,16 +639,26 @@ class RegisterTask extends Component
                 return;
             }
         }
+        // Calcular m2
+        foreach ($this->inputSelects as &$item) {
+            $product_id = Sublot::find($item['sublot_id'])->product_id;
+            $item['m2'] = M2Service::calculateM2($product_id, $item['consumed_quantity']);
+        }
+        // dd($this->inputSelects);
 
         // Completamos la tabla intermedia (input_task_detail)
         $this->task->inputSublotsDetails()->sync($this->inputSelects);
 
         // Actualizamos los sublotes de entrada
-        foreach ($this->inputSelects as $item) {
+        foreach ($this->inputSelects as &$item) {
+
             $input_sublot = Sublot::find($item['sublot_id']);
+            $product_id = $input_sublot->product_id;
+
             $input_sublot->update([
                 'actual_quantity' => $input_sublot->actual_quantity - $item['consumed_quantity'],
-                'available' => $input_sublot->actual_quantity - $item['consumed_quantity'] > 0 ? 1 : 0
+                'available' => $input_sublot->actual_quantity - $item['consumed_quantity'] > 0 ? 1 : 0,
+                'actual_m2' => $input_sublot->actual_m2 - M2Service::calculateM2($product_id, $item['consumed_quantity']),
             ]);
 
             $input_sublot->product->update([
@@ -623,6 +676,9 @@ class RegisterTask extends Component
 
         // Creamos los sublotes de salida
         foreach ($this->outputSelects as $item) {
+
+            $m2 = M2Service::calculateM2($item['product_id'], $item['produced_quantity']);
+
             $sublot = Sublot::create([
                 'code' => 'S' .  TaskService::getSublotCode($this->task->lot),
                 'lot_id' => $lot->id,
@@ -631,11 +687,14 @@ class RegisterTask extends Component
                 'area_id' => $this->task->typeOfTask->destination_area_id,
                 'initial_quantity' => $item['produced_quantity'],
                 'actual_quantity' => $item['produced_quantity'],
+                'initial_m2' => $m2,
+                'actual_m2' => $m2,
             ]);
 
             $aux[] = [
                 'sublot_id' => $sublot->id,
                 'produced_quantity' => $sublot->initial_quantity,
+                'm2' => $m2,
             ];
 
             $sublot->product->update([
@@ -655,7 +714,7 @@ class RegisterTask extends Component
         // Redireccionamos con flash message
         $name = Str::upper($this->task->typeOfTask->name);
         session()->flash('flash.banner', 'Tarea de tipo ' . $name . ' registrada correctamente.');
-        return redirect()->route('admin.tasks.index');
+        return redirect()->route('admin.tasks.show', $this->task->id);
     }
 
     public function render()

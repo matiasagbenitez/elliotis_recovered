@@ -111,21 +111,24 @@
         <hr class="my-1">
 
         <h2 class="font-semibold font-mono text-md mt-4 mb-2">Detalle inicial</h2>
-        {{-- <x-responsive-table> --}}
+        <x-responsive-table>
         <table class="min-w-full divide-y border">
             <thead>
                 <tr class="text-center text-gray-500 uppercase text-sm  font-mono font-thin">
-                    <th scope="col" class="w-1/6 px-4 py-2">
+                    <th scope="col" class="w-1/8 py-2">
                         Lote
                     </th>
-                    <th scope="col" class="w-1/6 px-4 py-2">
+                    <th scope="col" class="{{ $initial ? 'w-1/4' : 'w-1/8' }} py-2">
                         {{ $initial ? 'Proveedor' : 'Sublote' }}
                     </th>
-                    <th scope="col" class="w-1/3 px-4 py-2">
+                    <th scope="col" class="{{ $initial ? 'w-1/4' : 'w-1/2' }} py-2">
                         Producto
                     </th>
-                    <th scope="col" class="w-1/6 px-4 py-2">
+                    <th scope="col" class="py-2">
                         {{ $movement || $initial || $movement_transformation ? 'Stock original' : 'Cantidad consumida' }}
+                    </th>
+                    <th scope="col" class="py-2">
+                        M2
                     </th>
                 </tr>
             </thead>
@@ -152,29 +155,37 @@
                                 {{ $item['quantity'] }}
                             </p>
                         </td>
+                        <td class="px-6 py-2 text-center">
+                            <p class="text-sm uppercase {{ $item['m2'] == 'N/A' ? 'px-3' : ''}}">
+                                {{ $item['m2'] }}
+                            </p>
+                        </td>
                     </tr>
                 @endforeach
             </tbody>
         </table>
-        {{-- </x-responsive-table> --}}
+        </x-responsive-table>
 
         <h2 class="font-semibold font-mono text-md mt-4 mb-2">Detalle final</h2>
 
-        {{-- <x-responsive-table> --}}
+        <x-responsive-table>
         <table class="min-w-full divide-y border">
             <thead>
                 <tr class="text-center text-gray-500 uppercase text-sm  font-mono font-thin">
-                    <th scope="col" class="w-1/6 px-4 py-2">
+                    <th scope="col" class="w-1/8 py-2">
                         Lote
                     </th>
-                    <th scope="col" class="w-1/6 px-4 py-2">
+                    <th scope="col" class="w-1/8 py-2">
                         Sublote
                     </th>
-                    <th scope="col" class="w-1/3 px-4 py-2">
+                    <th scope="col" class="w-1/2 py-2">
                         Producto
                     </th>
-                    <th scope="col" class="w-1/6 px-4 py-2">
+                    <th scope="col" class="py-2">
                         {{ $movement || $initial || $movement_transformation ? 'Cantidad movida' : 'Cantidad producida' }}
+                    </th>
+                    <th scope="col" class="py-2">
+                        M2
                     </th>
                 </tr>
             </thead>
@@ -201,11 +212,16 @@
                                 {{ $item['quantity'] }}
                             </p>
                         </td>
+                        <td class="px-6 py-2 text-center">
+                            <p class="text-sm uppercase">
+                                {{ $item['m2'] }}
+                            </p>
+                        </td>
                     </tr>
                 @endforeach
             </tbody>
         </table>
-        {{-- </x-responsive-table> --}}
+        </x-responsive-table>
     </div>
 
 </div>

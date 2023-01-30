@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Livewire\Tests\Test;
+use App\Http\Livewire\Tests\M2Test;
 use App\Http\Livewire\Lots\LotsIndex;
 use App\Http\Livewire\Sales\ShowSale;
 use App\Http\Livewire\Tasks\ShowTask;
@@ -51,14 +52,14 @@ use App\Http\Livewire\TypesOfTasks\IndexTypesOfTasks;
 use App\Http\Livewire\IvaConditions\IndexIvaConditions;
 use App\Http\Livewire\PurchaseOrders\ShowPurchaseOrder;
 use App\Http\Livewire\Tenderings\ShowFinishedTendering;
+use App\Http\Livewire\Productions\ProductionCalculation;
 use App\Http\Livewire\PurchaseOrders\CreatePurchaseOrder;
 use App\Http\Livewire\PurchaseOrders\PurchaseOrdersIndex;
 use App\Http\Livewire\SaleOrders\ShowNecessaryProduction;
 use App\Http\Livewire\PreviousProducts\IndexPreviousProducts;
 use App\Http\Livewire\FollowingProducts\IndexFollowingProducts;
-use App\Http\Livewire\NecesaryProduction\IndexNecessaryProduction;
-use App\Http\Livewire\Productions\ProductionCalculation;
 use App\Http\Livewire\PucharseParameters\IndexPucharseParameters;
+use App\Http\Livewire\NecesaryProduction\IndexNecessaryProduction;
 
 Route::get('/countries', IndexCountries::class)->name('admin.countries.index');
 Route::get('/provinces', IndexProvinces::class)->name('admin.provinces.index');
@@ -138,6 +139,7 @@ Route::get('/sublots/products', SublotsProducts::class)->name('admin.sublots-pro
 // Test
 Route::get('/tests', Test::class)->name('admin.tests.index');
 Route::get('/tests-orders', TestOrders::class)->name('admin.tests-orders.index');
+Route::get('/m2-test', M2Test::class)->name('admin.m2-test.index');
 
 
 // Producción

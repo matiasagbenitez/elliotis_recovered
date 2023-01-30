@@ -29,6 +29,9 @@ return new class extends Migration
             $table->integer('initial_quantity')->default(0);
             $table->integer('actual_quantity')->default(0);
 
+            $table->float('initial_m2')->default(0);
+            $table->float('actual_m2')->default(0);
+
             $table->timestamps();
         });
     }

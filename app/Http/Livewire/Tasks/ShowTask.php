@@ -64,6 +64,7 @@ class ShowTask extends Component
                 'sublot_code' => $sublot->trunkLot->purchase->supplier->business_name,
                 'product_name' => $sublot->product->name,
                 'quantity' => $sublot->initial_quantity,
+                'm2' => $sublot->m2 > 0 ? $sublot->m2 . ' m2' : 'N/A'
             ];
         }
 
@@ -73,6 +74,7 @@ class ShowTask extends Component
                 'sublot_code' => $sublot->code,
                 'product_name' => $sublot->product->name,
                 'quantity' => $sublot->initial_quantity,
+                'm2' => $sublot->m2 > 0 ? $sublot->m2 . ' m2' : 'N/A'
             ];
         }
     }
@@ -85,6 +87,7 @@ class ShowTask extends Component
                 'sublot_code' => $sublot->code,
                 'product_name' => $sublot->product->name,
                 'quantity' => $sublot->pivot->consumed_quantity,
+                'm2' => $sublot->pivot->m2 > 0 ? $sublot->pivot->m2 . ' m2' : 'N/A',
             ];
         }
 
@@ -94,6 +97,7 @@ class ShowTask extends Component
                 'sublot_code' => $sublot->code,
                 'product_name' => $sublot->product->name,
                 'quantity' => $sublot->initial_quantity,
+                'm2' => $sublot->pivot->m2 > 0 ? $sublot->pivot->m2 . ' m2' : 'N/A',
             ];
         }
     }
@@ -106,6 +110,7 @@ class ShowTask extends Component
                 'sublot_code' => $sublot->code,
                 'product_name' => $sublot->product->name,
                 'quantity' => $sublot->initial_quantity,
+                'm2' => $sublot->initial_m2 > 0 ? $sublot->initial_m2 . ' m2' : 'N/A',
             ];
         }
 
@@ -115,6 +120,7 @@ class ShowTask extends Component
                 'sublot_code' => $sublot->code,
                 'product_name' => $sublot->product->name,
                 'quantity' => $sublot->pivot->produced_quantity,
+                'm2' => $sublot->pivot->m2 > 0 ? $sublot->pivot->m2 . ' m2' : 'N/A',
             ];
         }
     }
@@ -127,6 +133,7 @@ class ShowTask extends Component
                 'sublot_code' => $sublot->code,
                 'product_name' => $sublot->product->name,
                 'quantity' => $sublot->initial_quantity,
+                'm2' => $sublot->initial_m2 > 0 ? $sublot->initial_m2 . ' m2' : 'N/A',
             ];
         }
 
@@ -136,6 +143,7 @@ class ShowTask extends Component
                 'sublot_code' => $sublot->code,
                 'product_name' => $sublot->product->name,
                 'quantity' => $sublot->pivot->produced_quantity,
+                'm2' => $sublot->pivot->m2 > 0 ? $sublot->pivot->m2 . ' m2' : 'N/A',
             ];
         }
     }

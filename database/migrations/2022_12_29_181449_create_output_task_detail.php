@@ -18,6 +18,7 @@ return new class extends Migration
             $table->foreign('sublot_id')->references('id')->on('sublots');
 
             $table->integer('produced_quantity')->min(0)->nullable();
+            $table->float('m2')->default(0);
 
             $table->timestamps();
         });
