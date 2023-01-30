@@ -71,7 +71,8 @@ class NecessaryProductionService
         if ($previousProduct) {
             $newUnities = $unities - $previousProduct->real_stock;
             $previousProducts[] = [
-                'id' => $previousProduct->id,
+                // 'id' => $previousProduct->id,
+                'product_id' => $previousProduct->id,
                 'name' => $previousProduct->name,
                 'quantity' => $previousProduct->real_stock,
                 'needed' => $newUnities < 0 ? 0 : $newUnities,
