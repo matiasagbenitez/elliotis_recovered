@@ -7,10 +7,10 @@
     </x-slot>
 
     <x-responsive-table>
-        <div class="px-4 py-3">
+        <div class="px-6 py-4 bg-gray-200">
             <div class="grid grid-cols-6 gap-4">
                 <div class="col-span-6">
-                    <x-jet-label class="mb-1">Área</x-jet-label>
+                    <x-jet-label class="mb-2 text-lg font-semibold">Área</x-jet-label>
                     <select wire:model='filter' class="input-control w-full">
                         <option value="">Todas las áreas</option>
                         @foreach ($areas as $area)

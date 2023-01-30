@@ -3,16 +3,21 @@
 namespace App\Http\Livewire\Lots;
 
 use App\Models\Lot;
-use App\Models\TypeOfTask;
 use App\Models\User;
 use Livewire\Component;
+use App\Models\TypeOfTask;
+use Livewire\WithPagination;
 
 class LotsIndex extends Component
 {
+    use WithPagination;
+
     public $lots = [], $typesOfTasks;
     public $stats = [];
+
     public $filters = [
-        'task_name' => '',
+        'type_of_task' => '',
+        'sublots_availability' => 'all',
         'date_from' => '',
         'date_to' => '',
     ];
@@ -24,24 +29,57 @@ class LotsIndex extends Component
         $this->getStats();
     }
 
-    // public function updatedFilters($value)
-    // {
-    //     if ($this->filters['task_name'] != '') {
-    //         $this->lots = Lot::whereHas('task', function ($query) {
-    //             $query->where('type_of_task_id', $this->filters['task_name']);
-    //         });
-    //         dd($this->lots);
-    //     } else {
-    //         $this->lots = Lot::orderBy('created_at', 'desc')->get();
-    //     }
+    public function updatedFilters()
+    {
+        $this->lots = Lot::orderBy('created_at', 'desc')->get();
 
-    //     $this->getStats();
-    // }
+        // Filter by type of task
+        if ($this->filters['type_of_task'] != '') {
+            $this->lots = Lot::whereHas('task', function ($query) {
+                $query->where('type_of_task_id', $this->filters['type_of_task']);
+            })->orderBy('created_at', 'desc')->get();
+        }
+
+        // Filter by sublots availability
+        if ($this->filters['sublots_availability'] != 'all') {
+            $this->lots = $this->lots->filter(function ($lot) {
+                if ($this->filters['sublots_availability'] == 'available') {
+                    return $lot->sublots->where('available', true)->count() == $lot->sublots->count();
+                } elseif ($this->filters['sublots_availability'] == 'unavailable') {
+                    return $lot->sublots->where('available', true)->count() == 0;
+                } elseif ($this->filters['sublots_availability'] == 'partially') {
+                    return $lot->sublots->where('available', true)->count() > 0 && $lot->sublots->where('available', true)->count() < $lot->sublots->count();
+                }
+            });
+        }
+
+        // Filter by date
+        if ($this->filters['date_from'] != '' && $this->filters['date_to'] != '') {
+            $this->lots = $this->lots->filter(function ($lot) {
+                return $lot->created_at->between($this->filters['date_from'], $this->filters['date_to']);
+            });
+        }
+
+        $this->getStats();
+    }
+
 
     public function getStats()
     {
         $this->stats = [];
+
         foreach ($this->lots as $lot) {
+
+            $sublots_availability = 0;
+
+            if ($lot->sublots->where('available', true)->count() == 0) {
+                $sublots_availability = 0;
+            } elseif ($lot->sublots->where('available', true)->count() == $lot->sublots->count()) {
+                $sublots_availability = 1;
+            } else {
+                $sublots_availability = 2;
+            }
+
             $this->stats[] = [
                 'lot' => $lot,
                 'id' => $lot->id,
@@ -49,11 +87,11 @@ class LotsIndex extends Component
                 'task' => $lot->task->typeOfTask->name,
                 'task_id' => $lot->task->id,
                 'sublots_count' => $lot->sublots->count(),
+                'sublots_availability' => $sublots_availability,
                 'created_at' => $lot->created_at->format('d-m-Y H:i'),
-                'created_by' => User::find($lot->task->finished_by)->name,
             ];
         }
-        $this->render();
+
     }
 
     public function render()
