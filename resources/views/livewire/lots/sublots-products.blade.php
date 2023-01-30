@@ -26,9 +26,6 @@
                 <thead class="border-b border-gray-300 bg-gray-200">
                     <tr class="text-center text-sm text-gray-500 uppercase">
                         <th scope="col" class="px-4 py-2">
-                            ID
-                        </th>
-                        <th scope="col" class="px-4 py-2">
                             Código
                         </th>
                         <th scope="col" class="px-4 py-2">
@@ -38,7 +35,10 @@
                             Área
                         </th>
                         <th scope="col" class="px-4 py-2">
-                            Stock
+                            Unidades stock
+                        </th>
+                        <th scope="col" class="px-4 py-2">
+                            M2
                         </th>
                     </tr>
                 </thead>
@@ -47,20 +47,15 @@
                         <tr class="bg-gray-50">
                             <td class="px-6 py-3 text-center">
                                 <p class="text-sm uppercase">
-                                    {{ $stat['id'] }}
-                                </p>
-                            </td>
-                            <td class="px-6 py-3 text-center">
-                                <p class="text-sm uppercase">
                                     {{ $stat['code'] }}
                                 </p>
                             </td>
-                            <td class="px-6 py-3 text-center">
+                            <td class="px-6 py-3">
                                 <p class="text-sm uppercase">
                                     {{ $stat['product'] }}
                                 </p>
                             </td>
-                            <td class="px-6 py-3 text-center">
+                            <td class="px-6 py-3">
                                 <p class="text-sm uppercase">
                                     {{ $stat['area'] }}
                                 </p>
@@ -70,6 +65,10 @@
                                     {{ $stat['actual_quantity'] }}
                                 </p>
                             </td>
+                            <td class="px-6 py-3 text-center">
+                                <p class="text-sm font-bold">
+                                    {{ $stat['m2'] }}
+                                </p>
                             </td>
                         </tr>
                     @endforeach

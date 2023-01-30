@@ -80,13 +80,18 @@ class LotsIndex extends Component
                 $sublots_availability = 2;
             }
 
+            $m2 = 0;
+            foreach ($lot->sublots as $sublot) {
+                $m2 += $sublot->initial_m2;
+            }
+
             $this->stats[] = [
-                'lot' => $lot,
                 'id' => $lot->id,
                 'lot_code' => $lot->code,
                 'task' => $lot->task->typeOfTask->name,
                 'task_id' => $lot->task->id,
-                'sublots_count' => $lot->sublots->count(),
+                'm2' => $m2 == 0 ? 'N/A' : $m2 . ' m2',
+                'sublots_count' => $lot->sublots->count() . ' sublotes',
                 'sublots_availability' => $sublots_availability,
                 'created_at' => $lot->created_at->format('d-m-Y H:i'),
             ];

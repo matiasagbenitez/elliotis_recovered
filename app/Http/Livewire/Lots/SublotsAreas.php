@@ -28,6 +28,7 @@ class SublotsAreas extends Component
                 'product' => $sublot->product->name,
                 'area' => $sublot->area->name,
                 'actual_quantity' => $sublot->actual_quantity,
+                'm2' => $sublot->actual_m2 > 0 ? $sublot->actual_m2 . ' m2' : 'N/A',
             ];
         }
     }

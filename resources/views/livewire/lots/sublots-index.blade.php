@@ -44,9 +44,6 @@
             <table class="text-gray-600 min-w-full divide-y divide-gray-200">
                 <thead class="border-b border-gray-300 bg-gray-200">
                     <tr class="text-center text-sm text-gray-500 uppercase">
-                        <th scope="col" class="px-4 py-2 whitespace-nowrap">
-                            ID sublote
-                        </th>
                         <th scope="col" class="px-4 py-2">
                             Código
                         </th>
@@ -62,6 +59,12 @@
                         <th scope="col" class="px-4 py-2">
                             Cantidad actual
                         </th>
+                        <th scope="col" class="px-4 whitespace-nowrap py-2">
+                            M2 inicial
+                        </th>
+                        <th scope="col" class="px-4 whitespace-nowrap py-2">
+                            M2 actual
+                        </th>
                         <th scope="col" class="px-4 py-2">
                             Disponibilidad
                         </th>
@@ -70,11 +73,6 @@
                 <tbody class="divide-y divide-gray-200">
                     @foreach ($lot->sublots as $sublot)
                     <tr>
-                        <td class="px-6 py-2 text-center">
-                            <p class="text-sm uppercase">
-                                {{ $sublot->id }}
-                            </p>
-                        </td>
                         <td class="px-6 py-2 text-center">
                             <p class="text-sm uppercase">
                                 {{ $sublot->code }}
@@ -98,6 +96,16 @@
                         <td class="px-6 py-2 text-center">
                             <p class="text-sm uppercase">
                                 {{ $sublot->actual_quantity }}
+                            </p>
+                        </td>
+                        <td class="px-6 py-2 text-center  whitespace-nowrap">
+                            <p class="text-sm">
+                                {{ $sublot->initial_m2 }} m2
+                            </p>
+                        </td>
+                        <td class="px-6 py-2 text-center whitespace-nowrap font-bold">
+                            <p class="text-sm">
+                                {{ $sublot->actual_m2 }} m2
                             </p>
                         </td>
                         <td class="px-6 py-2 text-center">
