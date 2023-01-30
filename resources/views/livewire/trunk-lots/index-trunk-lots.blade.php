@@ -64,9 +64,10 @@
             <div class="pt-4 bg-gray-50 rounded-lg shadow mb-5">
 
                 <div class="flex justify-between items-center px-6 mb-2">
-                    <span class="font-extrabold text-lg">
-                        {{ $trunk_lot->code }}
-                    </span>
+                        <span class="font-bold text-gray-500">
+                            <i class="fas fa-info-circle mr-1"></i>
+                            Lote {{ $trunk_lot->code }}
+                        </span>
                     <a href="{{ route('admin.purchases.show-detail', $trunk_lot->purchase_id) }}"
                         class="hover:underline" title="Ver detalle de compra">
                         Compra #{{ $trunk_lot->purchase->id }}
@@ -135,6 +136,7 @@
                                                     Sin stock
                                                 </span>
                                             @endif
+                                        </p>
                                     </td>
 
                                 </tr>
