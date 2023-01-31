@@ -25,7 +25,7 @@
 
 
     @if (!empty($pendingProducts))
-    <div class="bg-sky-50 border-t-4 border-sky-800 rounded-b text-sky-900 px-4 py-3 shadow-md mb-5 rounded-lg"
+        <div class="bg-sky-50 border-t-4 border-sky-800 rounded-b text-sky-900 px-4 py-3 shadow-md mb-5 rounded-lg"
             role="alert">
             <div class="flex">
                 <div class="py-1"><svg class="fill-current h-6 w-6 text-sky-800 mr-4"
@@ -37,7 +37,8 @@
                     <p class="font-bold">PRODUCCIÓN NECESARIA de los siguientes productos:</p>
                     <ul class="list-disc list-inside">
                         @foreach ($pendingProducts as $product)
-                            <li>{{ $product['name'] }} - {{ $product['necessary_stock'] }} unidades</li>
+                            <li>{{ $product['name'] }} - {{ $product['necessary_stock'] }} <span
+                                    class="font-bold">({{ $product['m2'] }})</span></li>
                         @endforeach
                     </ul>
                 </div>
@@ -225,6 +226,13 @@
                                         <span
                                             class="px-6 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
                                             CANCELADA
+                                        </span>
+                                    @break
+
+                                    @case(4)
+                                        <span
+                                            class="px-6 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">
+                                            PENDIENTE
                                         </span>
                                     @break
 
@@ -434,6 +442,164 @@
                                 title: message
                             });
                         });
+                        Livewire.on('error', message => {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Oops...',
+                                text: message,
+                                showConfirmButton: true,
+                                confirmButtonColor: '#1f2937',
+                            });
+                        });
+                    }
+                })
+            }
+        });
+    </script>
+
+    <script>
+        setTimeout(function() {
+            Livewire.emitTo('tasks.manage-tasks', 'checkPendingProducts');
+        }, 1000);
+
+        Livewire.on('startTaskAutomatically', () => {
+
+            Swal.fire({
+                title: '¡Se requiere producción en esta tarea!',
+                text: "¿Desea iniciar una nueva?",
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#1f2937',
+                cancelButtonColor: '#A9A7A7',
+                confirmButtonText: 'Sí, crear tarea',
+                cancelButtonText: 'No, esta vez no'
+
+            }).then((result) => {
+                if (result.isConfirmed) {
+
+                    Livewire.emitTo('tasks.manage-tasks', 'startAutomaticTask');
+
+                    Livewire.on('success', message => {
+                        const Toast = Swal.mixin({
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 3000,
+                            timerProgressBar: true,
+                        });
+
+                        Toast.fire({
+                            icon: 'success',
+                            title: message
+                        });
+                    });
+
+                    Livewire.on('error', message => {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: message,
+                            showConfirmButton: true,
+                            confirmButtonColor: '#1f2937',
+                        });
+                    });
+                } else {
+                    Livewire.on('error', message => {
+                        Swal.fire({
+                            icon: 'success',
+                            title: '¡Perfecto!',
+                            text: message,
+                            showConfirmButton: true,
+                            confirmButtonColor: '#1f2937',
+                        });
+                    });
+                }
+            })
+        });
+    </script>
+
+    <script>
+        Livewire.on('disablePurchase', async (purchaseId) => {
+
+            const {
+                value: reason
+            } = await Swal.fire({
+                title: 'Anular compra',
+                input: 'textarea',
+                inputPlaceholder: 'Especifique aquí el o los motivos de anulación',
+                showCancelButton: true,
+                confirmButtonColor: '#1f2937',
+                cancelButtonColor: '#dc2626',
+                cancelButtonColor: '#d33',
+                cancelButtonText: 'Cancelar',
+            });
+
+            if (reason) {
+
+                Swal.fire({
+                    title: '¿Anular compra?',
+                    text: "Puedes anular la compra y su orden asociada o bien, solo la compra. ¡No podrás revertir esta acción!",
+                    icon: 'warning',
+
+                    confirmButtonColor: '#1f2937',
+                    confirmButtonText: 'Anular compra y orden',
+
+                    showDenyButton: true,
+                    showCancelButton: true,
+                    denyButtonText: 'Anular solo compra',
+                    denyButtonColor: '#9ca3af',
+
+                    cancelButtonColor: '#dc2626',
+                    cancelButtonText: 'Cancelar'
+
+                }).then((result) => {
+
+                    if (result.isConfirmed) {
+
+                        Livewire.emitTo('purchases.index-purchases', 'disable', purchaseId, reason,
+                            disableOrder = true);
+                        Livewire.on('success', message => {
+                            const Toast = Swal.mixin({
+                                toast: true,
+                                position: 'top-end',
+                                showConfirmButton: false,
+                                timer: 3000,
+                                timerProgressBar: true,
+                            });
+                            Toast.fire({
+                                icon: 'success',
+                                title: message
+                            });
+                        });
+
+                        Livewire.on('error', message => {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Oops...',
+                                text: message,
+                                showConfirmButton: true,
+                                confirmButtonColor: '#1f2937',
+                            });
+                        });
+
+                    } else if (result.isDenied) {
+
+                        Livewire.emitTo('purchases.index-purchases', 'disable', purchaseId, reason,
+                            disableOrder = false);
+                        Livewire.on('success', message => {
+                            const Toast = Swal.mixin({
+                                toast: true,
+                                position: 'top-end',
+                                showConfirmButton: false,
+                                timer: 3000,
+                                timerProgressBar: true,
+                            });
+                            Toast.fire({
+                                icon: 'success',
+                                title: message
+                            });
+                        });
+
                         Livewire.on('error', message => {
                             Swal.fire({
                                 icon: 'error',

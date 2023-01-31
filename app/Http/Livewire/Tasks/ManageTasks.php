@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Tasks;
 
+use App\Http\Services\M2Service;
 use App\Models\Task;
 use App\Models\User;
 use App\Models\Sublot;
@@ -21,8 +22,8 @@ class ManageTasks extends Component
     use WithPagination;
 
     public $task_type_name, $type_of_task_id, $running_task, $tasks, $employees, $statuses;
-    protected $listeners = ['startNewTask', 'finishTask', 'disable'];
-    public $pendingProducts = [];
+    protected $listeners = ['startNewTask', 'finishTask', 'disable', 'checkPendingProducts', 'startAutomaticTask'];
+    public $pendingProducts = [], $emittedProductionDialog = false;
 
     public $filters = [
         'employee_id' => null,
@@ -44,14 +45,33 @@ class ManageTasks extends Component
 
         foreach ($pendingProduction as $product) {
             if ($product->necessary_stock != null && $product->necessary_stock > 0) {
+                $m2 = M2Service::calculateM2($product->id, $product->necessary_stock);
                 $this->pendingProducts[] = [
                     'product_id' => $product->id,
                     'name' => $product->name,
-                    'necessary_stock' => $product->necessary_stock,
+                    'necessary_stock' => $product->necessary_stock . ' unidades',
+                    'm2' => $m2 . ' m2',
                 ];
             }
         }
+    }
 
+    public function checkPendingProducts()
+    {
+        if (count($this->pendingProducts) > 0 && $this->pendingProducts != [] && !$this->running_task) {
+            $this->emit('startTaskAutomatically');
+            $this->emittedProductionDialog = true;
+        }
+    }
+
+    public function startAutomaticTask()
+    {
+        try {
+            $this->startNewTask();
+            $this->emit('success', '¡Tarea de tipo: ' . $this->task_type_name . ' iniciada correctamente!');
+        } catch (\Throwable $th) {
+            $this->emit('error', 'No se creó ninguna tarea pendiente, pero recuerde que puede crearla en cualquier momento.');
+        }
     }
 
     public function updatedFilters()
@@ -66,12 +86,12 @@ class ManageTasks extends Component
         $this->updatedFilters();
     }
 
-    public function startNewTask()
+    public function startNewTask($task_status_id = 1)
     {
         try {
             $createForm = [
                 'type_of_task_id' => $this->type_of_task_id,
-                'task_status_id' => 1,
+                'task_status_id' => $task_status_id,
                 'started_at' => Date::now(),
                 'started_by' => auth()->user()->id,
             ];
