@@ -22,7 +22,7 @@ class RegisterTask extends Component
     public $sublots;
     public $info = [];
     public $movement, $transformation, $movement_transformation, $initial, $final;
-    protected $listeners = ['presave'];
+    protected $listeners = ['presave', 'cancel'];
 
     public $inputSelects = [];
     public $inputSublots = [];
@@ -246,6 +246,21 @@ class RegisterTask extends Component
         }
 
         NecessaryProductionService::calculate(null, true);
+    }
+
+    public function cancel()
+    {
+        try {
+            $this->task->delete();
+
+            // Flash message
+            $name = Str::upper($this->task->typeOfTask->name);
+            session()->flash('flash.banner', 'Tarea de tipo ' . $name . ' eliminada correctamente.');
+            return redirect()->route('admin.tasks.manage', $this->type_of_task->id);
+
+        } catch (\Throwable $th) {
+            $this->emit('error', 'Error al cancelar la tarea.');
+        }
     }
 
     public function save_initial()

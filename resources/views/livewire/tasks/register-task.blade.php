@@ -3,7 +3,7 @@
     <x-slot name="header">
         <div class="flex items-center justify-between">
 
-            <a href="{{ route('admin.tasks.index') }}">
+            <a href="{{ route('admin.tasks.manage', $type_of_task->id) }}">
                 <x-jet-button>
                     <i class="fas fa-arrow-left mr-2"></i>
                     Volver
@@ -26,7 +26,7 @@
     <div class="container flex flex-col md:flex-row gap-5 my-6 rounded-lg">
 
         {{-- SIDEBAR IZQUIERDA --}}
-        <div class="w-full md:w-96 bg-white px-8 py-2 my-4 rounded-lg">
+        <div class="w-full md:w-96 bg-white px-8 pt-2 pb-4 my-4 rounded-lg">
             <div class="my-3 text-justify">
                 <span class="font-bold text-gray-500">
                     <i class="fas fa-info-circle mr-1"></i>
@@ -57,7 +57,7 @@
         </div>
 
         {{-- DIV TAREA PRINCIPAL --}}
-        <div class="bg-white px-8 py-2 my-4 rounded-lg">
+        <div class="bg-white px-8 pt-2 pb-4 my-4 rounded-lg">
 
             <div class="my-3">
                 <span class="font-bold text-gray-500">
@@ -226,16 +226,30 @@
             @endif
 
             {{-- BOTÓN GUARDAR --}}
-            <div class="flex justify-between items-center mt-6">
-                <p class="text font-semibold">
-                    Controle la información ingresada y luego presione el botón
-                    <span class="font-bold">"Registrar tarea"</span>.
-                </p>
+            <h1 class="font-bold">Finalizar tarea</h1>
+            <hr class="mt-1 mb-3">
 
-                <div class="mt-6" wire:click="$emit('saveTask')">
-                    <x-jet-button class="px-6 col-span-2 bg-emerald-800">
-                        Registrar tarea
-                    </x-jet-button>
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="w-1/2 text-justify">
+                    <p class="text-sm font-semibold">
+                        Antes de finalizar la tarea, verifique la información ingresada y luego presione el botón
+                        <span class="font-bold">"Registrar tarea"</span>.
+                        Si desea cancelar esta tarea sin finalizarla, presione el botón
+                        <span class="font-bold">"Cancelar tarea"</span>.
+                    </p>
+                </div>
+
+                <div class="flex gap-6 items-center">
+                    <div wire:click="$emit('cancelTask')">
+                        <x-jet-danger-button class="px-6 col-span-2">
+                            Cancelar tarea
+                        </x-jet-danger-button>
+                    </div>
+                    <div wire:click="$emit('saveTask')">
+                        <x-jet-button class="px-6 col-span-2">
+                            Registrar tarea
+                        </x-jet-button>
+                    </div>
                 </div>
             </div>
 
@@ -245,6 +259,8 @@
 </div>
 
 @push('script')
+
+    {{-- Registrar tarea --}}
     <script>
         Livewire.on('saveTask', () => {
             Swal.fire({
@@ -299,4 +315,61 @@
             });
         });
     </script>
+
+    {{-- Cancelar tarea --}}
+    <script>
+        Livewire.on('cancelTask', () => {
+            Swal.fire({
+                title: '¿Estás seguro?',
+                text: "¡Si eliminas esta tarea, no podrás recuperarla!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#1f2937',
+                cancelButtonColor: '#dc2626',
+                confirmButtonText: 'Sí, eliminar tarea',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+
+                    Livewire.emitTo('tasks.register-task', 'cancel');
+
+                    Livewire.on('success', message => {
+                        const Toast = Swal.mixin({
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 3000,
+                            timerProgressBar: true,
+                        });
+
+                        Toast.fire({
+                            icon: 'success',
+                            title: message
+                        });
+                    });
+
+                    Livewire.on('error', message => {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: message,
+                            showConfirmButton: true,
+                            confirmButtonColor: '#1f2937',
+                        });
+                    });
+                }
+            })
+        });
+
+        Livewire.on('error', message => {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: message,
+                showConfirmButton: true,
+                confirmButtonColor: '#1f2937',
+            });
+        });
+    </script>
+
 @endpush
