@@ -7,6 +7,7 @@ use App\Models\Task;
 use App\Models\Sublot;
 use App\Models\TrunkSublot;
 use Illuminate\Database\Seeder;
+use App\Http\Services\M2Service;
 use App\Http\Services\TaskService;
 use Illuminate\Support\Facades\Date;
 use App\Http\Services\RandomNumberService;
@@ -15,7 +16,6 @@ class Task1Seeder extends Seeder
 {
     public function run()
     {
-
         $sublots = TrunkSublot::where('area_id', 1)->where('available', true)->get();
         $cant = rand(4, 5);
         if ($sublots->count() < $cant) {
@@ -23,6 +23,7 @@ class Task1Seeder extends Seeder
         }
 
         $start_date = TaskService::getStartDate();
+        $end_date = TaskService::getEndDate($start_date);
 
         $task = Task::create([
             'type_of_task_id' => 1,
@@ -48,6 +49,8 @@ class Task1Seeder extends Seeder
         $lot = Lot::create([
             'task_id' => $task->id,
             'code' => 'L' . TaskService::getLotCode($task),
+            'created_at' => $end_date,
+            'updated_at' => $end_date,
         ]);
 
         $aux = [];
@@ -70,6 +73,8 @@ class Task1Seeder extends Seeder
                 'area_id' => $task->typeOfTask->destination_area_id,
                 'initial_quantity' => $item['consumed_quantity'],
                 'actual_quantity' => $item['consumed_quantity'],
+                'created_at' => $end_date,
+                'updated_at' => $end_date,
             ]);
 
             $aux[] = [

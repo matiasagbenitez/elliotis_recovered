@@ -457,7 +457,7 @@
         });
     </script>
 
-    <script>
+    {{-- <script>
         setTimeout(function() {
             Livewire.emitTo('tasks.manage-tasks', 'checkPendingProducts');
         }, 1000);
@@ -516,102 +516,5 @@
                 }
             })
         });
-    </script>
-
-    <script>
-        Livewire.on('disablePurchase', async (purchaseId) => {
-
-            const {
-                value: reason
-            } = await Swal.fire({
-                title: 'Anular compra',
-                input: 'textarea',
-                inputPlaceholder: 'Especifique aquí el o los motivos de anulación',
-                showCancelButton: true,
-                confirmButtonColor: '#1f2937',
-                cancelButtonColor: '#dc2626',
-                cancelButtonColor: '#d33',
-                cancelButtonText: 'Cancelar',
-            });
-
-            if (reason) {
-
-                Swal.fire({
-                    title: '¿Anular compra?',
-                    text: "Puedes anular la compra y su orden asociada o bien, solo la compra. ¡No podrás revertir esta acción!",
-                    icon: 'warning',
-
-                    confirmButtonColor: '#1f2937',
-                    confirmButtonText: 'Anular compra y orden',
-
-                    showDenyButton: true,
-                    showCancelButton: true,
-                    denyButtonText: 'Anular solo compra',
-                    denyButtonColor: '#9ca3af',
-
-                    cancelButtonColor: '#dc2626',
-                    cancelButtonText: 'Cancelar'
-
-                }).then((result) => {
-
-                    if (result.isConfirmed) {
-
-                        Livewire.emitTo('purchases.index-purchases', 'disable', purchaseId, reason,
-                            disableOrder = true);
-                        Livewire.on('success', message => {
-                            const Toast = Swal.mixin({
-                                toast: true,
-                                position: 'top-end',
-                                showConfirmButton: false,
-                                timer: 3000,
-                                timerProgressBar: true,
-                            });
-                            Toast.fire({
-                                icon: 'success',
-                                title: message
-                            });
-                        });
-
-                        Livewire.on('error', message => {
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Oops...',
-                                text: message,
-                                showConfirmButton: true,
-                                confirmButtonColor: '#1f2937',
-                            });
-                        });
-
-                    } else if (result.isDenied) {
-
-                        Livewire.emitTo('purchases.index-purchases', 'disable', purchaseId, reason,
-                            disableOrder = false);
-                        Livewire.on('success', message => {
-                            const Toast = Swal.mixin({
-                                toast: true,
-                                position: 'top-end',
-                                showConfirmButton: false,
-                                timer: 3000,
-                                timerProgressBar: true,
-                            });
-                            Toast.fire({
-                                icon: 'success',
-                                title: message
-                            });
-                        });
-
-                        Livewire.on('error', message => {
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Oops...',
-                                text: message,
-                                showConfirmButton: true,
-                                confirmButtonColor: '#1f2937',
-                            });
-                        });
-                    }
-                })
-            }
-        });
-    </script>
+    </script> --}}
 @endpush

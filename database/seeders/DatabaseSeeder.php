@@ -33,7 +33,7 @@ class DatabaseSeeder extends Seeder
         $this->call(PhaseSeeder::class);
         $this->call(ProductSeeder::class);
 
-        for ($i = 0; $i < 2; $i++) {
+        for ($i = 0; $i < 15; $i++) {
             $this->call(Purchase1Seeder::class);
             $this->call(Purchase2Seeder::class);
             $this->call(Purchase3Seeder::class);
@@ -61,29 +61,21 @@ class DatabaseSeeder extends Seeder
         $this->call(FollowingProductSeeder::class);
 
         // Tasks Seeders
-        // for ($i = 0; $i < 15; $i++) {
+        for ($i = 0; $i < 20; $i++) {
             $this->call(Task1Seeder::class);
-            $this->call(Task1Seeder::class);
-            $this->call(Task1Seeder::class);
-            // $this->call(Task2Seeder::class);
-            // $this->call(Task3Seeder::class);
-        //     $this->call(Task4Seeder::class);
-        //     $this->call(Task5Seeder::class);
-        //     $this->call(Task6Seeder::class);
-        //     $this->call(Task7Seeder::class);
-        //     $this->call(Task8Seeder::class);
-        // }
+            $this->call(Task2Seeder::class);
+            $this->call(Task3Seeder::class);
+            $this->call(Task4Seeder::class);
+            $this->call(Task5Seeder::class);
+            $this->call(Task6Seeder::class);
+            $this->call(Task7Seeder::class);
+            $this->call(Task8Seeder::class);
+        }
 
-        // $this->call(Task9Seeder::class);
-        // $this->call(Task9Seeder::class);
-        // $this->call(Task9Seeder::class);
-        // $this->call(Task9Seeder::class);
-        // $this->call(Task9Seeder::class);
-
-        // $this->call(Task10Seeder::class);
-        // $this->call(Task10Seeder::class);
-        // $this->call(Task10Seeder::class);
-        // $this->call(Task10Seeder::class);
+        for ($i = 0; $i < 15; $i++) {
+            $this->call(Task9Seeder::class);
+            $this->call(Task10Seeder::class);
+        }
 
         // $this->call(NecessaryProductionSeeder::class);
     }

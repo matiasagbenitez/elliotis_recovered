@@ -6,6 +6,7 @@ use App\Models\Lot;
 use App\Models\Task;
 use App\Models\Sublot;
 use Illuminate\Database\Seeder;
+use App\Http\Services\M2Service;
 use App\Http\Services\TaskService;
 use Illuminate\Support\Facades\Date;
 use App\Http\Services\RandomNumberService;
@@ -17,7 +18,7 @@ class Task7Seeder extends Seeder
     {
 
         $sublots = Sublot::where('phase_id', 4)->where('area_id', 5)->where('available', true)->get();
-        $cant = rand(4, 5);
+        $cant = rand(2, 4);
         if ($sublots->count() < $cant) {
             return;
         }
@@ -25,6 +26,7 @@ class Task7Seeder extends Seeder
         $sublots = $sublots->random($cant);
 
         $start_date = TaskService::getStartDate();
+        $end_date = TaskService::getEndDate($start_date);
 
         $task = Task::create([
             'type_of_task_id' => 7,
@@ -34,22 +36,14 @@ class Task7Seeder extends Seeder
         ]);
 
         foreach ($sublots as $sublot) {
-            // $rand = RandomNumberService::highProbability();
-            // if ($rand == 1) {
-                $consumed_quantity = $sublot->actual_quantity;
-            // } else {
-            //     if ($sublot->actual_quantity < $sublot->initial_quantity) {
-            //         $consumed_quantity = $sublot->actual_quantity;
-            //     } else {
-            //         $rounded_half = round($sublot->actual_quantity / 2);
-            //         $rounded_half = (int) $rounded_half;
-            //         $consumed_quantity = rand($rounded_half, $sublot->actual_quantity);
-            //     }
-            // }
+
+            $consumed_quantity = $sublot->actual_quantity;
+            $m2 = M2Service::calculateM2($sublot->product_id, $consumed_quantity);
 
             $inputSelects[] = [
                 'sublot_id' => $sublot->id,
-                'consumed_quantity' => $consumed_quantity
+                'consumed_quantity' => $consumed_quantity,
+                'm2' => $m2,
             ];
         }
 
@@ -58,13 +52,20 @@ class Task7Seeder extends Seeder
         $lot = Lot::create([
             'task_id' => $task->id,
             'code' => 'L' . TaskService::getLotCode($task),
+            'created_at' => $end_date,
+            'updated_at' => $end_date,
         ]);
 
         foreach ($inputSelects as $item) {
+
+            $product_id = Sublot::find($item['sublot_id'])->product_id;
+            $m2 = M2Service::calculateM2($product_id, $item['consumed_quantity']);
+
             $input_sublot = Sublot::find($item['sublot_id']);
             $input_sublot->update([
                 'actual_quantity' => $input_sublot->actual_quantity - $item['consumed_quantity'],
-                'available' => $input_sublot->actual_quantity - $item['consumed_quantity'] > 0 ? 1 : 0
+                'available' => $input_sublot->actual_quantity - $item['consumed_quantity'] > 0 ? 1 : 0,
+                'actual_m2' => $input_sublot->actual_m2 - $m2,
             ]);
 
             // Creamos el sublote de salida
@@ -76,11 +77,14 @@ class Task7Seeder extends Seeder
                 'area_id' => $task->typeOfTask->destination_area_id,
                 'initial_quantity' => $item['consumed_quantity'],
                 'actual_quantity' => $item['consumed_quantity'],
+                'initial_m2' => $m2,
+                'actual_m2' => $m2,
             ]);
 
             $aux[] = [
                 'sublot_id' => $sublot->id,
                 'produced_quantity' => $sublot->initial_quantity,
+                'm2' => $sublot->initial_m2,
             ];
 
         }
@@ -90,7 +94,7 @@ class Task7Seeder extends Seeder
         // Actualizamos la tarea
         $task->update([
             'task_status_id' => 2,
-            'finished_at' => TaskService::getEndDate($start_date),
+            'finished_at' => $end_date,
             'finished_by' => 1,
         ]);
     }

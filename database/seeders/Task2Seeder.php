@@ -19,7 +19,7 @@ class Task2Seeder extends Seeder
 
         $sublots = Sublot::where('phase_id', 1)->where('area_id', 2)->where('available', true)->get();
         // $cant = rand(4, 5);
-        $cant = rand(2, 3);
+        $cant = rand(2, 4);
         if ($sublots->count() < $cant) {
             return;
         }
@@ -27,6 +27,7 @@ class Task2Seeder extends Seeder
         $sublots = $sublots->random($cant);
 
         $start_date = TaskService::getStartDate();
+        $end_date = TaskService::getEndDate($start_date);
 
         $task = Task::create([
             'type_of_task_id' => 2,
@@ -38,10 +39,12 @@ class Task2Seeder extends Seeder
         foreach ($sublots as $sublot) {
 
             $consumed_quantity = $sublot->actual_quantity;
+            $m2 = M2Service::calculateM2($sublot->product_id, $consumed_quantity);
 
             $inputSelects[] = [
                 'sublot_id' => $sublot->id,
-                'consumed_quantity' => $consumed_quantity
+                'consumed_quantity' => $consumed_quantity,
+                'm2' => $m2,
             ];
         }
 
@@ -49,10 +52,13 @@ class Task2Seeder extends Seeder
 
         foreach ($inputSelects as $item) {
 
+            $product_id = Sublot::find($item['sublot_id'])->product_id;
+
             $sublot = Sublot::find($item['sublot_id']);
             $sublot->update([
                 'actual_quantity' => $sublot->actual_quantity - $item['consumed_quantity'],
-                'available' => $sublot->actual_quantity - $item['consumed_quantity'] > 0 ? 1 : 0
+                'available' => $sublot->actual_quantity - $item['consumed_quantity'] > 0 ? 1 : 0,
+                'actual_m2' => $sublot->actual_m2 - $item['m2'] > 0 ? $sublot->actual_m2 - $item['m2'] : 0,
             ]);
 
             $sublot->product->update([
@@ -68,6 +74,8 @@ class Task2Seeder extends Seeder
         $lot = Lot::create([
             'task_id' => $task->id,
             'code' => 'L' . TaskService::getLotCode($task),
+            'created_at' => $end_date,
+            'updated_at' => $end_date,
         ]);
 
         $aux = [];
@@ -86,11 +94,14 @@ class Task2Seeder extends Seeder
                 'actual_quantity' => $item['produced_quantity'],
                 'initial_m2' => $m2,
                 'actual_m2' => $m2,
+                'created_at' => $end_date,
+                'updated_at' => $end_date,
             ]);
 
             $aux[] = [
                 'sublot_id' => $sublot->id,
                 'produced_quantity' => $sublot->initial_quantity,
+                'm2' => $sublot->initial_m2,
             ];
 
             $sublot->product->update([
@@ -103,7 +114,7 @@ class Task2Seeder extends Seeder
         // Actualizamos la tarea
         $task->update([
             'task_status_id' => 2,
-            'finished_at' => TaskService::getEndDate($start_date),
+            'finished_at' => $end_date,
             'finished_by' => 1,
         ]);
     }
