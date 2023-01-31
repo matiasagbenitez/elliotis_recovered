@@ -19,17 +19,21 @@
     </x-slot>
 
     @if ($task->cancelled)
-        <div
-            class="max-w-6xl mx-auto flex items-center p-4 mb-4 text-sm text-red-700 bg-red-100 rounded-lg dark:bg-red-200 dark:text-red-800 border-2 border-red-600">
-            <i class="fas fa-info-circle text-lg mr-2"></i>
-            <div class="text-md">
-                <span class="font-bold uppercase">Atención!</span>
-                El detalle de esta tarea no es válida ya que la misma fue anulada por
-                {{ $user_who_cancelled }}
-                el día
-                {{ Date::parse($task->cancelled_at)->format('d-m-Y') }}
-                a las
-                {{ Date::parse($task->cancelled_at)->format('H:i') }}.
+        <div class="max-w-6xl mx-auto bg-red-100 flex justify-center items-center text-red-700 px-4 py-3 rounded relative gap-4 mb-5"
+            role="alert">
+            {{-- <div> --}}
+            <i class="fas fa-ban mr-5 text-5xl"></i>
+            {{-- </div> --}}
+            <div class="flex flex-col">
+                <p class="font-bold font-mono uppercase">Atención</p>
+                <p class="font-mono text-sm">
+                    El detalle de esta tarea no es válida ya que la misma fue anulada por
+                    {{ $user_who_cancelled }}
+                    el día
+                    {{ Date::parse($task->cancelled_at)->format('d-m-Y') }}
+                    a las
+                    {{ Date::parse($task->cancelled_at)->format('H:i') }}.
+                </p>
             </div>
         </div>
     @endif

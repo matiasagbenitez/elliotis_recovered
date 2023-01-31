@@ -25,7 +25,7 @@
         <div class="max-w-6xl mx-auto bg-red-100 flex justify-center items-center text-red-700 px-4 py-3 rounded relative gap-4 mb-5"
             role="alert">
             {{-- <div> --}}
-            <i class="fas fa-ban text-5xl"></i>
+            <i class="fas fa-ban mr-5 text-5xl"></i>
             {{-- </div> --}}
             <div class="flex flex-col">
                 <p class="font-bold font-mono uppercase">Orden de compra anulada</p>
@@ -40,7 +40,7 @@
         <div class="max-w-6xl mx-auto bg-green-100 flex justify-center items-center text-green-700 px-4 py-3 rounded relative gap-4 mb-5""
             role="alert">
             {{-- <div> --}}
-            <i class="fas fa-ban text-5xl"></i>
+            <i class="fas fa-check mr-5 text-5xl"></i>
             {{-- </div> --}}
             <div class="flex flex-col">
                 <p class="font-bold font-mono uppercase">Orden de compra procesada correctamente</p>

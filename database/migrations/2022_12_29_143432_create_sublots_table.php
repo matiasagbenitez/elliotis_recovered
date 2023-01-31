@@ -25,6 +25,7 @@ return new class extends Migration
             $table->unsignedBigInteger('area_id');
             $table->foreign('area_id')->references('id')->on('areas');
 
+            $table->boolean('cancelled')->default(false);
             $table->boolean('available')->default(true);
             $table->integer('initial_quantity')->default(0);
             $table->integer('actual_quantity')->default(0);

@@ -128,6 +128,7 @@ class ManageTasks extends Component
             // Inhabilitar sublotes producidos
             foreach ($task->outputSublotsDetails as $outputSublot) {
                 $outputSublot->update([
+                    'cancelled' => true,
                     'available' => false,
                 ]);
             }
@@ -145,12 +146,10 @@ class ManageTasks extends Component
                     $inputSublot->update([
                         'available' => true,
                         'actual_quantity' => $inputSublot->actual_quantity + $inputSublot->pivot->consumed_quantity,
+                        'actual_m2' => $inputSublot->actual_m2 + $inputSublot->pivot->m2,
                     ]);
                 }
             }
-
-
-
 
             $task->update([
                 'task_status_id' => 3,
@@ -164,7 +163,6 @@ class ManageTasks extends Component
             $this->updatedFilters();
 
         } catch (\Throwable $th) {
-            dd($th);
             $this->emit('error', '¡Error al deshabilitar la tarea de tipo: ' . $this->task_type_name . '!');
         }
     }
