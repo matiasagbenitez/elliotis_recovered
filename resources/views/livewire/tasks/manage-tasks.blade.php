@@ -162,6 +162,9 @@
                             Finalizada por
                         </th>
                         <th class="px-4 py-2">
+                            Producción
+                        </th>
+                        <th class="px-4 py-2">
                             Estado
                         </th>
                         <th class="px-4 py-2">
@@ -195,6 +198,11 @@
                             <td class="px-6 py-3 text-center">
                                 <p class="text-sm uppercase">
                                     {{ $task['finished_by'] }}
+                                </p>
+                            </td>
+                            <td class="px-6 py-3 text-center">
+                                <p class="text-sm">
+                                    {{ $task['production'] }}
                                 </p>
                             </td>
                             <td class="px-6 py-3 text-center">

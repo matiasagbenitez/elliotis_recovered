@@ -31,6 +31,12 @@ class TaskService
         $tasks = [];
 
         foreach ($allTasks as $task) {
+
+            $m2 = 0;
+            if ($task->finished_by != null) {
+                $m2 = $task->lot->sublots->sum('initial_m2');
+            }
+
             $tasks[] = [
                 'id' => $task->id,
                 'status' => $task->task_status_id,
@@ -38,6 +44,7 @@ class TaskService
                 'started_by' => User::find($task->started_by)->name,
                 'finished_at' => $task->finished_at ? Date::parse($task->finished_at)->format('d-m-Y H:i') : null,
                 'finished_by' => $task->finished_by ? User::find($task->finished_by)->name : null,
+                'production' => $m2 > 0 ? $m2 . ' m2' : 'N/A',
             ];
         }
 
