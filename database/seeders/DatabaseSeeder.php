@@ -33,11 +33,11 @@ class DatabaseSeeder extends Seeder
         $this->call(PhaseSeeder::class);
         $this->call(ProductSeeder::class);
 
-        for ($i = 0; $i < 5; $i++) {
+        for ($i = 0; $i < 1; $i++) {
             $this->call(Purchase1Seeder::class);
             $this->call(Purchase2Seeder::class);
             $this->call(Purchase3Seeder::class);
-            $this->call(Purchase4Seeder::class);
+            // $this->call(Purchase4Seeder::class);
         }
 
         $this->call(TrunkLotSeeder::class);
@@ -61,7 +61,7 @@ class DatabaseSeeder extends Seeder
         $this->call(FollowingProductSeeder::class);
 
         // Tasks Seeders
-        for ($i = 0; $i < 5; $i++) {
+        for ($i = 0; $i < 1; $i++) {
             $this->call(Task1Seeder::class);
             $this->call(Task2Seeder::class);
             $this->call(Task3Seeder::class);

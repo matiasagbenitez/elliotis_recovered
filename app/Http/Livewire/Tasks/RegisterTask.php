@@ -247,11 +247,6 @@ class RegisterTask extends Component
         }
 
         NecessaryProductionService::calculate(null, true);
-        // If exists some buyable product with stock less than minimum stock, we send an email to the admin
-        $products = Product::where('is_buyable', 1)->where('real_stock', '<', 100)->get();
-        if (count($products) > 0) {
-            TenderingService::create();
-        }
     }
 
     public function cancel()
@@ -263,7 +258,6 @@ class RegisterTask extends Component
             $name = Str::upper($this->task->typeOfTask->name);
             session()->flash('flash.banner', 'Tarea de tipo ' . $name . ' eliminada correctamente.');
             return redirect()->route('admin.tasks.manage', $this->type_of_task->id);
-
         } catch (\Throwable $th) {
             $this->emit('error', 'Error al cancelar la tarea.');
         }
@@ -290,7 +284,7 @@ class RegisterTask extends Component
             $this->task->trunkSublots()->sync($this->inputSelects);
 
             // Creamos el lote
-          $lot = Lot::create([
+            $lot = Lot::create([
                 'task_id' => $this->task->id,
                 'code' => 'L' . TaskService::getLotCode($this->task),
             ]);
@@ -433,6 +427,16 @@ class RegisterTask extends Component
                 'finished_by' => auth()->user()->id,
             ]);
 
+            if ($this->task->typeOfTask->initialPhase->id == 1) {
+                // If exists some buyable product with stock less than minimum stock, we send an email to the admin
+                $products = Product::where('is_buyable', 1)->where('real_stock', '<', 100)->get();
+                if (count($products) > 0) {
+                    $task_id = $this->task->id;
+                    $task_name = Str::upper($this->task->typeOfTask->name) . ' con ID: ' . $this->task->id;
+                    TenderingService::create($task_id, $task_name);
+                }
+            }
+
             // Redireccionamos con flash message
             $name = Str::upper($this->task->typeOfTask->name);
             session()->flash('flash.banner', 'Tarea de tipo ' . $name . ' registrada correctamente.');
@@ -510,7 +514,6 @@ class RegisterTask extends Component
                     'produced_quantity' => $item['consumed_quantity'],
                     'm2' => $m2,
                 ];
-
             }
 
             $this->task->outputSublotsDetails()->sync($aux);
