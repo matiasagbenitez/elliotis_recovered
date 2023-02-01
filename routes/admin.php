@@ -58,6 +58,7 @@ use App\Http\Livewire\PurchaseOrders\PurchaseOrdersIndex;
 use App\Http\Livewire\SaleOrders\ShowNecessaryProduction;
 use App\Http\Livewire\PreviousProducts\IndexPreviousProducts;
 use App\Http\Livewire\FollowingProducts\IndexFollowingProducts;
+use App\Http\Livewire\M2Calculator\M2CalculatorIndex;
 use App\Http\Livewire\PucharseParameters\IndexPucharseParameters;
 use App\Http\Livewire\NecesaryProduction\IndexNecessaryProduction;
 
@@ -135,6 +136,7 @@ Route::get('/lots/{lot}/sublots', SublotsIndex::class)->name('admin.sublots.inde
 Route::get('/sublots/areas', SublotsAreas::class)->name('admin.sublots-areas.index');
 Route::get('/sublots/products', SublotsProducts::class)->name('admin.sublots-products.index');
 
+Route::get('/calculator', M2CalculatorIndex::class)->name('admin.calculator.index');
 
 // Test
 Route::get('/tests', Test::class)->name('admin.tests.index');
