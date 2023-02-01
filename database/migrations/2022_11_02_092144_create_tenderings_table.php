@@ -20,20 +20,22 @@ return new class extends Migration
             $table->float('subtotal', 10, 2)->required();
             $table->float('iva', 10, 2)->required();
             $table->float('total', 10, 2)->required();
-            $table->text('observations')->nullable();
+
+            $table->float('total_weight', 10, 2);
+            $table->enum('type_of_purchase', [1, 2])->default(2);
 
             $table->boolean('is_active')->default(true);
+
             $table->boolean('is_finished')->default(false);
             $table->datetime('finished_at')->nullable();
             $table->unsignedBigInteger('finished_by')->nullable();
-            $table->foreign('finished_by')->references('id')->on('users');
 
-            $table->boolean('is_analyzed')->default(false);
-            $table->boolean('is_approved')->default(false);
-
+            $table->boolean('is_cancelled')->default(false);
             $table->integer('cancelled_by')->nullable();
             $table->date('cancelled_at')->nullable();
             $table->text('cancel_reason')->nullable();
+
+            $table->text('observations')->nullable();
 
             $table->timestamps();
         });

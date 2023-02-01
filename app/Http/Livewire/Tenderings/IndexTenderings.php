@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Tenderings;
 
+use App\Http\Services\TenderingService;
 use Livewire\Component;
 use App\Models\Tendering;
 use Livewire\WithPagination;
@@ -20,6 +21,12 @@ class IndexTenderings extends Component
     public function updatedQuery()
     {
         $this->resetPage();
+    }
+
+    public function test()
+    {
+        // dd('test');
+        TenderingService::create();
     }
 
     public function disable($id, $reason)

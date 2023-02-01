@@ -3,16 +3,23 @@
     <x-slot name="header">
         <div class="flex items-center justify-between">
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">Concursos privados de precios</h2>
-            <a href="{{ route('admin.tenderings.create') }}">
+            {{-- <a href="{{ route('admin.tenderings.create') }}"> --}}
+            {{-- <button wire:click="test">
                 <x-jet-secondary-button>
                     Registrar nuevo concurso
                 </x-jet-secondary-button>
-            </a>
+
+            </button> --}}
+            {{-- </a> --}}
         </div>
     </x-slot>
 
     <div class="flex flex-col gap-4 rounded-lg bg-transparent">
-
+        <div class="flex justify-end mt-6" wire:click="test">
+            <x-jet-button class="px-6 col-span-2">
+                Registrar concurso
+            </x-jet-button>
+        </div>
         {{-- Search --}}
         <div class="grid grid-cols-6 gap-3">
             <div class="col-span-3">
@@ -32,7 +39,8 @@
             <div class="col-span-3">
                 <div class="flex flex-col gap-2">
                     <x-jet-label value="Orden" />
-                    <select wire:model="direction" class="input-control" @if ($query == 3 || $query == 4) disabled @endif>
+                    <select wire:model="direction" class="input-control"
+                        @if ($query == 3 || $query == 4) disabled @endif>
                         <option value="asc">Ascendente</option>
                         <option value="desc">Descendente</option>
                     </select>

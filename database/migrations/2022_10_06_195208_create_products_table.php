@@ -29,6 +29,7 @@ return new class extends Migration
             $table->integer('real_stock')->required();
             $table->integer('necessary_stock')->nullable();
             $table->integer('minimum_stock')->required();
+            $table->integer('reposition')->required()->default(0);
 
             $table->boolean('is_buyable')->default(false)->required();
             $table->boolean('is_salable')->default(false)->required();

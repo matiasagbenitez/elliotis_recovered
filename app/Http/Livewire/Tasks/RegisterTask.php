@@ -14,6 +14,7 @@ use App\Models\TypeOfTask;
 use App\Models\TrunkSublot;
 use Illuminate\Support\Str;
 use App\Http\Services\TaskService;
+use App\Http\Services\TenderingService;
 use Illuminate\Support\Facades\Date;
 
 class RegisterTask extends Component
@@ -246,6 +247,11 @@ class RegisterTask extends Component
         }
 
         NecessaryProductionService::calculate(null, true);
+        // If exists some buyable product with stock less than minimum stock, we send an email to the admin
+        $products = Product::where('is_buyable', 1)->where('real_stock', '<', 100)->get();
+        if (count($products) > 0) {
+            TenderingService::create();
+        }
     }
 
     public function cancel()
