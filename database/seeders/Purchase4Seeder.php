@@ -55,12 +55,12 @@ class Purchase4Seeder extends Seeder
             ->take($aux)
             ->get();
 
+        $tn_price = rand(2400, 3000);
 
         foreach ($products as $product) {
 
             $quantity = rand(18, 30);
             $tn_total = $quantity * 1.18;
-            $tn_price = $product->cost;
             $subtotal = $tn_total * $tn_price;
 
             $purchase->products()->attach($product->id, [

@@ -108,7 +108,7 @@ Route::get('/purchase-order/create', CreatePurchaseOrder::class)->name('admin.pu
 Route::get('/purchase-order/{purchaseOrder}/detail', ShowPurchaseOrder::class)->name('admin.purchase-orders.show-detail');
 
 Route::get('/tenderings', IndexTenderings::class)->name('admin.tenderings.index');
-Route::get('/tendering/create', CreateTendering::class)->name('admin.tenderings.create');
+Route::get('/tendering/create/{notification?}', CreateTendering::class)->name('admin.tenderings.create');
 Route::get('/tendering/{tendering}/detail', ShowTendering::class)->name('admin.tenderings.show-detail');
 Route::get('/tendering/{tendering}/hash/{hash:hash}/detail', ShowOfferTendering::class)->name('admin.tenderings.show-offer-detail');
 Route::get('/tendering/{tendering}/finished', ShowFinishedTendering::class)->name('admin.tenderings.show-finished-tendering');

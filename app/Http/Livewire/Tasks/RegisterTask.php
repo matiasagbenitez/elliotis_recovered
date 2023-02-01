@@ -433,7 +433,7 @@ class RegisterTask extends Component
                 if (count($products) > 0) {
                     $task_id = $this->task->id;
                     $task_name = Str::upper($this->task->typeOfTask->name) . ' con ID: ' . $this->task->id;
-                    TenderingService::create($task_id, $task_name);
+                    TenderingService::notificate($task_id, $task_name);
                 }
             }
 

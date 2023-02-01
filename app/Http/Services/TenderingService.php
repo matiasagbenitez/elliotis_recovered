@@ -8,7 +8,7 @@ use App\Notifications\NewTenderingRequired;
 
 class TenderingService
 {
-    public static function create($task_id, $task_name)
+    public static function notificate($task_id, $task_name)
     {
         $products = Product::where('is_buyable', true)->where('real_stock', '<', 100)->get();
         $detail = [];

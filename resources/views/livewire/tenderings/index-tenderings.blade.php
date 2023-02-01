@@ -2,40 +2,36 @@
 
     <x-slot name="header">
         <div class="flex items-center justify-between">
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">Concursos privados de precios</h2>
-            {{-- <a href="{{ route('admin.tenderings.create') }}"> --}}
-            {{-- <button wire:click="test">
+            <h2 class="font-semibold text-xl text-gray-800 leading-tight">Licitaciones</h2>
+            <a href="{{ route('admin.tenderings.create') }}">
                 <x-jet-secondary-button>
-                    Registrar nuevo concurso
+                    Registrar nueva compra
                 </x-jet-secondary-button>
-
-            </button> --}}
-            {{-- </a> --}}
+            </a>
         </div>
     </x-slot>
 
-    <div class="flex flex-col gap-4 rounded-lg bg-transparent">
-        <div class="flex justify-end mt-6" wire:click="test">
-            <x-jet-button class="px-6 col-span-2">
-                Registrar concurso
-            </x-jet-button>
-        </div>
-        {{-- Search --}}
-        <div class="grid grid-cols-6 gap-3">
+    <div class="flex flex-col rounded-lg bg-white">
+
+        {{-- FILTROS --}}
+        <div class="grid grid-cols-6 gap-3 bg-gray-200 px-5 py-5 rounded-t-lg">
+            <div class="col-span-6">
+                <span class="font-bold text-gray-500">
+                    <i class="fas fa-info-circle mr-1"></i>
+                    Listado de licitaciones
+                </span>
+            </div>
+
             <div class="col-span-3">
                 <div class="flex flex-col gap-2">
                     <x-jet-label value="Filtros" />
                     <select wire:model="query" class="input-control">
                         <option value="">Todos los concursos</option>
-                        <option value="1">Concursos válidos</option>
-                        <option value="2">Concursos anulados</option>
-                        <option value="3">Concursos más prontos a vencer</option>
-                        <option value="4">Concursos más tardes a vencer</option>
-                        <option value="5">Concursos analizados</option>
-                        <option value="6">Concursos aprobados</option>
+
                     </select>
                 </div>
             </div>
+
             <div class="col-span-3">
                 <div class="flex flex-col gap-2">
                     <x-jet-label value="Orden" />
@@ -48,99 +44,104 @@
             </div>
         </div>
 
-        @if ($tenderings->count())
-            @foreach ($tenderings as $tender)
-                <div class="px-6 py-3 bg-white rounded-lg shadow">
-                    <div class="flex justify-between">
-                        <span class="font-bold">
-                            Concurso #{{ $tender->id }}
-                        </span>
-                        <p class="text-sm uppercase">
-                            @if ($tender->is_active == 1)
-                                <span
-                                    class="px-6 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                                    VÁLIDO
-                                </span>
-                            @else
-                                <span
-                                    class="px-6 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
-                                    ANULADO
-                                </span>
-                            @endif
-                        </p>
-                    </div>
-                    <hr class="mt-1">
-                    <p class="text-sm font-bold my-1">Inicio concurso:
-                        {{-- <span class="font-normal"> {{ Date::parse($tender->start_date)->format('d-m-Y h:m:s') }} hs</span> --}}
-                        <span class="font-normal"> {{ Date::parse($tender->start_date)->format('d-m-Y H:i') }} hs</span>
-                    </p>
-                    <div class="flex justify-between">
-                        <p class="text-sm font-bold">Fin concurso:
-                            <span class="font-normal">{{ Date::parse($tender->end_date)->format('d-m-Y H:i') }}
-                                hs</span>
-                        </p>
-                        {{-- Si le fecha de fin aún no llegó o si no está inactivo, mostrar el tiempo restante --}}
-                        @if ($tender->end_date > now() && $tender->is_active == 1)
-                            <p class="text-sm font-bold">Tiempo restante:
-                                <span class="font-normal">{{ Date::parse($tender->end_date)->diffForHumans() }}</span>
-                            </p>
-                        @endif
-                    </div>
-                    <p class="text-sm my-1 font-bold"> Ítems solicitados:</p>
-                    <ul class="list-disc list-inside ml-4">
-                        {{-- Get price, quantity and subtotal for each product in pivot table --}}
-                        @foreach ($tender->products as $product)
-                            <li class="text-xs">{{ $product->name }} (x{{ $product->pivot->quantity }})</li>
-                        @endforeach
-                    </ul>
-                    <div class="flex justify-between">
-                        <p class="text-sm my-1 font-bold">Subtotal estimado:
-                            <span class="font-normal">${{ number_format($tender->subtotal, 2, ',', '.') }}</span>
-                        </p>
-                        <p class="text-sm my-1 font-bold">IVA estimado:
-                            <span class="font-normal">${{ number_format($tender->iva, 2, ',', '.') }}</span>
-                        </p>
-                        <p class="text-sm my-1 font-bold">Total estimado:
-                            <span class="font-normal">${{ number_format($tender->total, 2, ',', '.') }}</span>
-                        </p>
-                    </div>
-                    <div class="flex justify-between">
-                        <p class="text-sm my-1 font-bold">Concurso analizado:
-                            <span class="font-normal">{{ $tender->is_analyzed == 1 ? 'Sí' : 'No' }}</span>
-                        </p>
-                        @if ($tender->is_active)
-                            @if ($tender->end_date > now() && $tender->is_analyzed == 0)
-                                <button wire:click="$emit('disableTender', '{{ $tender->id }}')">
-                                    <span class="text-sm hover:font-bold cursor-pointer">
-                                        <i class="fas fa-ban mr-1 text-gray-800"></i>
-                                        Anular
-                                    </span>
-                                </button>
-                            @endif
-                        @endif
-                    </div>
-                    <div class="flex justify-between">
-                        <p class="text-sm my-1 font-bold">Oferta aceptada:
-                            <span class="font-normal">{{ $tender->is_approved == 1 ? 'Sí' : 'No' }}</span>
-                        </p>
-                        <a href="{{ route('admin.tenderings.show-detail', $tender->id) }}">
-                            <span class="text-sm hover:font-bold cursor-pointer">
-                                <i class="fas fa-info-circle mr-1 text-gray-800"></i>
-                                Ver detalle
-                            </span>
-                        </a>
-                    </div>
-                </div>
-            @endforeach
-        @else
-            <div class="px-6 py-4">
-                <p class="text-center font-semibold">No se encontraron registros coincidentes.</p>
-            </div>
-        @endif
 
-        @if ($tenderings->count())
-            {{ $tenderings->links() }}
-        @endif
+        <x-responsive-table>
+
+            {{-- TABLA --}}
+            @if ($tenderings->count())
+                <table class="text-gray-600 min-w-full divide-y divide-gray-200 table-fixed">
+                    <thead class="text-sm text-center text-gray-500 uppercase border-b border-gray-300 bg-gray-50">
+                        <tr class="px-4 py-2">
+                            <th>
+                                ID
+                            </th>
+                            <th scope="col" class="w-1/5 py-3">
+                                Fecha inicio
+                            </th>
+                            <th scope="col" class="w-1/5 py-3">
+                                Fecha final
+                            </th>
+                            <th scope="col" class="w-1/5 py-3">
+                                Total en licitación
+                            </th>
+                            <th scope="col" class="w-1/5 py-3">
+                                Estado
+                            </th>
+                            <th scope="col" class="w-1/5 py-3">
+                                Situación
+                            </th>
+                            <th scope="col">
+                                Acción
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-200">
+                        @foreach ($tenderings as $tender)
+                            <tr class="bg-gray-50">
+                                <td class="px-6 py-3">
+                                    <p class="text-sm uppercase text-center">
+                                        {{ $tender->id }}
+                                    </p>
+                                </td>
+                                <td class="px-6 py-3 whitespace-nowrap text-center">
+                                    <p class="text-sm uppercase">
+                                        {{ Date::parse($tender->start_date)->format('d-m-Y H:i') }}
+                                    </p>
+                                </td>
+                                <td class="px-6 py-3">
+                                    <p class="text-sm uppercase text-center">
+                                        {{ Date::parse($tender->end_date)->format('d-m-Y H:i') }}
+                                    </p>
+                                </td>
+                                <td class="px-6 py-3">
+                                    <p class="text-sm text-center">
+                                        {{ $tender->products->sum('pivot.quantity') }} unidades
+                                    </p>
+                                </td>
+                                <td class="px-6 py-3 text-center">
+                                    <p
+                                        class="text-center px-6 py-1 inline-flex text-xs uppercase leading-5 font-semibold rounded-full {{ $tender->is_active ? ' bg-green-100 text-green-800' : ' bg-red-100 text-red-800' }}">
+                                        {{ $tender->is_active ? 'Válido' : 'Anulado' }}
+                                    </p>
+                                </td>
+                                <td class="px-6 py-3 text-center">
+                                    <p
+                                        class="text-center px-6 py-1 inline-flex text-xs uppercase leading-5 font-semibold rounded-full {{ $tender->is_active ? ' bg-yellow-100 text-yellow-800' : ' bg-gray-100 text-gray-800' }}">
+                                        {{ $tender->is_active ? 'En ejecución' : 'Finalizado' }}
+                                    </p>
+                                </td>
+                                <td class="px-6 py-3 text-center">
+                                    <div class="flex items-center justify-end gap-2">
+                                        @if ($tender->is_active)
+                                            <button title="Anular venta"
+                                                wire:click="$emit('disableSaleOrder', '{{ $tender->id }}')">
+                                                <i class="fas fa-ban mr-1"></i>
+                                            </button>
+                                        @endif
+                                        <a title="Ver detalle" href="{{ route('admin.tenderings.show-detail', $tender) }}">
+                                            <x-jet-secondary-button>
+                                                <i class="fas fa-list"></i>
+                                            </x-jet-secondary-button>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            @else
+                <div class="px-6 py-4">
+                    <p class="text-center font-semibold">No se encontraron registros coincidentes.</p>
+                </div>
+            @endif
+
+            @if ($tenderings->hasPages())
+                <div class="px-6 pt-2 pb-3 bg-gray-50">
+                    {{ $tenderings->links() }}
+                </div>
+            @endif
+
+        </x-responsive-table>
     </div>
 
 </div>

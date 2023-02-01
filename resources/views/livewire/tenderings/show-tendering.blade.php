@@ -56,87 +56,100 @@
         @endif
 
         {{-- Purchase detail --}}
-        <div class="px-6 py-3 bg-white rounded-lg shadow">
-            <span class="font-bold">Concurso #{{ $tender->id }}</span>
-            <hr class="mt-1">
-            {{-- <div @if (!$tender->is_active) class="grid grid-cols-2" @endif> --}}
-            <div class="grid">
+        <div class="bg-gray-50 rounded-t-lg">
 
-                {{-- DIV IZQUIERDA --}}
+            <div class="flex px-6 py-3 items-center justify-between">
                 <div>
-                    <p class="text-sm font-bold my-1">Inicio concurso:
-                        {{-- <span class="font-normal"> {{ Date::parse($tender->start_date)->format('d-m-Y h:m:s') }} hs</span> --}}
-                        <span class="font-normal"> {{ Date::parse($tender->start_date)->format('d-m-Y H:i') }} hs</span>
+                    <span class="font-bold text-gray-600 text-lg">
+                        <i class="fas fa-info-circle mr-1"></i>
+                        Detalle licitación N° {{ $tender->id }}
+                    </span>
+                </div>
+
+                <div>
+                    <span
+                        class="px-6 py-1 inline-flex text-xs uppercase leading-5 font-semibold rounded-full {{ $stats['active'] ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
+                        {{ $stats['active'] ? 'Concurso válido' : 'Concurso inválido' }}
+                    </span>
+                    <span
+                        class="px-6 py-1 inline-flex text-xs uppercase leading-5 font-semibold rounded-full {{ $stats['finished'] ? 'bg-gray-100 text-gray-800' : 'bg-yellow-100 text-yellow-800' }}">
+                        {{ $stats['finished'] ? 'Finalizado' : 'En ejecución' }}
+                    </span>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-2 px-6">
+                <div class="space-y-1">
+                    <p class="font-bold">
+                        Fecha inicio licitación:
+                        <span class="font-normal">{{ $stats['start_date'] }}</span>
                     </p>
-                    <div class="flex justify-between">
-                        <p class="text-sm font-bold">Fin concurso:
-                            <span class="font-normal">{{ Date::parse($tender->end_date)->format('d-m-Y H:i') }}
-                                hs</span>
-                        </p>
-                        {{-- Si le fecha de fin aún no llegó o si no está inactivo, mostrar el tiempo restante --}}
-                        @if ($tender->end_date > now() && $tender->is_active == 1)
-                            <p class="text-sm font-bold">Tiempo restante:
-                                <span class="font-normal">{{ Date::parse($tender->end_date)->diffForHumans() }}</span>
-                            </p>
-                        @endif
-                    </div>
-                    <p class="text-sm my-1 font-bold"> Ítems solicitados:</p>
-                    <ul class="list-disc list-inside ml-4">
-                        {{-- Get price, quantity and subtotal for each product in pivot table --}}
-                        @foreach ($tender->products as $product)
-                            <li class="text-xs">{{ $product->name }} (x{{ $product->pivot->quantity }})</li>
-                        @endforeach
-                    </ul>
-                    <div class="flex justify-between">
-                        <p class="text-sm my-1 font-bold">Subtotal estimado:
-                            <span class="font-normal">${{ number_format($tender->subtotal, 2, ',', '.') }}</span>
-                        </p>
-                        <p class="text-sm my-1 font-bold">IVA estimado:
-                            <span class="font-normal">${{ number_format($tender->iva, 2, ',', '.') }}</span>
-                        </p>
-                        <p class="text-sm my-1 font-bold">Total estimado:
-                            <span class="font-normal">${{ number_format($tender->total, 2, ',', '.') }}</span>
-                        </p>
-                    </div>
-                    <p class="text-sm my-1 font-bold">Concurso analizado:
-                        <span class="font-normal">{{ $tender->is_analyzed == 1 ? 'Sí' : 'No' }}</span>
+                    <p class="font-bold">
+                        Fin fin licitación:
+                        <span class="font-normal">{{ $stats['end_date'] }}</span>
                     </p>
-                    <p class="text-sm my-1 font-bold">Oferta aceptada:
-                        <span class="font-normal">{{ $tender->is_approved == 1 ? 'Sí' : 'No' }}</span>
+                    <p class="font-bold">
+                        Tiempo restante:
+                        <span class="font-normal">{{ $stats['remaining_time'] }}</span>
+                    </p>
+                    <p class="font-semibold">
+                        {{ $stats['suppliers_stats'] }}
                     </p>
                 </div>
 
+                <div class="space-y-1">
+                    <p class="font-bold">
+                        Productos y cantidades en licitación:
+                    </p>
+                    <ul class="list-disc text-gray-600 ml-10">
+                        @foreach ($products as $item)
+                            <li>
+                                {{ $item['quantity'] }} unidades de <span
+                                    class="font-semibold">{{ $item['name'] }}</span>
+                            </li>
+                        @endforeach
+                    </ul>
+                    <p class="font-bold">
+                        Cantidad total de productos:
+                        <span class="font-normal">{{ $stats['total_products'] }}</span>
+                    </p>
+                </div>
             </div>
         </div>
 
         {{-- DETALLE DE HASHES --}}
-        <div class="px-6 pt-3 pb-6 bg-white rounded-lg shadow mt-4">
-            <p class="font-bold my-1">Solicitudes enviadas</p>
-            <hr class="mt-1 mb-2">
+        <div class="bg-gray-50 rounded-b-lg">
+
+            <div class="px-6 py-4">
+                <p class="font-bold text-gray-600 text-sm uppercase text-center">
+                    Detalle de solicitudes enviadas
+                </p>
+            </div>
+
             @if ($hashes->count())
                 <x-responsive-table>
                     <table class="text-gray-600 min-w-full divide-y divide-gray-200 table-fixed">
                         <thead class="text-sm text-center text-gray-500 uppercase border-b border-gray-300 bg-gray-200">
                             <tr>
-                                <th scope="col" class="px-4 py-2">
+                                <th scope="col" class="px-4 py-3">
                                     ID
                                 </th>
-                                <th scope="col" class="w-1/3 px-4 py-2">
+                                <th scope="col" class="w-1/3 px-4 py-3">
                                     Proveedor
                                 </th>
-                                <th scope="col" class="px-4 py-2">
+                                <th scope="col" class="px-4 py-3">
                                     Visto
                                 </th>
-                                <th scope="col" class="w-1/4 px-4 py-2">
+                                <th scope="col" class="w-1/4 px-4 py-3">
                                     Fecha visto
                                 </th>
-                                <th scope="col" class="px-4 py-2">
+                                <th scope="col" class="px-4 py-3">
                                     Respuesta
                                 </th>
-                                <th scope="col" class="w-1/4 px-4 py-2">
+                                <th scope="col" class="w-1/4 px-4 py-3">
                                     Fecha respuesta
                                 </th>
-                                <th scope="col" class="px-4 py-2">
+                                <th scope="col" class="px-4 py-3">
                                     Detalle
                                 </th>
                             </tr>
@@ -155,23 +168,7 @@
                                         </p>
                                     </td>
                                     <td class="px-6 py-2 text-center">
-                                        @switch($hash->seen)
-                                            @case(1)
-                                                <span
-                                                    class="px-4 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                                                    Sí
-                                                </span>
-                                            @break
-
-                                            @case(0)
-                                                <span
-                                                    class="px-4 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
-                                                    No
-                                                </span>
-                                            @break
-
-                                            @default
-                                        @endswitch
+                                        <i class="fas fa-{{ !$hash->seen ? 'times' : 'check' }} text-{{ !$hash->seen ? 'red' : 'green' }}-600"></i>
                                     </td>
                                     <td class="px-6 py-2">
                                         <p
@@ -180,23 +177,7 @@
                                         </p>
                                     </td>
                                     <td class="px-6 py-2 text-center">
-                                        @switch($hash->answered)
-                                            @case(1)
-                                                <span
-                                                    class="px-4 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                                                    Sí
-                                                </span>
-                                            @break
-
-                                            @case(0)
-                                                <span
-                                                    class="px-4 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
-                                                    No
-                                                </span>
-                                            @break
-
-                                            @default
-                                        @endswitch
+                                        <i class="fas fa-{{ !$hash->answered ? 'times' : 'check' }} text-{{ !$hash->answered ? 'red' : 'green' }}-600"></i>
                                     </td>
                                     <td class="px-6 py-2">
                                         <p
@@ -222,20 +203,16 @@
                     </table>
                 </x-responsive-table>
             @endif
-        </div>
+        </>
     </div>
 
-    @if ($tender->is_active)
-        @if (!$tender->is_finished)
-            <div class="bg-white p-3">
-                <div class="flex justify-center">
-                    <x-jet-button wire:click="$emit('finishTender', '{{ $tender->id }}')">
-                        <i class="fas fa-flag mr-2"></i>
-                        Finalizar concurso
-                    </x-jet-button>
-                </div>
-            </div>
-        @endif
+    @if ($tender->is_active && !$tender->is_finished)
+        <div class="flex justify-center mt-5">
+            <x-jet-button wire:click="$emit('finishTender', '{{ $tender->id }}')">
+                <i class="fas fa-flag mr-2"></i>
+                Finalizar concurso
+            </x-jet-button>
+        </div>
     @endif
 
 </div>

@@ -16,13 +16,7 @@ return new class extends Migration
 
             $table->dateTime('start_date')->required();
             $table->dateTime('end_date')->required();
-
-            $table->float('subtotal', 10, 2)->required();
-            $table->float('iva', 10, 2)->required();
-            $table->float('total', 10, 2)->required();
-
-            $table->float('total_weight', 10, 2);
-            $table->enum('type_of_purchase', [1, 2])->default(2);
+            $table->string('notification_id')->nullable();
 
             $table->boolean('is_active')->default(true);
 

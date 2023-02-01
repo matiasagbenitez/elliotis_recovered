@@ -14,7 +14,7 @@ class IndexNotifications extends Component
 
     public $notifications = [];
     public $text = [];
-    protected $listeners = ['markAsRead'];
+    protected $listeners = ['markAsRead', 'createTendering'];
 
     public function mount()
     {
@@ -25,23 +25,15 @@ class IndexNotifications extends Component
     public function formatNotifications()
     {
         $text = [];
-
         foreach ($this->notifications as $notification) {
-
             if ($notification->type == 'App\Notifications\NewTenderingRequired') {
-
                 $message = 'La propuesta es: ';
-
                 foreach ($notification->data['detail'] as $detail) {
                     $product = Product::find($detail['product_id']);
                     $reposition = $detail['reposition'];
-
                     $message .= "x $reposition $product->name - ";
-
                 }
-
                 $message = substr($message, 0, -3);
-
                 $text[] = [
                     'id' => $notification->id,
                     'task_id' => $notification->data['task_id'],
@@ -50,10 +42,8 @@ class IndexNotifications extends Component
                     'read_at' => $notification->read_at,
                     'message' => $message,
                 ];
-
             }
         }
-
         return $text;
     }
 
@@ -63,6 +53,14 @@ class IndexNotifications extends Component
         $notification->markAsRead();
         $this->notifications = auth()->user()->notifications;
         $this->text = $this->formatNotifications();
+    }
+
+    public function createTendering($id)
+    {
+        $notification = auth()->user()->notifications->where('id', $id)->first();
+        $notification->markAsRead();
+
+        return redirect()->route('admin.tenderings.create', ['notification' => $id]);
     }
 
     public function render()

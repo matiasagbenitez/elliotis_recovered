@@ -14,7 +14,7 @@ class Tendering extends Model
     // Many to many relationship with products
     public function products()
     {
-        return $this->belongsToMany(Product::class)->withPivot('quantity', 'tn_total', 'tn_price', 'subtotal')->withTimestamps();
+        return $this->belongsToMany(Product::class)->withPivot('quantity')->withTimestamps();
     }
 
     // Relationship with Hash

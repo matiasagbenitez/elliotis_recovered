@@ -51,11 +51,12 @@ class Purchase3Seeder extends Seeder
             ->get();
 
 
+        $tn_price = rand(2400, 3000);
+
         foreach ($products as $product) {
 
             $quantity = rand(18, 30);
             $tn_total = $quantity * 1.18;
-            $tn_price = 3000;
             $subtotal = $tn_total * $tn_price;
 
             $purchase->products()->attach($product->id, [

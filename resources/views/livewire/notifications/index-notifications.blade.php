@@ -5,12 +5,12 @@
         </h2>
     </x-slot>
 
-    <div class="max-w-6xl mx-auto bg-white rounded-lg px-10 py-5">
+    <div class="max-w-6xl mx-auto bg-white rounded-lg px-10 py-8">
         <span class="font-bold text-gray-500">
             <i class="fas fa-info-circle mr-1"></i>
             Listado de notificaciones
         </span>
-        <hr class="my-5">
+        <hr class="my-3">
 
         @forelse ($text as $item)
             <div
@@ -27,20 +27,21 @@
                 </div>
 
                 <div class="flex justify-between mt-5">
-                    <div>
-                        <span class="text-gray-500 text-xs font-semibold">
-                            {{ $item['created_at'] }}
-                        </span>
-                    </div>
+                    <span class="text-gray-500 text-xs font-semibold">
+                        {{ $item['created_at'] }}
+                    </span>
                     <div class="flex gap-3 items-center">
                         @if ($item['read_at'] == null)
-                            <span class="text-gray-500 text-xs font-semibold hover:cursor-pointer hover:font-bold hover:text-gray-700"
+                            <span
+                                class="text-gray-500 text-xs font-semibold hover:cursor-pointer hover:font-bold hover:text-gray-700"
                                 wire:click="$emit('markAsRead', '{{ $item['id'] }}')">
                                 <i class="fas fa-check-circle"></i>
                                 Marcar como leída
                             </span>
                         @endif
-                        <span class="text-gray-500 text-xs font-semibold  hover:cursor-pointer hover:font-bold hover:text-gray-700">
+                        <span
+                            class="text-gray-500 text-xs font-semibold  hover:cursor-pointer hover:font-bold hover:text-gray-700"
+                            wire:click="$emit('createTendering', '{{ $item['id'] }}')">
                             <i class="fas fa-shopping-cart"></i>
                             Generar licitación
                         </span>
