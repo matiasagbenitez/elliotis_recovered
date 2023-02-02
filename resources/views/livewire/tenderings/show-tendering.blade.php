@@ -163,8 +163,9 @@
                                         </p>
                                     </td>
                                     <td class="px-6 py-2 text-center">
-                                        <p class="text-sm uppercase {{ $hash->cancelled ? 'line-through' : '' }}">
+                                        <p class="text-sm uppercase {{ $hash->cancelled ? 'text-red-500 font-bold' : '' }}">
                                             {{ $hash->supplier->business_name }}
+                                            {{ $hash->cancelled ? '(Oferta anulada)' : '' }}
                                         </p>
                                     </td>
                                     <td class="px-6 py-2 text-center">
@@ -172,7 +173,7 @@
                                     </td>
                                     <td class="px-6 py-2">
                                         <p
-                                            class="text-sm uppercase text-center {{ $hash->cancelled ? 'line-through' : '' }}">
+                                            class="text-sm uppercase text-center">
                                             {{ $hash->seen_at ? Date::parse($hash->seen_at)->format('d-m-Y H:i') : 'N/A' }}
                                         </p>
                                     </td>
@@ -181,7 +182,7 @@
                                     </td>
                                     <td class="px-6 py-2">
                                         <p
-                                            class="text-sm uppercase text-center {{ $hash->cancelled ? 'line-through' : '' }}">
+                                            class="text-sm uppercase text-center">
                                             {{ $hash->answered_at ? Date::parse($hash->answered_at)->format('d-m-Y H:i') : 'N/A' }}
                                         </p>
                                     </td>

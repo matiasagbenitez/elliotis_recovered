@@ -49,17 +49,12 @@
                     {{ number_format($offer->tn_total, 2, ',', '.') }} TN
                 </span>
             </p>
-            <p class="font-bold">Subtotal =
+            <p class="font-bold">Precio TN (IVA incluido) =
                 <span class="font-normal">
-                    ${{ number_format($offer->subtotal, 2, ',', '.') }}
+                    ${{ number_format($offer->total / $offer->tn_total, 2, ',', '.') }}
                 </span>
             </p>
-            <p class="font-bold">IVA =
-                <span class="font-normal">
-                    ${{ number_format($offer->iva, 2, ',', '.') }}
-                </span>
-            </p>
-            <p class="font-bold">Total =
+            <p class="font-bold">Total final =
                 <span class="font-normal">
                     ${{ number_format($offer->total, 2, ',', '.') }}
                 </span>
@@ -88,8 +83,6 @@
         <p class="text-justify">
             Ante cualquier duda, no dude en contactarse con nosotros.
         </p>
-
-        <br>
 
         <div class="flex flex-col font-bold text-right">
             <span>¡Muchas gracias!</span>

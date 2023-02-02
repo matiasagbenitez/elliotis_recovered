@@ -20,6 +20,8 @@ class EditOffer extends Component
     protected $listeners = ['delete'];
 
     public $editForm = [
+        'tn_total' => '',
+        'tn_price' => '',
         'subtotal' => '',
         'iva' => '',
         'total' => '',
@@ -45,9 +47,12 @@ class EditOffer extends Component
         $this->allProducts = Product::where('is_buyable', true)->whereHas('tenderings', function ($query) use ($hash) {
             $query->where('tendering_id', $hash->tendering->id);
         })->orderBy('name')->get();
+
         $this->orderProducts = OfferProduct::where('offer_id', $this->offer->id)->get()->toArray();
-        $this->editForm['delivery_date'] = $this->offer->delivery_date;
-        $this->editForm['observations'] = $this->offer->observations;
+        $tn_price = round($this->offer->total / $this->offer->tn_total, 2);
+        $this->editForm = $this->offer->toArray();
+        $this->editForm['tn_price'] = $tn_price;
+
         $this->updatedOrderProducts();
     }
 
@@ -58,7 +63,7 @@ class EditOffer extends Component
         }
 
         if (!empty($this->orderProducts[count($this->orderProducts) - 1]['product_id']) || count($this->orderProducts) == 0) {
-            $this->orderProducts[] = ['product_id' => '', 'quantity' => 1, 'price' => 0, 'subtotal' => '0'];
+            $this->orderProducts[] = ['product_id' => '', 'quantity' => 1];
         }
     }
 
@@ -79,39 +84,41 @@ class EditOffer extends Component
         $this->updatedOrderProducts();
     }
 
-    public function updatedOrderProducts()
+    public function updatedEditForm()
     {
-        $subtotal = 0;
-
-        foreach ($this->orderProducts as $index => $product) {
-            $this->orderProducts[$index]['subtotal'] = number_format($product['quantity'] * $product['price'], 2, '.', '');
-            $subtotal += $this->orderProducts[$index]['subtotal'];
+        if ($this->editForm['tn_total'] == ''|| $this->editForm['tn_price'] == '') {
+            return;
         }
 
-        $iva = $subtotal * 0.21;
-        $total = $subtotal + $iva;
+        $total = $this->editForm['tn_total'] * $this->editForm['tn_price'];
+        $iva = $total * 0.21;
+        $subtotal = $total - $iva;
 
-        $this->editForm['subtotal'] = number_format($subtotal, 2, '.', '');
-        $this->editForm['iva'] = number_format($iva, 2, '.', '');
-        $this->editForm['total'] = number_format($total, 2, '.', '');
+        $this->editForm['subtotal'] = $subtotal;
+        $this->editForm['iva'] = $iva;
+        $total = number_format($total, 2, '.', '');
+        $this->editForm['total'] = $total;
     }
 
     public function update()
     {
         $this->validate([
-            'editForm.delivery_date' => 'required|date|after_or_equal:'.$this->hash->tendering->delivery_date,
+            'editForm.delivery_date' => 'required|date|after_or_equal:' . $this->tendering->end_date,
             'editForm.observations' => 'nullable|string',
             'orderProducts' => 'required|array',
             'orderProducts.*.product_id' => 'required|exists:products,id',
-            'orderProducts.*.quantity' => 'required|numeric|min:1',
-            'orderProducts.*.price' => 'required|numeric|min:0',
+            'orderProducts.*.quantity' => 'required|integer|min:1',
+            'editForm.tn_total' => 'required|numeric|min:1',
+            'editForm.tn_price' => 'required|numeric|min:1',
+            'editForm.subtotal' => 'required|numeric|min:1',
+            'editForm.iva' => 'required|numeric|min:1',
+            'editForm.total' => 'required|numeric|min:1',
         ]);
 
         // Verify that quantity is not greater than the quantity of the tendering
         foreach ($this->orderProducts as $product) {
             $productTendering = ProductTendering::where('tendering_id', $this->hash->tendering->id)->where('product_id', $product['product_id'])->first();
             if ($product['quantity'] > $productTendering->quantity) {
-                // Get product name
                 $productName = Product::find($product['product_id'])->name;
                 $this->emit('error', 'La cantidad del producto ' . $productName . ' no puede ser mayor a la cantidad solicitada en la licitación');
                 return;
@@ -122,21 +129,16 @@ class EditOffer extends Component
             'subtotal' => $this->editForm['subtotal'],
             'iva' => $this->editForm['iva'],
             'total' => $this->editForm['total'],
+            'tn_total' => $this->editForm['tn_total'],
             'delivery_date' => $this->editForm['delivery_date'],
             'observations' => $this->editForm['observations'],
         ]);
-        // ])->products()->sync($this->orderProducts);
 
         // Detach all products
         $this->offer->products()->detach();
 
-        // Attach products
         foreach ($this->orderProducts as $product) {
-            $this->offer->products()->attach($product['product_id'], [
-                'quantity' => $product['quantity'],
-                'price' => $product['price'],
-                'subtotal' => $product['subtotal'],
-            ]);
+            $this->offer->products()->attach($product['product_id'], ['quantity' => $product['quantity']]);
         }
 
         $editHash = $this->offer->hash;
@@ -146,8 +148,9 @@ class EditOffer extends Component
         sort($tenderingProductsId);
         $offerProductsId = $editHash->offer->products->pluck('id')->toArray();
         sort($offerProductsId);
-
         $editHash->offer->products_ok = $tenderingProductsId == $offerProductsId;
+        $editHash->offer->save();
+
         if($tenderingProductsId == $offerProductsId) {
             $this->offer->update([
                 'products_ok' => true,
