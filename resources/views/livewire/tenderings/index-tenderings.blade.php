@@ -106,19 +106,20 @@
                                 </td>
                                 <td class="px-6 py-3 text-center">
                                     <p
-                                        class="text-center px-6 py-1 inline-flex text-xs uppercase leading-5 font-semibold rounded-full {{ $tender->is_active ? ' bg-yellow-100 text-yellow-800' : ' bg-gray-100 text-gray-800' }}">
-                                        {{ $tender->is_active ? 'En ejecución' : 'Finalizado' }}
+                                        class="text-center px-6 py-1 inline-flex text-xs uppercase leading-5 font-semibold rounded-full {{ !$tender->is_finished && $tender->is_active ? ' bg-yellow-100 text-yellow-800' : ' bg-green-100 text-green-800' }}">
+                                        {{ !$tender->is_finished && $tender->is_active ? 'En ejecución' : 'Finalizado' }}
                                     </p>
                                 </td>
                                 <td class="px-6 py-3 text-center">
                                     <div class="flex items-center justify-end gap-2">
-                                        @if ($tender->is_active)
-                                            <button title="Anular venta"
-                                                wire:click="$emit('disableSaleOrder', '{{ $tender->id }}')">
+                                        @if ($tender->is_active && !$tender->is_finished)
+                                            <button title="Anular concurso"
+                                                wire:click="$emit('disableTender', '{{ $tender->id }}')">
                                                 <i class="fas fa-ban mr-1"></i>
                                             </button>
                                         @endif
-                                        <a title="Ver detalle" href="{{ route('admin.tenderings.show-detail', $tender) }}">
+                                        <a title="Ver detalle"
+                                            href="{{ route('admin.tenderings.show-detail', $tender) }}">
                                             <x-jet-secondary-button>
                                                 <i class="fas fa-list"></i>
                                             </x-jet-secondary-button>
@@ -201,6 +202,16 @@
                     }
                 })
             }
+        });
+
+        Livewire.on('error', message => {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: message,
+                showConfirmButton: true,
+                confirmButtonColor: '#1f2937',
+            });
         });
     </script>
 @endpush

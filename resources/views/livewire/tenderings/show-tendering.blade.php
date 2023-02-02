@@ -23,11 +23,10 @@
         </x-slot>
 
         @if (!$tender->is_active)
-            <div
-                class="flex items-center p-4 mb-4 text-sm text-red-700 bg-red-100 rounded-lg dark:bg-red-200 dark:text-red-800 border-2 border-red-600">
-                <i class="fas fa-info-circle text-lg mr-2"></i>
-                <div>
-                    <span class="font-bold uppercase">Atención!</span>
+            <div class="flex p-4 mb-4 text-red-700 bg-red-100 rounded-lg">
+                <div class="font-semibold flex items-center gap-2">
+                    <i class="fas fa-ban text-2xl mr-2"></i>
+                    <span class="font-bold uppercase">¡CONCURSO ANULADO!</span>
                     Este concurso fue anulado por {{ $user_who_cancelled }} el día
                     {{ Date::parse($tender->cancelled_at)->format('d-m-Y') }}.
                     <span class="font-bold">Motivo:</span>
@@ -37,21 +36,21 @@
         @endif
 
         @if ($tender->is_finished)
-            <div
-                class="flex items-center p-4 mb-4 text-sm text-cyan-700 bg-cyan-100 rounded-lg dark:bg-cyan-200 dark:text-cyan-800 border-2 border-cyan-600">
-                <i class="fas fa-info-circle text-lg mr-2"></i>
-                <div>
+            <div class="flex flex-col md:flex-row md:justify-between p-4 mb-4 bg-white rounded-lg text-gray-600">
+                <div class="font-semibold flex flex-col md:flex-row items-center gap-2">
+                    <i class="fas fa-check text-2xl mr-2"></i>
                     <span class="font-bold uppercase">CONCURSO FINALIZADO!</span>
                     Este concurso fue finalizado por
                     {{ $user_who_finished }}
                     el día
-                    {{ Date::parse($tender->finished_at)->format('d-m-Y H:i') }}hs.
-
-                    Puedes ver más información haciendo
-                    <a href="{{ route('admin.tenderings.show-finished-tendering', $tender) }}"
-                        class="font-bold underline">click aquí</a>.
-
+                    {{ Date::parse($tender->finished_at)->format('d-m-Y H:i') }}hs. Puedes ver el detalle haciendo click en el siguiente botón:</span>
                 </div>
+                <a href="{{ route('admin.tenderings.show-finished-tendering', $tender) }}"
+                    class="font-bold uppercase">
+                    <x-jet-button>
+                        Ver resultados
+                    </x-jet-button>
+                </a>
             </div>
         @endif
 
@@ -73,7 +72,7 @@
                     </span>
                     <span
                         class="px-6 py-1 inline-flex text-xs uppercase leading-5 font-semibold rounded-full {{ $stats['finished'] ? 'bg-gray-100 text-gray-800' : 'bg-yellow-100 text-yellow-800' }}">
-                        {{ $stats['finished'] ? 'Finalizado' : 'En ejecución' }}
+                        {{ $stats['finished'] && !$stats['active'] ? 'Finalizado' : 'En ejecución' }}
                     </span>
                 </div>
             </div>

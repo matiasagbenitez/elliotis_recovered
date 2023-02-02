@@ -22,125 +22,129 @@
     </x-slot>
 
     @if ($offer->hash->cancelled)
-        <div
-            class="flex items-center p-4 mb-4 text-sm text-red-700 bg-red-100 rounded-lg dark:bg-red-200 dark:text-red-800 border-2 border-red-600">
-            <i class="fas fa-info-circle text-lg mr-2"></i>
-            <div>
-                <span class="font-bold uppercase">Atención!</span>
-                Esta oferta fue cancelada por el proveedor el día
-                {{ Date::parse($offer->hash->canceled_at)->format('d-m-Y') }}
-                a las
-                {{ Date::parse($offer->hash->canceled_at)->format('H:i') }}.
+        <div class="max-w-6xl mx-auto bg-red-100 flex justify-center items-center text-red-700 px-4 py-3 rounded relative gap-4 mb-5"
+            role="alert">
+            {{-- <div> --}}
+            <i class="fas fa-ban text-5xl"></i>
+            {{-- </div> --}}
+            <div class="flex flex-col">
+                <p class="font-bold font-mono uppercase">Atención!</p>
+                <p class="font-mono text-sm">
+                    Esta oferta fue cancelada por el proveedor el día
+                    {{ Date::parse($offer->hash->cancelled_at)->format('d-m-Y') }}
+                    a las
+                    {{ Date::parse($offer->hash->cancelled_at)->format('H:i') }}.
+                </p>
             </div>
         </div>
     @endif
 
     {{-- DETALLE DE HASHES --}}
-    <div class="px-6 py-3 bg-white rounded-lg shadow mt-4 font-mono uppercase">
-        <p class="font-bold uppercase text-center text-2xl my-1">Oferta de {{ $supplier->business_name }}</p>
+    <div class="max-w-6xl mx-auto px-10 pt-3 pb-8 bg-white rounded-lg shadow mt-4 font-mono">
+        <h1 class="font-bold uppercase text-center text-2xl my-4">Detalle oferta de {{ $supplier->business_name }}</h1>
+
+        <p class="font-bold text-xl">Detalle de la oferta</p>
         <hr class="mt-1 mb-2">
         <div class="grid grid-cols-2">
-            <div class="space-y-3">
-                <p class="text-sm font-bold my-1">Concurso visto por primera vez el:
+            <div class="space-y-2">
+                <p class="text-sm font-bold">
+                    Proveedor:
                     <span class="font-normal">
-                        @if ($hash->seen)
-                            {{ Date::parse($offer->hash->seen_at)->format('d-m-Y H:i') }} hs
-                        @else
-                            No visto
-                        @endif
+                        {{ $stats['supplier_name'] }}
                     </span>
                 </p>
-                <p class="text-sm font-bold my-1">Fecha de respuesta inicial:
+                <p class="text-sm font-bold">
+                    Fecha oferta vista:
                     <span class="font-normal">
-                        @if ($hash->answered)
-                            {{ Date::parse($offer->hash->answered_at)->format('d-m-Y H:i') }} hs
-                        @else
-                            No respondido
-                        @endif
+                        {{ $stats['offer_seen_at'] }}
                     </span>
                 </p>
-                <p class="text-sm font-bold my-1">Fecha última modificación:
+                <p class="text-sm font-bold">
+                    Fecha primera respuesta:
                     <span class="font-normal">
-                        @if ($hash->answered)
-                            {{ Date::parse($offer->updated_at)->format('d-m-Y H:i') }} hs
-                        @else
-                            No modificado
-                        @endif
+                        {{ $stats['offer_answered_at'] }}
                     </span>
                 </p>
-                <p class="text-sm font-bold my-1">Hash:
-                    <span class="font-normal">{{ $offer->hash->hash }}</span>
-                </p>
+                <p class="text-sm font-bold">
+                    Fecha última modificación:
+                    <span class="font-normal">
+                        {{ $stats['last_updated_at'] }}
+                    </span>
             </div>
         </div>
 
-        <p class="font-bold mt-5 mb-2">Detalle última oferta</p>
-        {{-- <hr class="mt-1 mb-2"> --}}
+        <p class="font-bold my-8 mb-2">Detalle productos</p>
 
         {{-- DETALLE DE OFERTA --}}
-        {{-- <x-responsive-table> --}}
+        <x-responsive-table>
             <table class="min-w-full divide-y border">
                 <thead>
                     <tr class="text-center text-gray-500 uppercase text-sm  font-mono font-thin">
                         <th scope="col" class="w-1/4 px-4 py-2">
-                            Producto
+                            Producto solicitado
                         </th>
                         <th scope="col" class="w-1/4 px-4 py-2">
-                            Cantidad
+                            Cantidad solicitada
                         </th>
                         <th scope="col" class="w-1/4 px-4 py-2">
-                            Precio unitario
+                            Producto ofertado
                         </th>
                         <th scope="col" class="w-1/4 px-4 py-2">
-                            Subtotal
+                            Cantidad ofertada
                         </th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200">
-                    @foreach ($offer->products as $product)
-                    <tr class="uppercase text-sm font-mono">
+                    @foreach ($products as $product)
+                        <tr class="uppercase text-sm font-mono">
                             <td class="px-6 py-2 text-center">
                                 <p class="text-sm uppercase">
-                                    {{ $product->name }}
+                                    {{ $product['name'] }}
                                 </p>
                             </td>
                             <td class="px-6 py-2 text-center">
                                 <p class="text-sm uppercase">
-                                    {{ $product->pivot->quantity }}
+                                    {{ $product['quantity_required'] }}
                                 </p>
                             </td>
                             <td class="px-6 py-2 text-center">
                                 <p class="text-sm uppercase">
-                                    ${{ number_format($product->pivot->price, 2, ',', '.') }}
+                                    {{ $product['is_offered'] }}
                                 </p>
                             </td>
                             <td class="px-6 py-2 text-center">
                                 <p class="text-sm uppercase">
-                                    ${{ number_format($product->pivot->subtotal, 2, ',', '.') }}
+                                    {{ $product['quantity_offered'] }}
                                 </p>
                             </td>
                         </tr>
                     @endforeach
                 </tbody>
             </table>
-        {{-- </x-responsive-table> --}}
-        <div class="mt-5 space-y-3">
+        </x-responsive-table>
+
+        <div class="mt-5 space-y-2">
             <div>
-                <p class="text-sm font-bold my-1">Subtotal =
-                    <span class="font-normal">${{ number_format($offer->subtotal, 2, ',', '.') }}</span>
+                <p class="text-sm font-bold my-1"> Peso estimado (TN) =
+                    <span class="font-normal">{{ $stats['tn_total'] }}</span>
                 </p>
             </div>
             <div>
-                <p class="text-sm font-bold my-1">IVA =
-                    <span class="font-normal">${{ number_format($offer->iva, 2, ',', '.') }}</span>
+                <p class="text-sm font-bold my-1">Peso TN (IVA incluido) =
+                    <span class="font-normal">{{ $stats['tn_price'] }}</span>
                 </p>
             </div>
             <div>
                 <p class="text-sm font-bold my-1">Total final =
-                    <span class="font-normal">${{ number_format($offer->total, 2, ',', '.') }}</span>
+                    <span class="font-normal">{{ $stats['total'] }}</span>
                 </p>
             </div>
         </div>
 
+        <p class="font-bold  mt-8 mb-2">Información adicional</p>
+        <hr class="mt-1 mb-2">
+        <span class="font-normal text-sm">
+            {{ $stats['observations'] }}
+        </span>
     </div>
 </div>

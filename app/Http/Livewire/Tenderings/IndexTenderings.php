@@ -16,6 +16,7 @@ class IndexTenderings extends Component
     use WithPagination;
 
     public $query, $direction = 'asc';
+    protected $listeners = ['disable' => 'disable'];
 
     public function updatedQuery()
     {
@@ -24,23 +25,26 @@ class IndexTenderings extends Component
 
     public function mount()
     {
-        $tenderings = Tendering::where('is_active', true)->get();
+        //
     }
 
     public function disable($id, $reason)
     {
         try {
             $tendering = Tendering::find($id);
-            $tendering->is_active = false;
-            $tendering->cancelled_by = auth()->user()->id;
-            $tendering->cancelled_at = now();
-            $tendering->cancel_reason = $reason;
+            $tendering->update([
+                'is_active' => false,
+                'is_finished' => true,
+                'is_cancelled' => true,
+                'cancelled_by' => auth()->user()->id,
+                'cancelled_at' => now(),
+                'cancel_reason' => $reason,
+            ]);
 
             $tendering->hashes()->update([
                 'is_active' => false,
             ]);
 
-            $tendering->save();
 
             $tendering->hashes()->each(function ($hash) {
                 Mail::to($hash->supplier->email)->send(new TenderingDeletedMailable($hash->supplier, $hash->tendering));
@@ -48,14 +52,13 @@ class IndexTenderings extends Component
 
             $this->emit('success', 'Concurso anulado correctamente.');
         } catch (\Exception $e) {
-            // $this->emit('error', 'Error al desactivar el concurso.');
-            $this->emit('error', $e);
+            $this->emit('error', 'Ha ocurrido un error al anular el concurso.');
         }
     }
 
     public function render()
     {
-        $tenderings = Tendering::where('is_active', true)->paginate(6);
+        $tenderings = Tendering::paginate(6);
 
         return view('livewire.tenderings.index-tenderings', compact('tenderings'));
     }
