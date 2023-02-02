@@ -25,65 +25,30 @@
         <p class="text-justify">
             Hola,
             <span class="font-bold">{{ $supplier->business_name }}! </span>
-            Gracias por participar del concurso.
+            Gracias por participar de la licitación. Te mostramos el detalle de tu última oferta:
         </p>
 
         <br>
 
-        <p class="text-justify text-sm mb-2">
-            Te mostramos el detalle de tu última oferta:
-        </p>
-
-        <x-responsive-table>
-            <table class="text-gray-600 min-w-full divide-y divide-gray-200 table-fixed">
-                <thead class="text-xs text-center text-gray-500 uppercase border-b border-gray-300 bg-gray-200">
-                    <tr class="text-center">
-                        <th scope="col" class="w-1/4 px-4 py-2">
-                            Producto
-                        </th>
-                        <th scope="col" class="w-1/4 px-4 py-2">
-                            Cantidad
-                        </th>
-                        <th scope="col" class="w-1/4 py-2 px-4">
-                            Precio unitario
-                        </th>
-                        <th scope="col" class="w-1/4 py-2 px-4">
-                            Subtotal
-                        </th>
-                    </tr>
-                </thead>
-                <tbody class="divide-y divide-gray-200">
-                    @foreach ($offer->products as $product)
-                        <tr class="bg-gray-50 text-center">
-                            <td class="px-6 py-2">
-                                <p class="text-xs uppercase">
-                                    {{ $product->name }}
-                                </p>
-                            </td>
-                            <td class="px-6 py-2">
-                                <p class="text-xs uppercase">
-                                    {{ $product->pivot->quantity }}
-                                </p>
-                            </td>
-                            <td class="px-6 py-2">
-                                <p class="text-xs uppercase">
-                                    ${{ number_format($product->pivot->price, 2, ',', '.') }}
-                                </p>
-                            </td>
-                            <td class="px-6 py-2">
-                                <p class="text-xs uppercase">
-                                    ${{ number_format($product->pivot->subtotal, 2, ',', '.') }}
-                                </p>
-                            </td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        </x-responsive-table>
+        <ul class="list-disc ml-10">
+            @foreach ($offer->products as $product)
+                <li>
+                    <p>
+                        x{{ $product->pivot->quantity }} unidades de
+                        <span class="font-bold">{{ $product->name }}</span>
+                    </p>
+                </li>
+            @endforeach
+        </ul>
 
         <br>
 
-        <div class="text-xs">
+        <div class="text-">
+            <p class="font-bold">Peso aproximado (TN) =
+                <span class="font-normal">
+                    {{ number_format($offer->tn_total, 2, ',', '.') }} TN
+                </span>
+            </p>
             <p class="font-bold">Subtotal =
                 <span class="font-normal">
                     ${{ number_format($offer->subtotal, 2, ',', '.') }}
