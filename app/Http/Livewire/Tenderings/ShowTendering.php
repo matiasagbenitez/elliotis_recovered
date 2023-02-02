@@ -2,11 +2,12 @@
 
 namespace App\Http\Livewire\Tenderings;
 
+use DateInterval;
 use App\Models\User;
 use Livewire\Component;
 use App\Models\Tendering;
-use DateInterval;
 use Illuminate\Support\Facades\Date;
+use App\Http\Services\TenderingService;
 
 class ShowTendering extends Component
 {
@@ -75,15 +76,24 @@ class ShowTendering extends Component
     public function finishTendering(Tendering $tendering)
     {
         try {
+
+            if ($tendering->hashes->where('answered', true)->count() == 0) {
+                $this->emit('error', 'No se puede finalizar la licitación. Si la licitación no tiene ninguna oferta recibida, debe anularla desde la sección anterior.');
+                return;
+            }
+
+            TenderingService::init($tendering);
+
             $tendering->update([
                 'is_finished' => true,
                 'finished_at' => now(),
                 'finished_by' => auth()->user()->id,
             ]);
             $tendering->hashes()->update(['is_active' => false]);
+
             return redirect()->route('admin.tenderings.show-finished-tendering', $tendering);
         } catch (\Throwable $th) {
-            dd($th);
+            $this->emit('error', 'Ha ocurrido un error al finalizar la licitación.');
         }
     }
 

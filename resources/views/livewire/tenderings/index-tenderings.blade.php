@@ -5,7 +5,7 @@
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">Licitaciones</h2>
             <a href="{{ route('admin.tenderings.create') }}">
                 <x-jet-secondary-button>
-                    Registrar nueva compra
+                    Generar nueva licitación
                 </x-jet-secondary-button>
             </a>
         </div>
@@ -22,7 +22,7 @@
                 </span>
             </div>
 
-            <div class="col-span-3">
+            {{-- <div class="col-span-3">
                 <div class="flex flex-col gap-2">
                     <x-jet-label value="Filtros" />
                     <select wire:model="query" class="input-control">
@@ -41,7 +41,7 @@
                         <option value="desc">Descendente</option>
                     </select>
                 </div>
-            </div>
+            </div> --}}
         </div>
 
 
@@ -55,19 +55,22 @@
                             <th>
                                 ID
                             </th>
-                            <th scope="col" class="w-1/5 py-3">
+                            <th scope="col" class="w-1/6 py-3">
                                 Fecha inicio
                             </th>
-                            <th scope="col" class="w-1/5 py-3">
+                            <th scope="col" class="w-1/6 py-3">
                                 Fecha final
                             </th>
-                            <th scope="col" class="w-1/5 py-3">
+                            <th scope="col" class="w-1/6 py-3">
                                 Total en licitación
                             </th>
-                            <th scope="col" class="w-1/5 py-3">
+                            <th scope="col" class="w-1/6 py-3">
+                                Ofertas
+                            </th>
+                            <th scope="col" class="w-1/6 py-3">
                                 Estado
                             </th>
-                            <th scope="col" class="w-1/5 py-3">
+                            <th scope="col" class="w-1/6 py-3">
                                 Situación
                             </th>
                             <th scope="col">
@@ -96,6 +99,11 @@
                                 <td class="px-6 py-3">
                                     <p class="text-sm text-center">
                                         {{ $tender->products->sum('pivot.quantity') }} unidades
+                                    </p>
+                                </td>
+                                <td class="px-6 py-3">
+                                    <p class="text-sm text-center">
+                                        {{ $tender->hashes->where('answered', true)->count() }} ofertas
                                     </p>
                                 </td>
                                 <td class="px-6 py-3 text-center">

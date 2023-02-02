@@ -3,7 +3,7 @@
         <div class="flex items-center justify-between">
 
             {{-- GO BACK BUTTON --}}
-            <a href="{{ route('admin.tenderings.show-detail', $tender->id) }}">
+            <a href="{{ route('admin.tenderings.show-detail', $tendering->id) }}">
                 <x-jet-button>
                     <i class="fas fa-arrow-left mr-2"></i>
                     Volver
@@ -12,8 +12,7 @@
 
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                 Detalle de
-                <span class="font-bold">Concurso #{{ $tender->id }}</span>
-                finalizado
+                <span class="font-bold">LICITACIÓN #{{ $tendering->id }}</span>
             </h2>
 
             {{-- PDF BUTTON --}}
@@ -26,15 +25,14 @@
         </div>
     </x-slot>
 
+    {{-- MEJOR OFERTA --}}
     @if ($bestOffer)
-        <div class="px-10 py-6 bg-white rounded-lg shadow mb-8">
-
+        <div class="px-6 py-6 bg-white rounded-lg shadow mb-6">
             <span class="font-bold text-gray-700 text-lg">
                 <i class="fas fa-star text-yellow-400 text-lg mr-2"></i>
                 Oferta ganadora
             </span>
             <hr class="my-2">
-
             <div class="md:grid md:grid-cols-2">
                 <div class="space-y-1">
                     <p class="font-bold">
@@ -58,152 +56,192 @@
                 </div>
 
                 <div class="flex items-end justify-end gap-2">
-                    <a href="{{ route('admin.tenderings.show-offer-detail', ['tendering' => $bestOfferStats['tendering_id'], 'hash' => $bestOfferStats['hash']]) }}">
-                        <x-jet-secondary-button class="mt-4" wire:click="showBestOffer">
+                    <a
+                        href="{{ route('admin.tenderings.show-offer-detail', ['tendering' => $bestOfferStats['tendering_id'], 'hash' => $bestOfferStats['hash']]) }}">
+                        <x-jet-secondary-button class="mt-4">
                             Ver oferta
                         </x-jet-secondary-button>
                     </a>
-                    <x-jet-button class="mt-4" wire:click="showBestOffer">
-                        Generar orden de compra
-                    </x-jet-button>
+                    @if (!$bestOfferHasOrderAssociated)
+                        <x-jet-button class="mt-4" wire:click="showBestOffer"
+                            wire:click="$emit('createOrder', '{{ $bestOfferStats['offer_id'] }}')">
+                            Generar orden de compra
+                        </x-jet-button>
+                    @endif
                 </div>
             </div>
 
         </div>
     @endif
 
-    <div class="px-10 py-8 bg-white rounded-lg shadow">
 
-        {{-- ESTADÍSTICAS --}}
-        <div class="grid grid-cols-4 gap-4">
+    <x-responsive-table>
 
-            {{-- Solicitudes enviadas --}}
-            <div class="bg-slate-200 rounded-lg p-6 hover:cursor-pointer" wire:click="filter('requested')">
-                <p class="text-center text-xl">
-                    {{-- {{ $requestedSuppliers }} --}}
-                </p>
-                <p class="text-center uppercase font-bold">Solicitudes enviadas</p>
-                <p class="text-center text-xl mt-2 uppercase">
-                    <i class="fas fa-business-time"></i>
-                </p>
-            </div>
-
-            {{-- Solicitudes vistas --}}
-            <div class="bg-slate-300 rounded-lg p-6 hover:cursor-pointer" wire:click="filter('seen')">
-                <p class="text-center text-xl">
-                    {{-- {{ $seenRequests }} --}}
-                </p>
-                <p class="text-center uppercase font-bold">Solicitudes vistas</p>
-                <p class="text-center text-xl mt-2 uppercase">
-                    <i class="fas fa-eye"></i>
-                </p>
-            </div>
-
-            {{-- Ofertas enviadas --}}
-            <div class="bg-slate-300 rounded-lg p-6 hover:cursor-pointer" wire:click="filter('answered')">
-                <p class="text-center text-xl">
-                    {{-- {{ $answeredRequests }} --}}
-                </p>
-                <p class="text-center uppercase font-bold">Ofertas válidas</p>
-                <p class="text-center text-xl mt-2 uppercase">
-                    <i class="fas fa-check-circle"></i>
-                </p>
-            </div>
-
-            {{-- Ofertas canceladas --}}
-            <div class="bg-slate-400 rounded-lg p-6 hover:cursor-pointer" wire:click="filter('cancelled')">
-                <p class="text-center text-xl">
-                    {{-- {{ $cancelledOffers }} --}}
-                </p>
-                <p class="text-center uppercase font-bold">Ofertas canceladas</p>
-                <p class="text-center text-xl mt-2 uppercase">
-                    <i class="fas fa-ban"></i>
-                </p>
-            </div>
-
+        <div class="bg-gray-200 px-6 py-3">
+            <p class="font-bold text-gray-700 text-lg ">
+                <i class="fas fa-info-circle text-gray-700 text-lg mr-2"></i>
+                Detalle de ofertas recibidas
+            </p>
         </div>
-    </div>
-
-    <div class="px-6 py-6 mt-6 bg-white rounded-lg shadow">
-
-        {{-- ESTADÍSTICAS --}}
-        <div class="grid grid-cols-5 gap-4 text-sm ">
-
-            {{-- Todas las oferas --}}
-            <div class="bg-slate-200 rounded-lg p-6 hover:cursor-pointer flex flex-col justify-center"
-                wire:click="filterOffers('all')">
-                <p class="text-center text-xl mb-5">
-                    {{-- {{ $totalOffers }} --}}
-                </p>
-                <p class="text-center uppercase font-bold">Todas las ofertas recibidas</p>
+        {{-- TABLA --}}
+        @if ($allOffersStats)
+            <table class="text-gray-600 min-w-full divide-y divide-gray-200 table-fixed">
+                <thead class="text-sm text-center text-gray-500 uppercase border-b border-gray-300 bg-gray-50">
+                    <tr class="px-4 py-2">
+                        <th scope="col" class="py-3 px-3">
+                            ID
+                        </th>
+                        <th scope="col" class="w-1/4 py-3 px-3">
+                            Proveedor
+                        </th>
+                        <th scope="col" class="py-3 px-3">
+                            Fecha respuesta
+                        </th>
+                        <th scope="col" class="py-3 px-3">
+                            Total TN
+                        </th>
+                        <th scope="col" class="py-3 px-3">
+                            Total oferta
+                        </th>
+                        <th scope="col" class="w-1/4 py-3 px-3">
+                            Características
+                        </th>
+                        <th scope="col" class="py-3 px-3">
+                            Acción
+                        </th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200">
+                    @foreach ($allOffersStats as $stats)
+                        <tr class="bg-gray-50">
+                            <td class="px-6 py-3">
+                                <p class="text-sm uppercase text-center">
+                                    {{ $stats['offer_id'] }}
+                                </p>
+                            </td>
+                            <td class="px-6 py-3">
+                                <p class="text-sm uppercase whitespace-nowrap text-center">
+                                    {{ $stats['supplier'] }}
+                                </p>
+                            </td>
+                            <td class="px-6 py-3">
+                                <p class="text-sm uppercase text-center">
+                                    {{ $stats['answered_at'] }}
+                                </p>
+                            </td>
+                            <td class="px-6 py-3">
+                                <p class="text-sm uppercase text-center">
+                                    {{ $stats['total_tn'] }}
+                                </p>
+                            </td>
+                            <td class="px-6 py-3">
+                                <p class="text-sm uppercase text-center">
+                                    {{ $stats['total'] }}
+                                </p>
+                            </td>
+                            <td class="px-6 py-3">
+                                <p class="text-sm uppercase whitespace-nowrap">
+                                    {{ $stats['products_quantities'] }}
+                                </p>
+                            </td>
+                            <td class="px-6 py-3">
+                                <div class="flex items-center justify-center gap-2">
+                                    <a
+                                        href="{{ route('admin.tenderings.show-offer-detail', ['tendering' => $tendering->id, 'hash' => $stats['hash']]) }}">
+                                        <x-jet-secondary-button title="Ver detalle">
+                                            <i class="fas fa-list"></i>
+                                        </x-jet-secondary-button>
+                                    </a>
+                                    <x-jet-button title="Generar orden de compra" wire:click="$emit('createOrder', '{{ $stats['offer_id'] }}')">
+                                        <i class="fas fa-sticky-note"></i>
+                                        {{-- Ticket icon --}}
+                                    </x-jet-button>
+                                </div>
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        @else
+            <div class="px-6 py-4">
+                <p class="text-center font-semibold">No se encontraron registros coincidentes.</p>
             </div>
+        @endif
 
-            {{-- Solicitudes enviadas --}}
-            <div class="bg-slate-300 rounded-lg p-6 hover:cursor-pointer flex flex-col justify-center"
-                wire:click="filterOffers('productsOkQuantitiesOk')">
-                <p class="text-center text-xl mb-5">
-                    {{-- {{ $productsOkQuantitiesOk }} --}}
-                </p>
-                <p class="text-center uppercase font-bold">
-                    Productos
-                    <i class="fas fa-check ml-1"></i>
-                </p>
-                <p class="text-center uppercase font-bold">
-                    Cantidades
-                    <i class="fas fa-check ml-1"></i>
-                </p>
-            </div>
-
-            {{-- Solicitudes vistas --}}
-            <div class="bg-slate-400 rounded-lg p-6 hover:cursor-pointer flex flex-col justify-center"
-                wire:click="filterOffers('productsOkQuantitiesNo')">
-                <p class="text-center text-xl mb-5">
-                    {{-- {{ $productsOkQuantitiesNo }} --}}
-                </p>
-                <p class="text-center uppercase font-bold">
-                    Productos
-                    <i class="fas fa-check ml-1"></i>
-                </p>
-                <p class="text-center uppercase font-bold">
-                    Cantidades
-                    <i class="fas fa-times ml-1"></i>
-                </p>
-            </div>
-
-            {{-- Ofertas enviadas --}}
-            <div class="bg-slate-500 rounded-lg p-6 hover:cursor-pointer flex flex-col justify-center"
-                wire:click="filterOffers('productsNoQuantitiesOk')">
-                <p class="text-center text-xl mb-5">
-                    {{-- {{ $productsNoQuantitiesOk }} --}}
-                </p>
-                <p class="text-center uppercase font-bold">
-                    Productos
-                    <i class="fas fa-times ml-1"></i>
-                </p>
-                <p class="text-center uppercase font-bold">
-                    Cantidades
-                    <i class="fas fa-check ml-1"></i>
-                </p>
-            </div>
-
-            {{-- Ofertas canceladas --}}
-            <div class="bg-slate-600 rounded-lg p-6 hover:cursor-pointer flex flex-col justify-center"
-                wire:click="filterOffers('productsNoQuantitiesNo')">
-                <p class="text-center text-xl mb-5">
-                    {{-- {{ $productsNoQuantitiesNo }} --}}
-                </p>
-                <p class="text-center uppercase font-bold">
-                    Productos
-                    <i class="fas fa-times ml-1"></i>
-                </p>
-                <p class="text-center uppercase font-bold">
-                    Cantidades
-                    <i class="fas fa-times ml-1"></i>
-                </p>
-            </div>
-
-        </div>
-    </div>
-
+    </x-responsive-table>
 
 </div>
+
+@push('script')
+    <script>
+        Livewire.on('createOrder', offerId => {
+            Swal.fire({
+                title: '¿Estás seguro?',
+                text: "Estás a punto de crear una orden de compra para este proveedor. ¡No podrás revertir esta acción!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#1f2937',
+                cancelButtonColor: '#dc2626',
+                confirmButtonText: 'Sí, crear orden',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+
+                    Livewire.emitTo('tenderings.show-finished-tendering', 'createPurchaseOrder', offerId);
+
+                    Livewire.on('success', message => {
+                        const Toast = Swal.mixin({
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 3000,
+                            timerProgressBar: true,
+                        });
+                        Toast.fire({
+                            icon: 'success',
+                            title: message
+                        });
+                    });
+
+                    Livewire.on('error', message => {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: message,
+                            showConfirmButton: true,
+                            confirmButtonColor: '#1f2937',
+                        });
+                    });
+                }
+            })
+        });
+    </script>
+
+    <script>
+        Livewire.on('success', message => {
+            const Toast = Swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+            });
+            Toast.fire({
+                icon: 'success',
+                title: message
+            });
+        });
+    </script>
+
+    <script>
+        Livewire.on('error', message => {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: message,
+                showConfirmButton: true,
+                confirmButtonColor: '#1f2937',
+            });
+        });
+    </script>
+@endpush

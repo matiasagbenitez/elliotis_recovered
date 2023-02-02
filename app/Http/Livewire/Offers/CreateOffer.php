@@ -52,7 +52,9 @@ class CreateOffer extends Component
         $end_date = Date::parse($this->tender->end_date);
         $end_date->addDays(rand(1, 2))->setTime(rand(7, 18), 30);
 
-        $this->createForm['tn_total'] = rand(20, 40);
+        $total_quantity = $this->tender->products->sum('pivot.quantity');
+
+        $this->createForm['tn_total'] = number_format($total_quantity * 0.55, 2, '.', '');
         $this->createForm['tn_price'] = rand(2500, 3000);
         $this->createForm['delivery_date'] = date('Y-m-d\TH:i', strtotime($end_date));
         $this->createForm['observations'] = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.';

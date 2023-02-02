@@ -17,6 +17,8 @@ return new class extends Migration
             $table->unsignedBigInteger('offer_id');
             $table->foreign('offer_id')->references('id')->on('offers');
 
+            $table->boolean('has_purchase_order')->default(false);
+
             $table->timestamps();
         });
     }

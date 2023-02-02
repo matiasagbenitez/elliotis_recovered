@@ -35,8 +35,8 @@
             </div>
         @endif
 
-        @if ($tender->is_finished)
-            <div class="flex flex-col md:flex-row md:justify-between p-4 mb-4 bg-white rounded-lg text-gray-600">
+        @if ($tender->is_finished && !$tender->is_cancelled)
+            <div class="flex flex-col md:flex-row md:justify-between p-4 mb-4 bg-slate-200 rounded-lg text-gray-600">
                 <div class="font-semibold flex flex-col md:flex-row items-center gap-2">
                     <i class="fas fa-check text-2xl mr-2"></i>
                     <span class="font-bold uppercase">CONCURSO FINALIZADO!</span>
@@ -235,6 +235,16 @@
                     Livewire.emitTo('tenderings.show-tendering', 'finishTendering', tenderId);
                 }
             })
+        });
+
+        Livewire.on('error', message => {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: message,
+                showConfirmButton: true,
+                confirmButtonColor: '#1f2937',
+            });
         });
     </script>
 @endpush

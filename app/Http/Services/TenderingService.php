@@ -54,17 +54,17 @@ class TenderingService
 
     public static function classifyOffers($offers)
     {
-        foreach ($offers as $offer) {
-            if ($offer->products_ok && $offer->quantities_ok) {
-                self::$productsOK_quantitiesOK[] = $offer;
-            } elseif ($offer->products_ok && !$offer->quantities_ok) {
-                self::$productsOK_quantitiesNOTOK[] = $offer;
-            } elseif (!$offer->products_ok && $offer->quantities_ok) {
-                self::$productsNOTOK_quantitiesOK[] = $offer;
-            } elseif (!$offer->products_ok && !$offer->quantities_ok) {
-                self::$productsNOTOK_quantitiesNOTOK[] = $offer;
-            }
-        }
+        // foreach ($offers as $offer) {
+        //     if ($offer->products_ok && $offer->quantities_ok) {
+        //         self::$productsOK_quantitiesOK[] = $offer;
+        //     } elseif ($offer->products_ok && !$offer->quantities_ok) {
+        //         self::$productsOK_quantitiesNOTOK[] = $offer;
+        //     } elseif (!$offer->products_ok && $offer->quantities_ok) {
+        //         self::$productsNOTOK_quantitiesOK[] = $offer;
+        //     } elseif (!$offer->products_ok && !$offer->quantities_ok) {
+        //         self::$productsNOTOK_quantitiesNOTOK[] = $offer;
+        //     }
+        // }
 
         self::$bestOffer = self::chooseBestOffer($offers);
 
