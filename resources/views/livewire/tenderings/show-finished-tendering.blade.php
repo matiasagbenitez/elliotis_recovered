@@ -26,22 +26,53 @@
         </div>
     </x-slot>
 
+    @if ($bestOffer)
+        <div class="px-10 py-6 bg-white rounded-lg shadow mb-8">
 
-    <div class="px-6 py-6 mb-6 bg-white rounded-lg shadow">
-        @livewire('ranking.prueba-ranking', ['tendering' => $tender])
-    </div>
+            <span class="font-bold text-gray-700 text-lg">
+                <i class="fas fa-star text-yellow-400 text-lg mr-2"></i>
+                Oferta ganadora
+            </span>
+            <hr class="my-2">
 
-    {{-- @if (!$hasBestOffer)
-        <div class="px-6 py-6 mb-6 bg-white rounded-lg shadow">
-            @livewire('ranking.prueba-ranking', ['tendering' => $tender])
+            <div class="md:grid md:grid-cols-2">
+                <div class="space-y-1">
+                    <p class="font-bold">
+                        Proveedor:
+                        <span class="uppercase font-normal">{{ $bestOfferStats['supplier'] }}</span>
+                    </p>
+                    <p class="font-bold">
+                        {{ $bestOfferStats['products_quantities'] }}
+                    </p>
+                    <p class="font-bold">
+                        {{ $bestOfferStats['summary'] }}
+                    </p>
+                    <p class="font-bold">
+                        Importe total estimado:
+                        <span class="uppercase font-normal">${{ $bestOfferStats['total'] }}</span>
+                    </p>
+                    <p class="font-bold">
+                        Fecha de entrega:
+                        <span class="uppercase font-normal">{{ $bestOfferStats['delivery_date'] }}</span>
+                    </p>
+                </div>
+
+                <div class="flex items-end justify-end gap-2">
+                    <a href="{{ route('admin.tenderings.show-offer-detail', ['tendering' => $bestOfferStats['tendering_id'], 'hash' => $bestOfferStats['hash']]) }}">
+                        <x-jet-secondary-button class="mt-4" wire:click="showBestOffer">
+                            Ver oferta
+                        </x-jet-secondary-button>
+                    </a>
+                    <x-jet-button class="mt-4" wire:click="showBestOffer">
+                        Generar orden de compra
+                    </x-jet-button>
+                </div>
+            </div>
+
         </div>
-    @else
-        <div class="px-6 py-6 mb-6 bg-white rounded-lg shadow">
-            tiene mejor oferta
-        </div>
-    @endif --}}
+    @endif
 
-    <div class="px-6 py-6 bg-white rounded-lg shadow">
+    <div class="px-10 py-8 bg-white rounded-lg shadow">
 
         {{-- ESTADÍSTICAS --}}
         <div class="grid grid-cols-4 gap-4">
@@ -49,7 +80,7 @@
             {{-- Solicitudes enviadas --}}
             <div class="bg-slate-200 rounded-lg p-6 hover:cursor-pointer" wire:click="filter('requested')">
                 <p class="text-center text-xl">
-                    {{ $requestedSuppliers }}
+                    {{-- {{ $requestedSuppliers }} --}}
                 </p>
                 <p class="text-center uppercase font-bold">Solicitudes enviadas</p>
                 <p class="text-center text-xl mt-2 uppercase">
@@ -60,7 +91,7 @@
             {{-- Solicitudes vistas --}}
             <div class="bg-slate-300 rounded-lg p-6 hover:cursor-pointer" wire:click="filter('seen')">
                 <p class="text-center text-xl">
-                    {{ $seenRequests }}
+                    {{-- {{ $seenRequests }} --}}
                 </p>
                 <p class="text-center uppercase font-bold">Solicitudes vistas</p>
                 <p class="text-center text-xl mt-2 uppercase">
@@ -71,7 +102,7 @@
             {{-- Ofertas enviadas --}}
             <div class="bg-slate-300 rounded-lg p-6 hover:cursor-pointer" wire:click="filter('answered')">
                 <p class="text-center text-xl">
-                    {{ $answeredRequests }}
+                    {{-- {{ $answeredRequests }} --}}
                 </p>
                 <p class="text-center uppercase font-bold">Ofertas válidas</p>
                 <p class="text-center text-xl mt-2 uppercase">
@@ -82,7 +113,7 @@
             {{-- Ofertas canceladas --}}
             <div class="bg-slate-400 rounded-lg p-6 hover:cursor-pointer" wire:click="filter('cancelled')">
                 <p class="text-center text-xl">
-                    {{ $cancelledOffers }}
+                    {{-- {{ $cancelledOffers }} --}}
                 </p>
                 <p class="text-center uppercase font-bold">Ofertas canceladas</p>
                 <p class="text-center text-xl mt-2 uppercase">
@@ -91,19 +122,6 @@
             </div>
 
         </div>
-    </div>
-
-    {{-- DETALLES DE PROVEEDORES --}}
-    <div class="px-6 py-6 bg-white rounded-lg shadow mt-6">
-        <span class="font-bold">{{ $title }}</span>
-        <hr class="my-1">
-        <ul class="list-disc list-inside ml-4">
-            @foreach ($suppliers as $supplier)
-                <li class="text-sm">
-                    {{ $supplier['business_name'] }}
-                </li>
-            @endforeach
-        </ul>
     </div>
 
     <div class="px-6 py-6 mt-6 bg-white rounded-lg shadow">
@@ -115,7 +133,7 @@
             <div class="bg-slate-200 rounded-lg p-6 hover:cursor-pointer flex flex-col justify-center"
                 wire:click="filterOffers('all')">
                 <p class="text-center text-xl mb-5">
-                    {{ $totalOffers }}
+                    {{-- {{ $totalOffers }} --}}
                 </p>
                 <p class="text-center uppercase font-bold">Todas las ofertas recibidas</p>
             </div>
@@ -124,7 +142,7 @@
             <div class="bg-slate-300 rounded-lg p-6 hover:cursor-pointer flex flex-col justify-center"
                 wire:click="filterOffers('productsOkQuantitiesOk')">
                 <p class="text-center text-xl mb-5">
-                    {{ $productsOkQuantitiesOk }}
+                    {{-- {{ $productsOkQuantitiesOk }} --}}
                 </p>
                 <p class="text-center uppercase font-bold">
                     Productos
@@ -140,7 +158,7 @@
             <div class="bg-slate-400 rounded-lg p-6 hover:cursor-pointer flex flex-col justify-center"
                 wire:click="filterOffers('productsOkQuantitiesNo')">
                 <p class="text-center text-xl mb-5">
-                    {{ $productsOkQuantitiesNo }}
+                    {{-- {{ $productsOkQuantitiesNo }} --}}
                 </p>
                 <p class="text-center uppercase font-bold">
                     Productos
@@ -156,7 +174,7 @@
             <div class="bg-slate-500 rounded-lg p-6 hover:cursor-pointer flex flex-col justify-center"
                 wire:click="filterOffers('productsNoQuantitiesOk')">
                 <p class="text-center text-xl mb-5">
-                    {{ $productsNoQuantitiesOk }}
+                    {{-- {{ $productsNoQuantitiesOk }} --}}
                 </p>
                 <p class="text-center uppercase font-bold">
                     Productos
@@ -172,7 +190,7 @@
             <div class="bg-slate-600 rounded-lg p-6 hover:cursor-pointer flex flex-col justify-center"
                 wire:click="filterOffers('productsNoQuantitiesNo')">
                 <p class="text-center text-xl mb-5">
-                    {{ $productsNoQuantitiesNo }}
+                    {{-- {{ $productsNoQuantitiesNo }} --}}
                 </p>
                 <p class="text-center uppercase font-bold">
                     Productos
@@ -187,109 +205,5 @@
         </div>
     </div>
 
-    {{-- DETALLES DE PROVEEDORES --}}
-    <div class="px-6 py-6 bg-white rounded-lg shadow mt-6">
-        <span class="font-bold">{{ $offerTitle }}</span>
-        <hr class="my-1">
-        @if ($offersList->count())
-            @foreach ($offersList as $offer)
-                <div class="p-4 my-4 rounded-lg shadow border border-gray-200">
-                    <p class="font-bold">
-                        Oferta #{{ $offer->id }}
-                    </p>
-                    <div class="flex justify-between mb-3">
-                        <p>
-                            <span class="font-bold">Proveedor: </span>
-                            {{ $offer->hash->supplier->business_name }}
-                        </p>
-                        <p>
-                            <span class="font-bold">Hash: </span>
-                            @php
-                                $hash = $offer->hash->hash;
-                                $tendering = $offer->hash->tendering->id;
-                            @endphp
-                            <a href="{{ route('admin.tenderings.show-offer-detail', ['tendering' => $offer->hash->tendering->id, 'hash' => $offer->hash]) }}"
-                                class="hover:text-blue-500 hover:underline">
 
-                                {{ $offer->hash->hash }}
-                            </a>
-                        </p>
-                    </div>
-                    <x-responsive-table>
-                        <table class="text-gray-600 min-w-full divide-y divide-gray-200 table-fixed">
-                            <thead
-                                class="text-xs text-center text-gray-500 uppercase border-b border-gray-300 bg-gray-200">
-                                <tr class="text-center">
-                                    <th scope="col" class="w-1/4 px-4 py-2">
-                                        Producto
-                                    </th>
-                                    <th scope="col" class="w-1/4 px-4 py-2">
-                                        Cantidad
-                                    </th>
-                                    <th scope="col" class="w-1/4 py-2 px-4">
-                                        Precio unitario
-                                    </th>
-                                    <th scope="col" class="w-1/4 py-2 px-4">
-                                        Subtotal
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody class="divide-y divide-gray-200">
-                                @foreach ($offer->products as $product)
-                                    <tr class="bg-gray-50 text-center">
-                                        <td class="px-6 py-2">
-                                            <p class="text-xs uppercase">
-                                                {{ $product->name }}
-                                            </p>
-                                        </td>
-                                        <td class="px-6 py-2">
-                                            <p class="text-xs uppercase">
-                                                {{ $product->pivot->quantity }}
-                                            </p>
-                                        </td>
-                                        <td class="px-6 py-2">
-                                            <p class="text-xs uppercase">
-                                                ${{ number_format($product->pivot->price, 2, ',', '.') }}
-                                            </p>
-                                        </td>
-                                        <td class="px-6 py-2">
-                                            <p class="text-xs uppercase">
-                                                ${{ number_format($product->pivot->subtotal, 2, ',', '.') }}
-                                            </p>
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </x-responsive-table>
-
-                    <br>
-
-                    <div class="text-xs">
-                        <p class="font-bold">Subtotal =
-                            <span class="font-normal">
-                                ${{ number_format($offer->subtotal, 2, ',', '.') }}
-                            </span>
-                        </p>
-                        <p class="font-bold">IVA =
-                            <span class="font-normal">
-                                ${{ number_format($offer->iva, 2, ',', '.') }}
-                            </span>
-                        </p>
-                        <p class="font-bold">Total =
-                            <span class="font-normal">
-                                ${{ number_format($offer->total, 2, ',', '.') }}
-                            </span>
-                        </p>
-                    </div>
-                </div>
-            @endforeach
-        @else
-            <div class="mt-5">
-                <p class="text-center text-lg">
-                    Ninguna oferta coincide con los criterios de búsqueda.
-                </p>
-            </div>
-        @endif
-    </div>
 </div>
