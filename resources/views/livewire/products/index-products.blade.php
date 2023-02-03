@@ -14,7 +14,7 @@
     <x-responsive-table>
 
         {{-- Buscador --}}
-        <div class="px-6 py-4 flex gap-2 bg-white">
+        <div class="px-6 py-4 flex gap-2 bg-gray-200">
             <x-jet-input type="text" wire:model="search" class="w-full" placeholder="Filtre su búsqueda aquí..." />
             <x-jet-button wire:click="toggleFiltersDiv">
                 <span class="text-xs mr-1">Filtros</span>
@@ -101,6 +101,10 @@
                             class="w-1/6 px-4 py-2 text-center text-sm font-bold text-gray-500 uppercase tracking-wider">
                             M2
                         </th>
+                        <th scope="col"
+                            class="w-1/6 px-4 py-2 text-center text-sm font-bold text-gray-500 uppercase tracking-wider">
+                            Acción
+                        </th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200">
@@ -145,11 +149,20 @@
                             <td class="px-6 py-3 whitespace-nowrap">
                                 <p class="text-sm text-center">
                                     @if ($product->productType->measure->is_trunk)
-                                        N/A
+                                    N/A
                                     @else
-                                        {{ $product->productType->unity->unities * ($product->real_stock * $product->productType->measure->m2) }} m²
+                                    {{ $product->productType->unity->unities * ($product->real_stock * $product->productType->measure->m2) }} m²
                                     @endif
                                 </p>
+                            </td>
+                            <td class="px-6 py-3 whitespace-nowrap">
+                                <div class="flex items-center justify-center">
+                                   <a href="{{ route('admin.products.show', $product) }}">
+                                    <x-jet-button>
+                                        <i class="fas fa-cogs"></i>
+                                    </x-jet-button>
+                                   </a>
+                                </div>
                             </td>
                         </tr>
                     @endforeach

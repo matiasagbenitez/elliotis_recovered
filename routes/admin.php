@@ -20,6 +20,7 @@ use App\Http\Livewire\Tasks\RegisterTask;
 use App\Http\Livewire\Clients\CreateClient;
 use App\Http\Livewire\Clients\IndexClients;
 use App\Http\Livewire\Lots\SublotsProducts;
+use App\Http\Livewire\Products\ShowProduct;
 use App\Http\Livewire\Unities\IndexUnities;
 use App\Http\Livewire\Ranking\PruebaRanking;
 use App\Http\Livewire\IvaTypes\IndexIvaTypes;
@@ -88,6 +89,7 @@ Route::get('/product-types', IndexProductTypes::class)->name('admin.product-type
 
 Route::get('/products', IndexProducts::class)->name('admin.products.index');
 Route::get('/products/create', CreateProduct::class)->name('admin.products.create');
+Route::get('/products/{product}/show', ShowProduct::class)->name('admin.products.show');
 Route::get('/add-products', AddProductsComponent::class)->name('admin.add-products.index');
 
 Route::get('/areas', IndexAreas::class)->name('admin.areas.index');
