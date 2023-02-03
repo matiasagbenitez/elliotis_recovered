@@ -40,6 +40,9 @@ return new class extends Migration
             $table->unsignedBigInteger('iva_type_id');
             $table->foreign('iva_type_id')->references('id')->on('iva_types');
 
+            // Composite key for product_type_id, phase_id, wood_type_id
+            $table->unique(['product_type_id', 'phase_id', 'wood_type_id']);
+
             $table->timestamps();
         });
     }

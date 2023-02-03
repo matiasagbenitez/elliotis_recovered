@@ -20,6 +20,7 @@ class EditMeasure extends Component
         'height' => '',
         'width' => '',
         'length' => '',
+        'm2' => '',
     ];
 
     protected $validationAttributes = [
@@ -76,6 +77,12 @@ class EditMeasure extends Component
 
             $this->editForm['name'] = $heightName . '"  x  ' . $widthName . '"  x  ' . $lengthName . '\'';
 
+            if ($this->editForm['height'] != '' && $this->editForm['width'] != '' && $this->editForm['length'] != '') {
+                $width_cm = Inch::where('id', $this->editForm['width'])->first()->centimeter;
+                $length_cm = Feet::where('id', $this->editForm['length'])->first()->centimeter;
+                $m2 = ($width_cm * $length_cm) / 10000;
+            }
+
             $this->validate([
                 'editForm.name' => 'required|unique:measures,name,' . $this->measure->id,
                 'editForm.height' => 'required|numeric',
@@ -89,6 +96,7 @@ class EditMeasure extends Component
                 'width' => $this->editForm['width'],
                 'length' => $this->editForm['length'],
                 'favorite' => $this->isFav,
+                'm2' => $m2 ?? null,
             ]);
 
             $this->reset('editForm');

@@ -3,7 +3,11 @@
     <x-slot name="header">
         <div class="flex items-center justify-between">
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">Productos</h2>
-            {{-- @livewire('products.create-product') --}}
+            <a href="{{ route('admin.products.create') }}">
+                <x-jet-secondary-button>
+                    Crear nuevo producto
+                </x-jet-secondary-button>
+            </a>
         </div>
     </x-slot>
 

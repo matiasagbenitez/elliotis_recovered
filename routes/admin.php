@@ -24,6 +24,7 @@ use App\Http\Livewire\Unities\IndexUnities;
 use App\Http\Livewire\Ranking\PruebaRanking;
 use App\Http\Livewire\IvaTypes\IndexIvaTypes;
 use App\Http\Livewire\Measures\IndexMeasures;
+use App\Http\Livewire\Products\CreateProduct;
 use App\Http\Livewire\Products\IndexProducts;
 use App\Http\Livewire\Purchases\ShowPurchase;
 use App\Http\Livewire\Suppliers\EditSupplier;
@@ -45,11 +46,13 @@ use App\Http\Livewire\Tenderings\CreateTendering;
 use App\Http\Livewire\Tenderings\IndexTenderings;
 use App\Http\Livewire\Products\AddProductsComponent;
 use App\Http\Livewire\Tenderings\ShowOfferTendering;
+use App\Http\Livewire\M2Calculator\M2CalculatorIndex;
 use App\Http\Livewire\ProductNames\IndexProductNames;
 use App\Http\Livewire\ProductTypes\IndexProductTypes;
 use App\Http\Livewire\TaskStatuses\IndexTaskStatuses;
 use App\Http\Livewire\TypesOfTasks\IndexTypesOfTasks;
 use App\Http\Livewire\IvaConditions\IndexIvaConditions;
+use App\Http\Livewire\Notifications\IndexNotifications;
 use App\Http\Livewire\PurchaseOrders\ShowPurchaseOrder;
 use App\Http\Livewire\Tenderings\ShowFinishedTendering;
 use App\Http\Livewire\Productions\ProductionCalculation;
@@ -58,10 +61,8 @@ use App\Http\Livewire\PurchaseOrders\PurchaseOrdersIndex;
 use App\Http\Livewire\SaleOrders\ShowNecessaryProduction;
 use App\Http\Livewire\PreviousProducts\IndexPreviousProducts;
 use App\Http\Livewire\FollowingProducts\IndexFollowingProducts;
-use App\Http\Livewire\M2Calculator\M2CalculatorIndex;
 use App\Http\Livewire\PucharseParameters\IndexPucharseParameters;
 use App\Http\Livewire\NecesaryProduction\IndexNecessaryProduction;
-use App\Http\Livewire\Notifications\IndexNotifications;
 
 Route::get('/countries', IndexCountries::class)->name('admin.countries.index');
 Route::get('/provinces', IndexProvinces::class)->name('admin.provinces.index');
@@ -86,6 +87,7 @@ Route::get('/wood-types', IndexWoodTypes::class)->name('admin.wood-types.index')
 Route::get('/product-types', IndexProductTypes::class)->name('admin.product-types.index');
 
 Route::get('/products', IndexProducts::class)->name('admin.products.index');
+Route::get('/products/create', CreateProduct::class)->name('admin.products.create');
 Route::get('/add-products', AddProductsComponent::class)->name('admin.add-products.index');
 
 Route::get('/areas', IndexAreas::class)->name('admin.areas.index');

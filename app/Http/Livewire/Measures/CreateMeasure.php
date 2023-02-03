@@ -13,7 +13,7 @@ class CreateMeasure extends Component
     public $showDiv = 1;
     public $isFav = 0;
 
-    public $createForm = ['name' => '-', 'height' => '', 'width' => '', 'length' => ''];
+    public $createForm = ['name' => '-', 'height' => '', 'width' => '', 'length' => '', 'm2' => ''];
 
     public $inches = [], $feets = [];
 
@@ -51,7 +51,7 @@ class CreateMeasure extends Component
 
     public function resetInputFields()
     {
-        $this->createForm = ['name' => '-', 'height' => '', 'width' => '', 'length' => '', 'favorite' => ''];
+        $this->createForm = ['name' => '-', 'height' => '', 'width' => '', 'length' => '', 'm2' => '', 'favorite' => ''];
         $this->resetErrorBag();
     }
 
@@ -68,11 +68,18 @@ class CreateMeasure extends Component
 
             $this->validate();
 
+            if ($this->createForm['height'] != '' && $this->createForm['width'] != '' && $this->createForm['length'] != '') {
+                $width_cm = Inch::where('id', $this->createForm['width'])->first()->centimeter;
+                $length_cm = Feet::where('id', $this->createForm['length'])->first()->centimeter;
+                $m2 = $width_cm * $length_cm / 10000;
+            }
+
             Measure::create([
                 'name' => $this->createForm['name'],
                 'height' => $this->createForm['height'],
                 'width' => $this->createForm['width'],
                 'length' => $this->createForm['length'],
+                'm2' => $m2 ?? null,
                 'favorite' => $this->isFav,
             ]);
 

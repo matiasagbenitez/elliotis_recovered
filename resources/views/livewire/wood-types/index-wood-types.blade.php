@@ -18,15 +18,15 @@
                 <thead class="border-b border-gray-300 bg-gray-200">
                     <tr>
                         <th scope="col"
-                            class="px-4 py-2 text-center text-md font-bold text-gray-500 uppercase tracking-wider">
+                            class="px-4 py-2 text-center text-sm text-gray-500 uppercase tracking-wider">
                             ID
                         </th>
                         <th scope="col"
-                            class="px-4 py-2 text-center text-md font-bold text-gray-500 uppercase tracking-wider w-full">
+                            class="px-4 py-2 text-center text-sm text-gray-500 uppercase tracking-wider w-full">
                             Nombre
                         </th>
                         <th scope="col"
-                            class="px-4 py-2 text-center text-md font-bold text-gray-500 uppercase tracking-wider">
+                            class="px-4 py-2 text-center text-sm text-gray-500 uppercase tracking-wider">
                             Acción
                         </th>
                     </tr>
@@ -40,7 +40,7 @@
                                 </p>
                             </td>
                             <td class="px-6 py-3 whitespace-nowrap text-center">
-                                <p class="font-bold text-sm uppercase">
+                                <p class="text-sm uppercase">
                                     {{ $wood_type->name }}
                                 </p>
                             </td>
