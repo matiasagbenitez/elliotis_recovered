@@ -56,7 +56,6 @@ use App\Http\Livewire\IvaConditions\IndexIvaConditions;
 use App\Http\Livewire\Notifications\IndexNotifications;
 use App\Http\Livewire\PurchaseOrders\ShowPurchaseOrder;
 use App\Http\Livewire\Tenderings\ShowFinishedTendering;
-use App\Http\Livewire\Productions\ProductionCalculation;
 use App\Http\Livewire\PurchaseOrders\CreatePurchaseOrder;
 use App\Http\Livewire\PurchaseOrders\PurchaseOrdersIndex;
 use App\Http\Livewire\SaleOrders\ShowNecessaryProduction;
@@ -64,6 +63,7 @@ use App\Http\Livewire\PreviousProducts\IndexPreviousProducts;
 use App\Http\Livewire\FollowingProducts\IndexFollowingProducts;
 use App\Http\Livewire\PucharseParameters\IndexPucharseParameters;
 use App\Http\Livewire\NecesaryProduction\IndexNecessaryProduction;
+use App\Http\Livewire\Products\CreateFollowingProducts;
 use App\Http\Livewire\Products\CreatePreviousProduct;
 
 Route::get('/countries', IndexCountries::class)->name('admin.countries.index');
@@ -92,6 +92,7 @@ Route::get('/products', IndexProducts::class)->name('admin.products.index');
 Route::get('/products/create', CreateProduct::class)->name('admin.products.create');
 Route::get('/products/{product}/show', ShowProduct::class)->name('admin.products.show');
 Route::get('/products/{product}/previous-product', CreatePreviousProduct::class)->name('admin.products.create-previous-product');
+Route::get('/products/{product}/following-products', CreateFollowingProducts::class)->name('admin.products.create-following-products');
 Route::get('/add-products', AddProductsComponent::class)->name('admin.add-products.index');
 
 Route::get('/areas', IndexAreas::class)->name('admin.areas.index');
@@ -119,7 +120,6 @@ Route::get('/tendering/{tendering}/detail', ShowTendering::class)->name('admin.t
 Route::get('/tendering/{tendering}/hash/{hash:hash}/detail', ShowOfferTendering::class)->name('admin.tenderings.show-offer-detail');
 Route::get('/tendering/{tendering}/finished', ShowFinishedTendering::class)->name('admin.tenderings.show-finished-tendering');
 
-
 Route::get('/ranking/{tendering}', PruebaRanking::class)->name('admin.ranking.index');
 
 Route::get('/parameters', IndexParameters::class)->name('admin.parameters.index');
@@ -136,7 +136,6 @@ Route::get('/tasks', IndexTasks::class)->name('admin.tasks.index');
 Route::get('/tasks/{task_type}/manage', ManageTasks::class)->name('admin.tasks.manage');
 Route::get('/tasks/{task_type}/register/{task}', RegisterTask::class)->name('admin.tasks.register');
 Route::get('/tasks/show/{task}', ShowTask::class)->name('admin.tasks.show');
-
 
 Route::get('/lots', LotsIndex::class)->name('admin.lots.index');
 Route::get('/lots/{lot}/sublots', SublotsIndex::class)->name('admin.sublots.index');

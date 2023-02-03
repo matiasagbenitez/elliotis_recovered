@@ -204,7 +204,7 @@
             </a>
             <br>
             Por otro lado, los <span class="font-bold">productos siguientes </span> son aquellos que se generan a partir de este producto. Puede configurarlos haciendo
-            <a href="#" class="hover:text-cyan-900">
+            <a href="{{ route('admin.products.create-following-products', $product) }}" class="hover:text-cyan-900">
                 <span class="font-bold">click aquí.</span>
             </a>
         </span>

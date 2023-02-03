@@ -24,13 +24,18 @@ class CreatePreviousProduct extends Component
     public function create()
     {
         if ($this->previous_product_id != '' && $this->previous_product_id != null) {
-
             $previousProduct = PreviousProduct::updateOrCreate(
                 ['product_id' => $this->product->id],
                 ['previous_product_id' => $this->previous_product_id]
             );
-
+            $message = '¡Se actualizó exitosamente el producto anterior de ' . $this->product->name . '!';
+            session()->flash('flash.banner', $message);
+            return redirect()->route('admin.products.show', $this->product);
+        } else {
+            $this->emit('error', '¡Ocurrió un error al actualizar el producto anterior de ' . $this->product->name . '!');
+            return;
         }
+
     }
 
     public function render()
