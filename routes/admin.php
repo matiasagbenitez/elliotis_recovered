@@ -64,6 +64,7 @@ use App\Http\Livewire\PreviousProducts\IndexPreviousProducts;
 use App\Http\Livewire\FollowingProducts\IndexFollowingProducts;
 use App\Http\Livewire\PucharseParameters\IndexPucharseParameters;
 use App\Http\Livewire\NecesaryProduction\IndexNecessaryProduction;
+use App\Http\Livewire\Products\CreatePreviousProduct;
 
 Route::get('/countries', IndexCountries::class)->name('admin.countries.index');
 Route::get('/provinces', IndexProvinces::class)->name('admin.provinces.index');
@@ -90,6 +91,7 @@ Route::get('/product-types', IndexProductTypes::class)->name('admin.product-type
 Route::get('/products', IndexProducts::class)->name('admin.products.index');
 Route::get('/products/create', CreateProduct::class)->name('admin.products.create');
 Route::get('/products/{product}/show', ShowProduct::class)->name('admin.products.show');
+Route::get('/products/{product}/previous-product', CreatePreviousProduct::class)->name('admin.products.create-previous-product');
 Route::get('/add-products', AddProductsComponent::class)->name('admin.add-products.index');
 
 Route::get('/areas', IndexAreas::class)->name('admin.areas.index');

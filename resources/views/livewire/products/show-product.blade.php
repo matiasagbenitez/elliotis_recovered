@@ -177,6 +177,7 @@
                                                 Sin stock
                                             </span>
                                         @endif
+                                    </p>
                                 </td>
 
                             </tr>
@@ -198,7 +199,7 @@
         <hr class="my-2">
         <span>
             Un <span class="font-bold">producto anterior</span> es aquel a partir del cual se generó el producto actual. Puede configurar el producto anterior de este producto haciendo
-            <a href="#" class="hover:text-cyan-900">
+            <a href="{{ route('admin.products.create-previous-product', $product) }}" class="hover:text-cyan-900">
                 <span class="font-bold">click aquí.</span>
             </a>
             <br>
