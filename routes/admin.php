@@ -7,6 +7,7 @@ use App\Http\Livewire\Sales\ShowSale;
 use App\Http\Livewire\Tasks\ShowTask;
 use Illuminate\Support\Facades\Route;
 use App\Http\Livewire\Areas\IndexAreas;
+use App\Http\Livewire\Audits\AuditsIndex;
 use App\Http\Livewire\Sales\CreateSale;
 use App\Http\Livewire\Sales\IndexSales;
 use App\Http\Livewire\Tasks\IndexTasks;
@@ -166,6 +167,4 @@ Route::get('/notifications', IndexNotifications::class)->name('admin.notificatio
 Route::get('/necessary-production', IndexNecessaryProduction::class)->name('admin.necessary-production.index')->middleware('can:admin.necessary-production.index');
 
 // AUDITORÍA
-Route::get('/auditory', function () {
-    return 'Auditory Index';
-})->name('admin.auditory.index')->middleware('can:admin.auditory.index');
+Route::get('/audits', AuditsIndex::class)->name('admin.auditory.index')->middleware('can:admin.auditory.index');
