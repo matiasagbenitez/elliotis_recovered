@@ -4,16 +4,18 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class Lot extends Model
+class Lot extends Model implements Auditable
 {
+    use \OwenIt\Auditing\Auditable;
     use HasFactory;
 
     protected $guarded = ['id', 'created_at', 'updated_at'];
 
-    public function task()
+    public function area()
     {
-        return $this->belongsTo(Task::class);
+        return $this->belongsTo(Area::class);
     }
 
     public function sublots()
