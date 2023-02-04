@@ -192,21 +192,29 @@
 
         </x-responsive-table>
         <br>
-        <p class="font-bold text-gray-700 text-lg">
-            <i class="fas fa-info-circle text-gray-700 text-lg mr-2"></i>
-            Producto anterior y productos siguientes
-        </p>
-        <hr class="my-2">
+        @can('admin.products.create-previous-product', 'admin.products.create-following-products')
+            <p class="font-bold text-gray-700 text-lg">
+                <i class="fas fa-info-circle text-gray-700 text-lg mr-2"></i>
+                Producto anterior y productos siguientes
+            </p>
+            <hr class="my-2">
+        @endcan
         <span>
-            Un <span class="font-bold">producto anterior</span> es aquel a partir del cual se generó el producto actual. Puede configurar el producto anterior de este producto haciendo
-            <a href="{{ route('admin.products.create-previous-product', $product) }}" class="hover:text-cyan-900">
-                <span class="font-bold">click aquí.</span>
-            </a>
-            <br>
-            Por otro lado, los <span class="font-bold">productos siguientes </span> son aquellos que se generan a partir de este producto. Puede configurarlos haciendo
-            <a href="{{ route('admin.products.create-following-products', $product) }}" class="hover:text-cyan-900">
-                <span class="font-bold">click aquí.</span>
-            </a>
+            @can('admin.products.create-previous-product')
+                Un <span class="font-bold">producto anterior</span> es aquel a partir del cual se generó el producto actual.
+                Puede configurar el producto anterior de este producto haciendo
+                <a href="{{ route('admin.products.create-previous-product', $product) }}" class="hover:text-cyan-900">
+                    <span class="font-bold">click aquí.</span>
+                </a>
+                <br>
+            @endcan
+            @can('admin.products.create-following-products')
+                Los <span class="font-bold">productos siguientes </span> son aquellos que se generan a partir de este
+                producto. Puede configurarlos haciendo
+                <a href="{{ route('admin.products.create-following-products', $product) }}" class="hover:text-cyan-900">
+                    <span class="font-bold">click aquí.</span>
+                </a>
+            @endcan
         </span>
 
     </div>

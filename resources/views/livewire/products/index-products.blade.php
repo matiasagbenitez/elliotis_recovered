@@ -3,11 +3,14 @@
     <x-slot name="header">
         <div class="flex items-center justify-between">
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">Productos</h2>
+            @can('admin.products.create')
+
             <a href="{{ route('admin.products.create') }}">
                 <x-jet-secondary-button>
                     Crear nuevo producto
                 </x-jet-secondary-button>
             </a>
+            @endcan
         </div>
     </x-slot>
 
@@ -101,10 +104,12 @@
                             class="w-1/6 px-4 py-2 text-center text-sm font-bold text-gray-500 uppercase tracking-wider">
                             M2
                         </th>
+                        @can('admin.products.show')
                         <th scope="col"
                             class="w-1/6 px-4 py-2 text-center text-sm font-bold text-gray-500 uppercase tracking-wider">
                             Acción
                         </th>
+                        @endcan
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200">
@@ -155,15 +160,17 @@
                                     @endif
                                 </p>
                             </td>
+                            @can('admin.products.show')
                             <td class="px-6 py-3 whitespace-nowrap">
                                 <div class="flex items-center justify-center">
-                                   <a href="{{ route('admin.products.show', $product) }}">
-                                    <x-jet-button>
-                                        <i class="fas fa-cogs"></i>
-                                    </x-jet-button>
-                                   </a>
+                                    <a href="{{ route('admin.products.show', $product) }}">
+                                        <x-jet-button>
+                                            <i class="fas fa-cogs"></i>
+                                        </x-jet-button>
+                                    </a>
                                 </div>
                             </td>
+                            @endcan
                         </tr>
                     @endforeach
                 </tbody>
