@@ -16,20 +16,18 @@ class AuditsIndex extends Component
 
     public function mount()
     {
-        // Get all audits
-        $this->audits = Audit::all();
+        $this->audits = Audit::orderBy('created_at', 'desc')->get();
         $this->models = $this->getModels();
         $this->getStats();
     }
 
-    public function updatedSelectedModel($value)
+    public function updatedSelectedModel()
     {
-
-        if ($value == '') {
-            $this->audits = Audit::all();
+        if ($this->selected_model == '') {
+            $this->audits = Audit::orderBy('created_at', 'desc')->get();
             $this->getStats();
         } else {
-            $this->audits = Audit::where('auditable_type', $this->selected_model)->get();
+            $this->audits = Audit::where('auditable_type', $this->selected_model)->orderBy('created_at', 'desc')->get();
             $this->getStats();
         }
     }
@@ -37,9 +35,10 @@ class AuditsIndex extends Component
     public function getStats()
     {
         foreach ($this->audits as $audit) {
-
             $old_values = str_replace('"', '', json_encode($audit->old_values));
             $new_values = str_replace('"', '', json_encode($audit->new_values));
+            $old_values = str_replace(',', ' ', $old_values);
+            $new_values = str_replace(',', ', ', $new_values);
 
             $this->stats[] = [
                 'id' => $audit->id,
@@ -52,7 +51,7 @@ class AuditsIndex extends Component
             ];
         }
 
-        // dd($this->stats);
+        $this->render();
     }
 
     public function getModels()
