@@ -3,12 +3,13 @@
     <div @click.away="open = false"
         class="flex flex-col flex-shrink-0 w-full text-gray-700 bg-white h-full md:w-60 dark-mode:text-gray-200 dark-mode:bg-gray-800"
         x-data="{ open: false }">
-        <div class="flex flex-row items-center justify-between flex-shrink-0 px-8 py-4">
+        <div class="flex flex-row items-center justify-between md:justify-center flex-shrink-0 px-2 py-4">
             <a href="{{ route('dashboard') }}"
                 class="text-3xl font-extrabold text-gray-900 uppercase rounded-lg dark-mode:text-white focus:outline-none focus:shadow-outline text-center">
-                <div class="">
-                    <i class="fas fa-tree mr-"></i>
-                    ELLIOTIS
+                <div class="flex items-center justify-center">
+                    {{-- <img src="{{ asset('img/logo2.png') }}" class="h-32" alt="Logo"> --}}
+                    <img src="{{ asset('img/logo.png') }}" class="" alt="Logo">
+
                 </div>
             </a>
             <br>
