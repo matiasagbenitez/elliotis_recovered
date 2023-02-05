@@ -22,20 +22,24 @@
                             ID
                         </th>
                         <th scope="col"
-                            class="px-4 py-2 w-1/4">
+                            class="px-4 py-2 w-1/5">
                             Nombre
                         </th>
                         <th scope="col"
-                            class="px-4 py-2 w-1/4">
+                            class="px-4 py-2 w-1/5">
                             En proceso
                         </th>
                         <th scope="col"
-                            class="px-4 py-2 w-1/4">
+                            class="px-4 py-2 w-1/5">
                             Finalizado
                         </th>
                         <th scope="col"
-                            class="px-4 py-2 w-1/4">
+                            class="px-4 py-2 w-1/5">
                             Cancelado
+                        </th>
+                        <th scope="col"
+                            class="px-4 py-2 w-1/5">
+                            Pendiente
                         </th>
                         <th scope="col"
                             class="px-4 py-2">
@@ -69,6 +73,11 @@
                             <td class="px-6 py-3 whitespace-nowrap text-center">
                                 <p class="text-sm uppercase">
                                     {{ $task_status->canceled ? 'Si' : 'No' }}
+                                </p>
+                            </td>
+                            <td class="px-6 py-3 whitespace-nowrap text-center">
+                                <p class="text-sm uppercase">
+                                    {{ $task_status->pending ? 'Si' : 'No' }}
                                 </p>
                             </td>
                             <td class="px-6 py-3 whitespace-nowrap text-sm font-medium">

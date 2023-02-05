@@ -23,6 +23,11 @@ class TaskStatusSeeder extends Seeder
                 'name' => 'Cancelado',
                 'canceled' => true,
             ]
+            ,
+            [
+                'name' => 'Pendiente',
+                'pending' => true,
+            ]
         ];
 
         foreach ($taskStatuses as $taskStatus) {

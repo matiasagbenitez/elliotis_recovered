@@ -15,6 +15,7 @@ return new class extends Migration
             $table->boolean('running')->default(false);
             $table->boolean('finished')->default(false);
             $table->boolean('canceled')->default(false);
+            $table->boolean('pending')->default(false);
 
             $table->timestamps();
         });
