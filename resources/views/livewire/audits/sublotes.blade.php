@@ -7,35 +7,17 @@
             <a href="{{ route('admin.tenderings.index') }}">
                 <h2 class="font-semibold text-xl text-gray-800 leading-tight">Auditoría</h2>
             </a>
-
-            {{-- PDF BUTTON --}}
-            <a href="#">
-                <x-jet-danger-button>
-                    <i class="fas fa-file-pdf mr-2"></i>
-                    Descargar PDF
-                </x-jet-danger-button>
-            </a>
         </div>
     </x-slot>
 
-    <div class="max-w-7xl mx-auto bg-white px-10 py-5 my-6 rounded-lg">
+    <div class="max-w-7xl mx-auto bg-gray-50 my-4 rounded-lg">
 
         {{-- Título --}}
-        <p class="font-bold text-gray-700 text-lg ">
-            <i class="fas fa-info-circle text-gray-700 text-lg mr-2"></i>
-            Detalle de auditoría
-        </p>
-        <hr class="my-3">
-
-        {{-- Select --}}
-        <x-jet-label for="select" class="mb-2" value="Seleccione el modelo que desea auditar" />
-        <div class="flex items-center justify-between mb-6">
-            <select wire:model="selected_model" class="input-control w-full">
-                <option value="">Todos los modelos</option>
-                @foreach ($models as $model)
-                    <option value="{{ $model['model'] }}">{{ $model['name'] }}</option>
-                @endforeach
-            </select>
+        <div class="px-6 py-3 bg-white rounded-t-lg">
+            <p class="font-bold text-gray-800 text-lg ">
+                <i class="fas fa-info-circle text-gray-700 text-lg mr-2"></i>
+                Detalle de auditoría sobre la tabla SUBLOTES
+            </p>
         </div>
 
         <x-responsive-table>
@@ -43,7 +25,7 @@
             @if ($audits->isNotEmpty())
                 <table class="text-gray-600 min-w-full divide-y divide-gray-200 table-fixed">
                     <thead class="border-b border-gray-300 bg-gray-200">
-                        <tr class="text-center text-sm text-gray-500 uppercase">
+                        <tr class="text-center text-sm text-gray-500 uppercase whitespace-nowrap">
                             <th scope="col" class="px-4 py-2">
                                 ID
                             </th>
@@ -57,7 +39,7 @@
                                 Acción
                             </th>
                             <th scope="col" class="px-4 py-2">
-                                Modelo
+                                ID registro
                             </th>
                             <th scope="col" class="px-4 py-2">
                                 Estado Anterior
@@ -91,8 +73,8 @@
                                     </p>
                                 </td>
                                 <td class="px-6 py-2 text-center">
-                                    <p class="text-sm">
-                                        {{ $audit['model'] }}
+                                    <p class="text-sm uppercase">
+                                        {{ $audit['auditable_id'] }}
                                     </p>
                                 </td>
                                 <td class="px-6 py-2 text-center">
