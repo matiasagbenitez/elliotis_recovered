@@ -1,28 +1,21 @@
 <?php
 
-use App\Http\Livewire\API\IndexApi;
 use App\Http\Livewire\Tests\Test;
+use App\Http\Livewire\API\IndexApi;
+use App\Http\Livewire\Audits\Lotes;
 use App\Http\Livewire\Tests\M2Test;
+use App\Http\Livewire\Audits\Tareas;
+use App\Http\Livewire\Audits\Ventas;
+use App\Http\Livewire\Audits\Compras;
 use App\Http\Livewire\Lots\LotsIndex;
 use App\Http\Livewire\Sales\ShowSale;
 use App\Http\Livewire\Tasks\ShowTask;
 use Illuminate\Support\Facades\Route;
-use App\Http\Livewire\Areas\IndexAreas;
-use App\Http\Livewire\Audits\AuditsIndex;
 use App\Http\Livewire\Audits\Clientes;
-use App\Http\Livewire\Audits\Compras;
-use App\Http\Livewire\Audits\Licitaciones;
-use App\Http\Livewire\Audits\Lotes;
-use App\Http\Livewire\Audits\OrdenesDeCompra;
-use App\Http\Livewire\Audits\OrdenesDeVenta;
-use App\Http\Livewire\Audits\Productos;
-use App\Http\Livewire\Audits\ProductosAnteriores;
-use App\Http\Livewire\Audits\ProductosSiguientes;
-use App\Http\Livewire\Audits\Proveedores;
 use App\Http\Livewire\Audits\Sublotes;
-use App\Http\Livewire\Audits\Tareas;
 use App\Http\Livewire\Audits\Usuarios;
-use App\Http\Livewire\Audits\Ventas;
+use App\Http\Livewire\Areas\IndexAreas;
+use App\Http\Livewire\Audits\Productos;
 use App\Http\Livewire\Sales\CreateSale;
 use App\Http\Livewire\Sales\IndexSales;
 use App\Http\Livewire\Tasks\IndexTasks;
@@ -30,15 +23,22 @@ use App\Http\Livewire\Tests\TestOrders;
 use App\Http\Livewire\Lots\SublotsAreas;
 use App\Http\Livewire\Lots\SublotsIndex;
 use App\Http\Livewire\Tasks\ManageTasks;
+use App\Http\Livewire\Audits\AuditsIndex;
+use App\Http\Livewire\Audits\Proveedores;
 use App\Http\Livewire\Clients\EditClient;
 use App\Http\Livewire\Phases\IndexPhases;
 use App\Http\Livewire\Tasks\RegisterTask;
+use App\Http\Livewire\Weather\WeatherApi;
+use App\Http\Livewire\Audits\Licitaciones;
+use App\Http\Livewire\Dashboard\Dashboard;
 use App\Http\Livewire\Clients\CreateClient;
 use App\Http\Livewire\Clients\IndexClients;
 use App\Http\Livewire\Lots\SublotsProducts;
 use App\Http\Livewire\Products\ShowProduct;
 use App\Http\Livewire\Unities\IndexUnities;
+use App\Http\Livewire\Audits\OrdenesDeVenta;
 use App\Http\Livewire\Ranking\PruebaRanking;
+use App\Http\Livewire\Audits\OrdenesDeCompra;
 use App\Http\Livewire\IvaTypes\IndexIvaTypes;
 use App\Http\Livewire\Measures\IndexMeasures;
 use App\Http\Livewire\Products\CreateProduct;
@@ -55,6 +55,8 @@ use App\Http\Livewire\Suppliers\IndexSuppliers;
 use App\Http\Livewire\Tenderings\ShowTendering;
 use App\Http\Livewire\TrunkLots\IndexTrunkLots;
 use App\Http\Livewire\WoodTypes\IndexWoodTypes;
+use App\Http\Livewire\Audits\ProductosAnteriores;
+use App\Http\Livewire\Audits\ProductosSiguientes;
 use App\Http\Livewire\Localities\IndexLocalities;
 use App\Http\Livewire\Parameters\IndexParameters;
 use App\Http\Livewire\SaleOrders\CreateSaleOrder;
@@ -64,11 +66,13 @@ use App\Http\Livewire\Tenderings\IndexTenderings;
 use App\Http\Livewire\Tenderings\ShowOfferTendering;
 use App\Http\Livewire\M2Calculator\M2CalculatorIndex;
 use App\Http\Livewire\ProductNames\IndexProductNames;
+use App\Http\Livewire\Products\CreatePreviousProduct;
 use App\Http\Livewire\ProductTypes\IndexProductTypes;
 use App\Http\Livewire\TaskStatuses\IndexTaskStatuses;
 use App\Http\Livewire\TypesOfTasks\IndexTypesOfTasks;
 use App\Http\Livewire\IvaConditions\IndexIvaConditions;
 use App\Http\Livewire\Notifications\IndexNotifications;
+use App\Http\Livewire\Products\CreateFollowingProducts;
 use App\Http\Livewire\PurchaseOrders\ShowPurchaseOrder;
 use App\Http\Livewire\Tenderings\ShowFinishedTendering;
 use App\Http\Livewire\PurchaseOrders\CreatePurchaseOrder;
@@ -78,9 +82,6 @@ use App\Http\Livewire\PreviousProducts\IndexPreviousProducts;
 use App\Http\Livewire\FollowingProducts\IndexFollowingProducts;
 use App\Http\Livewire\PucharseParameters\IndexPucharseParameters;
 use App\Http\Livewire\NecesaryProduction\IndexNecessaryProduction;
-use App\Http\Livewire\Products\CreateFollowingProducts;
-use App\Http\Livewire\Products\CreatePreviousProduct;
-use App\Http\Livewire\Weather\WeatherApi;
 
 // PAÍSES, PROVINCIAS Y LOCALIDADES
 Route::get('/countries', IndexCountries::class)->name('admin.countries.index')->middleware('can:admin.countries.index');
@@ -201,3 +202,5 @@ Route::get('/audits/sales', Ventas::class)->name('admin.auditory.sales')->middle
 
 // API clima
 Route::get('/weather-api', WeatherApi::class)->name('admin.api.index');
+
+Route::get('/dashboard', Dashboard::class)->name('admin.dashboard');

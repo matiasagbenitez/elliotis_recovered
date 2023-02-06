@@ -45,6 +45,8 @@ class Task2Seeder extends Seeder
                 'sublot_id' => $sublot->id,
                 'consumed_quantity' => $consumed_quantity,
                 'm2' => $m2,
+                'created_at' => $end_date,
+                'updated_at' => $end_date,
             ];
         }
 
@@ -67,7 +69,7 @@ class Task2Seeder extends Seeder
 
             $outputSelects[] = [
                 'product_id' => $sublot->product->followingProducts->last()->id,
-                'produced_quantity' => $item['consumed_quantity'] * 9,
+                'produced_quantity' => $item['consumed_quantity'] * 7,
             ];
         }
 
@@ -102,6 +104,8 @@ class Task2Seeder extends Seeder
                 'sublot_id' => $sublot->id,
                 'produced_quantity' => $sublot->initial_quantity,
                 'm2' => $sublot->initial_m2,
+                'created_at' => $end_date,
+                'updated_at' => $end_date,
             ];
 
             $sublot->product->update([
