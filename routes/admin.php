@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Livewire\API\IndexApi;
 use App\Http\Livewire\Tests\Test;
 use App\Http\Livewire\Tests\M2Test;
 use App\Http\Livewire\Lots\LotsIndex;
@@ -79,6 +80,7 @@ use App\Http\Livewire\PucharseParameters\IndexPucharseParameters;
 use App\Http\Livewire\NecesaryProduction\IndexNecessaryProduction;
 use App\Http\Livewire\Products\CreateFollowingProducts;
 use App\Http\Livewire\Products\CreatePreviousProduct;
+use App\Http\Livewire\Weather\WeatherApi;
 
 // PAÍSES, PROVINCIAS Y LOCALIDADES
 Route::get('/countries', IndexCountries::class)->name('admin.countries.index')->middleware('can:admin.countries.index');
@@ -195,3 +197,7 @@ Route::get('/audits/sublots', Sublotes::class)->name('admin.auditory.sublots')->
 Route::get('/audits/tasks', Tareas::class)->name('admin.auditory.tasks')->middleware('can:admin.auditory.index');
 Route::get('/audits/users', Usuarios::class)->name('admin.auditory.users')->middleware('can:admin.auditory.index');
 Route::get('/audits/sales', Ventas::class)->name('admin.auditory.sales')->middleware('can:admin.auditory.index');
+
+
+// API clima
+Route::get('/weather-api', WeatherApi::class)->name('admin.api.index');

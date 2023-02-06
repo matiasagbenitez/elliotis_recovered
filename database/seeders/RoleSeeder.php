@@ -13,6 +13,7 @@ class RoleSeeder extends Seeder
     {
         $role1 = Role::create(['name' => 'sudo']);
         $role1->givePermissionTo(Permission::all());
+        $role1->revokePermissionTo('admin.auditory.index');
 
         $role2 = Role::create(['name' => 'auditor']);
         $role2->givePermissionTo('admin.auditory.index');
