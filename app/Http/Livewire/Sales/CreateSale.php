@@ -333,6 +333,7 @@ class CreateSale extends Component
             }
         } catch (\Throwable $th) {
             $this->emit('error', 'Ocurrió un error al intentar guardar la venta con la orden de venta seleccionada.');
+            return;
         }
 
         // Validamos los campos
@@ -356,6 +357,7 @@ class CreateSale extends Component
             // Creamos los productos de la venta en la tabla pivote
             foreach ($this->orderSublots as $sublot) {
                 $sale->products()->attach($sublot['product_id'], [
+                    'sublot_id' => $sublot['sublot_id'],
                     'm2_unitary' => $sublot['m2_unitary'],
                     'quantity' => $sublot['quantity'],
                     'm2_total' => $sublot['m2_total'],
@@ -403,8 +405,8 @@ class CreateSale extends Component
             session()->flash('flash.banner', $message);
             return redirect()->route('admin.sales.index');
         } catch (\Throwable $th) {
-            dd($th->getMessage());
-            // $this->emit('error', '¡Ha ocurrido un error! Verifica la información ingresada.');
+            // dd($th->getMessage());
+            $this->emit('error', '¡Ha ocurrido un error! Verifica la información ingresada.');
         }
     }
 

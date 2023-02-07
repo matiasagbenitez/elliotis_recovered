@@ -64,7 +64,7 @@ class DatabaseSeeder extends Seeder
         $this->call(FollowingProductSeeder::class);
 
         // Tasks Seeders
-        for ($i = 0; $i < 25; $i++) {
+        for ($i = 0; $i < 20; $i++) {
             $this->call(Task1Seeder::class);
             $this->call(Task1Seeder::class);
             $this->call(Task1Seeder::class);
@@ -77,7 +77,7 @@ class DatabaseSeeder extends Seeder
             $this->call(Task8Seeder::class);
         }
 
-        for ($i = 0; $i < 6; $i++) {
+        for ($i = 0; $i < 10; $i++) {
             $this->call(Task9Seeder::class);
             $this->call(Task10Seeder::class);
         }

@@ -56,6 +56,6 @@ class Sale extends Model implements Auditable
     // Relationship many to many with Product
     public function products()
     {
-        return $this->belongsToMany(Product::class)->withPivot('m2_unitary', 'quantity', 'm2_total', 'm2_price', 'subtotal')->withTimestamps();
+        return $this->belongsToMany(Product::class)->withPivot('sublot_id', 'm2_unitary', 'quantity', 'm2_total', 'm2_price', 'subtotal')->withTimestamps();
     }
 }

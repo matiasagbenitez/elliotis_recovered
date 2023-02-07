@@ -110,9 +110,6 @@
                                     Producto
                                 </th>
                                 <th scope="col" class="px-3 py-3 whitespace-nowrap">
-                                    Sublote
-                                </th>
-                                <th scope="col" class="px-3 py-3 whitespace-nowrap">
                                     M2 unitario
                                 </th>
                                 <th scope="col" class="px-3 py-3 whitespace-nowrap">
@@ -139,11 +136,6 @@
                                     <td class="px-6 py-3">
                                         <p>
                                             {{ $stat['name'] }}
-                                        </p>
-                                    </td>
-                                    <td class="px-6 py-3">
-                                        <p>
-                                            {{ $stat['sublot'] }}
                                         </p>
                                     </td>
                                     <td class="px-6 py-3 text-center whitespace-nowrap">

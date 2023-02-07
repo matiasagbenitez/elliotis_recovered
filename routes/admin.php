@@ -82,6 +82,7 @@ use App\Http\Livewire\PreviousProducts\IndexPreviousProducts;
 use App\Http\Livewire\FollowingProducts\IndexFollowingProducts;
 use App\Http\Livewire\PucharseParameters\IndexPucharseParameters;
 use App\Http\Livewire\NecesaryProduction\IndexNecessaryProduction;
+use App\Http\Livewire\Sales\ShowSaleClient;
 
 // PAÍSES, PROVINCIAS Y LOCALIDADES
 Route::get('/countries', IndexCountries::class)->name('admin.countries.index')->middleware('can:admin.countries.index');
@@ -126,7 +127,7 @@ Route::get('/purchase/{purchase}/detail', ShowPurchase::class)->name('admin.purc
 Route::get('/sales', IndexSales::class)->name('admin.sales.index')->middleware('can:admin.sales.index');
 Route::get('/sale/create', CreateSale::class)->name('admin.sales.create')->middleware('can:admin.sales.create');
 Route::get('/sale/{sale}/detail', ShowSale::class)->name('admin.sales.show-detail')->middleware('can:admin.sales.show-detail');
-
+Route::get('/sale/{sale}/detail-client', ShowSaleClient::class)->name('admin.sales.show-detail-client');
 // ORDENES DE VENTA
 Route::get('/sale-orders', SaleOrdersIndex::class)->name('admin.sale-orders.index')->middleware('can:admin.sale-orders.index');
 Route::get('/sale-order/create', CreateSaleOrder::class)->name('admin.sale-orders.create')->middleware('can:admin.sale-orders.create');

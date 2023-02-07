@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Sales;
 
 use App\Models\Sale;
+use App\Models\Sublot;
 use App\Models\User;
 use Livewire\Component;
 
@@ -27,8 +28,12 @@ class ShowSale extends Component
     public function getStats()
     {
         foreach ($this->sale->products as $product) {
+
+            $code = $product->pivot->sublot_id ? Sublot::find($product->pivot->sublot_id)->code : null;
+
             $this->stats[] = [
                 'name' => $product->name,
+                'sublot' => $code ? $code : 'N/I',
                 'm2_unitary' => $product->pivot->m2_unitary,
                 'quantity' => $product->pivot->quantity,
                 'm2_total' => $product->pivot->m2_total,
