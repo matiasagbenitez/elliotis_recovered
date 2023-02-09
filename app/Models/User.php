@@ -42,4 +42,9 @@ class User extends Authenticatable implements Auditable
     protected $appends = [
         'profile_photo_url',
     ];
+
+    public function company()
+    {
+        return $this->belongsTo(Company::class);
+    }
 }
