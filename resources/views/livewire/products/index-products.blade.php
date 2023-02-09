@@ -23,14 +23,24 @@
                 <span class="text-xs mr-1">Filtros</span>
                 <i class="fas fa-filter"></i>
             </x-jet-button>
+            <a
+            href="{{ route('admin.products.pdf', [
+                'search' => $search,
+                'product_name' => $product_name,
+                'measure' => $measure,
+                'wood_type' => $wood_type,
+                'stock_parameter' => $stock_parameter,
+            ]) }}">
             <x-jet-secondary-button>
-                <span class="text-xs mr-1">Reporte</span>
+                <span class="text-xs p-2 mr-1">Reporte</span>
                 <i class="fas fa-file"></i>
             </x-jet-secondary-button>
+        </a>
+
         </div>
 
         @if ($filtersDiv)
-            <div class="px-6 pb-4 grid grid-cols-4 gap-3 bg-white">
+            <div class="px-6 pb-4 grid grid-cols-4 gap-3 bg-gray-200">
                 {{-- Filtro por clasificación de producto --}}
                 <div class="col-span-1 rounded-lg gap-2">
                     <x-jet-label class="mb-1">Clasificación del producto</x-jet-label>
@@ -43,7 +53,7 @@
                 </div>
 
                 {{-- Filtro por medidas --}}
-                <div class="col-span-1 rounded-lg bg-white gap-2">
+                <div class="col-span-1 rounded-lg gap-2">
                     <x-jet-label class="mb-1">Medidas</x-jet-label>
                     <select class="input-control w-full" wire:model="measure">
                         <option value="" class="text-md">Todos</option>
@@ -54,7 +64,7 @@
                 </div>
 
                 {{-- Filtro por especie --}}
-                <div class="col-span-1 rounded-lg bg-white gap-2">
+                <div class="col-span-1 rounded-lg gap-2">
                     <x-jet-label class="mb-1">Especie</x-jet-label>
                     <select class="input-control w-full" wire:model="wood_type">
                         <option value="" class="text-md">Todos</option>
@@ -65,7 +75,7 @@
                 </div>
 
                 {{-- Filtro por especie --}}
-                <div class="col-span-1 rounded-lg bg-white gap-2">
+                <div class="col-span-1 rounded-lg gap-2">
                     <x-jet-label class="mb-1">Nivel de stock</x-jet-label>
                     <select class="input-control w-full" wire:model="stock_parameter">
                         <option value="" class="text-md">Todos</option>

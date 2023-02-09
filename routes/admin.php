@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ProductPDFController;
 use App\Http\Livewire\Tests\Test;
 use App\Http\Livewire\API\IndexApi;
 use App\Http\Livewire\Audits\Lotes;
@@ -205,3 +206,7 @@ Route::get('/audits/sales', Ventas::class)->name('admin.auditory.sales')->middle
 Route::get('/weather-api', WeatherApi::class)->name('admin.api.index');
 
 Route::get('/dashboard', Dashboard::class)->name('admin.dashboard');
+
+
+// RUTAS PDF
+Route::get('/products/pdf', [ProductPDFController::class, 'pdf'])->name('admin.products.pdf');

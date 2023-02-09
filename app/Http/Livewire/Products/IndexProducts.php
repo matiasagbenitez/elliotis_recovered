@@ -13,11 +13,11 @@ class IndexProducts extends Component
 {
     use WithPagination;
 
-    public $search;
-    public $product_names, $product_name;
-    public $measures, $measure;
-    public $wood_types, $wood_type;
-    public $stock_parameter;
+    public $search = '';
+    public $product_names, $product_name = '';
+    public $measures, $measure = '';
+    public $wood_types, $wood_type = '';
+    public $stock_parameter = '';
     public $filtersDiv = false;
 
     public function mount()
