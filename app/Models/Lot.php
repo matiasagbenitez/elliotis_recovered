@@ -13,9 +13,9 @@ class Lot extends Model implements Auditable
 
     protected $guarded = ['id', 'created_at', 'updated_at'];
 
-    public function area()
+    public function task()
     {
-        return $this->belongsTo(Area::class);
+        return $this->belongsTo(Task::class);
     }
 
     public function sublots()
