@@ -8,13 +8,17 @@
     <title>Productos PDF</title>
 
     <style>
+        @page {
+            margin-bottom: 80px;
+        }
+
         body {
             font-family: 'Nunito', sans-serif;
         }
 
         /* Margin top 0 */
         .report-title {
-            margin: 15px 0px;
+            margin: 10px 0px;
             font-size: 1.25rem;
             text-align: center;
             text-transform: uppercase;
@@ -22,10 +26,11 @@
 
         .content-table {
             width: 100%;
+            table-layout: fixed;
         }
 
         .table-head {
-            border-bottom: 1px solid #000;
+            /* border-bottom: 1px solid #000; */
             background-color: #e0e0e0;
         }
 
@@ -36,8 +41,12 @@
             font-weight: 700;
         }
 
+        .table-head td {
+            padding: 0px;
+        }
+
         .table-body-row {
-            padding: 5px 0px;
+            padding: 10px 0px;
             text-align: center;
             font-size: 0.8rem;
         }
@@ -46,6 +55,30 @@
             margin: 5px 0;
         }
 
+        .page-number {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .footer {
+            position: fixed;
+            bottom: 0;
+            right: 0;
+        }
+
+        li {
+            font-size: 0.8rem;
+        }
+
+        .observaciones {
+            padding-top: 5px;
+            padding-bottom: 5px;
+            padding-left: 10px;
+            padding-right: 10px;
+            page-break-inside: avoid;
+        }
     </style>
 </head>
 
@@ -54,40 +87,49 @@
     <div>
         <table>
             <tr>
-                <td style="width: 40%;">
+                <td style="width: 40%;" valign="top">
                     {{-- <img src="{{ asset('/img/logo_empresa.png') }}" alt="Logo" style="width: 250px; height: 170px;"> --}}
-                    <img src="{{ public_path('/img/logo_empresa.png') }}" alt="Logo" style="width: 160; height: 90;">
+                    <img src="{{ public_path('/img/logo_empresa.png') }}" alt="Logo"
+                        style="width: 130; height: 65; margin-right: 15px;">
                 </td>
-                <td style="width: 100%;">
-                    <p style="font-weight: 700; font-size: 0.8rem; margin-top: 0; margin-bottom: 5px;">
+                <td style="width: 30%; margin-right: 15px" valign="top">
+                    <p style="font-weight: 700; font-size: 0.8rem; margin: 0px;">
                         Empresa:
                         <span style="font-weight: 400;">
                             {{ $company_stats['name'] }}
                         </span>
                     </p>
-                    <p style="font-weight: 700; font-size: 0.8rem; margin-top: 0; margin-bottom: 5px;">
+                    <p style="font-weight: 700; font-size: 0.8rem; margin: 0px;">
                         Dirección:
                         <span style="font-weight: 400;">
                             {{ $company_stats['address'] }}
                         </span>
                     </p>
-                    <p style="font-weight: 700; font-size: 0.8rem; margin-top: 0; margin-bottom: 5px;">
+                    <p style="font-weight: 700; font-size: 0.8rem; margin: 0px;">
                         Código postal:
                         <span style="font-weight: 400;">
                             {{ $company_stats['cp'] }}
                         </span>
                     </p>
-                    <p style="font-weight: 700; font-size: 0.8rem; margin-top: 0; margin-bottom: 5px;">
+                    <p style="font-weight: 700; font-size: 0.8rem; margin: 0px;">
                         Teléfono de contacto:
                         <span style="font-weight: 400;">
                             {{ $company_stats['phone'] }}
                         </span>
                     </p>
-                    <p style="font-weight: 700; font-size: 0.8rem; margin-top: 0; margin-bottom: 5px;">
+                    <p style="font-weight: 700; font-size: 0.8rem; margin: 0px;">
                         Correo electrónico:
                         <span style="font-weight: 400;">
                             {{ $company_stats['email'] }}
                         </span>
+                    </p>
+                </td>
+                <td style="width: 100%;" valign="top">
+                    <p style="font-weight: 700; font-size: 0.8rem; margin: 0px; margin-left: 55px;">
+                        {{ $company_stats['date'] }}
+                    </p>
+                    <p style="font-size: 0.8rem; margin: 0px; margin-left: 55px; text-align:right">
+                        {{ $company_stats['user'] }}
                     </p>
                 </td>
             </tr>
@@ -115,7 +157,7 @@
                         <p>Especie</p>
                     </td>
                     <td style="width: 15%">
-                        <p>Estado</p>
+                        <p>Nivel stock</p>
                     </td>
                     <td style="width: 12.5%">
                         <p>Unidades</p>
@@ -137,7 +179,8 @@
                         <td style="width: 15%">
                             <p>{{ $stat['wood_type'] }}</p>
                         </td>
-                        <td style="width: 15%">
+                        <td
+                            style="width: 15%; {{ $stat['stock_level'] == 'Stock bajo' ? 'color: red;' : 'color: green' }}">
                             <p>{{ $stat['stock_level'] }}</p>
                         </td>
                         <td style="width: 12.5%">
@@ -150,6 +193,18 @@
                 @endforeach
             </tbody>
         </table>
+    </div>
+
+    <div class="observaciones" style="border: .5px solid black; margin-top: 15px;">
+        <p style="font-weight: 700; font-size: 0.8rem; margin: 0px;">
+            Filtros:
+        </p>
+        <ul style="list-style-type: disc; margin: 5px 0px;">
+            @foreach ($filtros as $key => $value)
+                <li>{{ $key }}: {{ $value }}</li>
+            @endforeach
+        </ul>
+    </div>
 
 </body>
 
