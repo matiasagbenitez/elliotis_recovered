@@ -229,5 +229,5 @@ Route::get('/sale/{sale}/detail/pdf', [SaleDetailPDFController::class, 'pdf'])->
 Route::get('/sale/{sale}/detail-client/pdf', [SaleDetailClientPDFController::class, 'pdf'])->name('admin.sale-detail-client.pdf');
 Route::get('/sale-order/{sale_order}/detail/pdf', [SaleOrderDetailPDFController::class, 'pdf'])->name('admin.sale-order-detail.pdf');
 
-// Route::get('/sublots/areas/pdf', [SublotsAreaPDFController::class, 'pdf'])->name('admin.sublots-areas.pdf');
-// Route::get('/sublots/products/pdf', [SublotsProductPDFController::class, 'pdf'])->name('admin.sublots-products.pdf');
+Route::get('/sublots/areas/pdf', [SublotsAreaPDFController::class, 'pdf'])->name('admin.sublots-areas.pdf');
+Route::get('/sublots/products/pdf', [SublotsProductPDFController::class, 'pdf'])->name('admin.sublots-products.pdf');

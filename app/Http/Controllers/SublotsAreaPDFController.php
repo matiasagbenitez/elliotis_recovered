@@ -14,14 +14,13 @@ class SublotsAreaPDFController extends Controller
     public function pdf(Request $request)
     {
         $area_id = $request->area;
-        $area = $area_id ? Area::find($area_id)->name : null;
 
         $filtros = [
-            'Area' => $area ?? 'Todas',
+            'Area' => $area_id ? Area::find($area_id)->name : 'Todas las áreas',
         ];
 
         $company_stats = $this->getCompanyStats();
-        $report_title = 'Reporte de sublotes por area';
+        $report_title = 'Reporte de sublotes en ' . $filtros['Area'];
         $stats = $this->getStats($area_id);
         $totals = $this->getTotals($stats);
 

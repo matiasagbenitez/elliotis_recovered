@@ -13,25 +13,27 @@
 
         <div class="px-6 py-4 bg-gray-200">
             <div class="grid grid-cols-6 gap-4">
-                <div class="col-span-6">
+                <div class="col-span-5">
                     <x-jet-label class="mb-2 text-lg font-semibold">Producto</x-jet-label>
                     <select wire:model='product' class="input-control w-full">
                         <option value="">Todos los productos</option>
-                        @foreach ($products as $product)
-                            <option value="{{ $product->id }}">{{ $product->name }}</option>
+                        @foreach ($products as $p)
+                            <option value="{{ $p->id }}">{{ $p->name }}</option>
                         @endforeach
                     </select>
                 </div>
+                <div class="flex items-end justify-center">
+                    <a
+                        href="{{ route('admin.sublots-products.pdf', [
+                            'product' => $product,
+                        ]) }}">
+                        <x-jet-danger-button>
+                            <i class="fas fa-file-pdf mr-2"></i>
+                            <p class="py-1 px-1">Descargar PDF</p>
+                        </x-jet-danger-button>
+                    </a>
+                </div>
             </div>
-            <a
-            href="{{ route('admin.sublots-products.pdf', [
-                'product' => $product,
-            ]) }}">
-            <x-jet-danger-button>
-                <i class="fas fa-file-pdf mr-2"></i>
-                <p class="py-1 px-1">Descargar PDF</p>
-            </x-jet-danger-button>
-        </a>
         </div>
 
         @if ($sublotStats)

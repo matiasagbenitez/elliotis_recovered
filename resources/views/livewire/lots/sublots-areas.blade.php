@@ -14,15 +14,13 @@
                     <x-jet-label class="mb-2 text-lg font-semibold">Área</x-jet-label>
                     <select wire:model="area" class="input-control w-full">
                         <option value="">Todas las áreas</option>
-                        @foreach ($areas as $area)
-                            <option value="{{ $area->id }}">{{ $area->name }}</option>
+                        @foreach ($areas as $a)
+                            <option value="{{ $a->id }}">{{ $a->name }}</option>
                         @endforeach
                     </select>
                 </div>
                 <div class="flex items-end justify-center">
-                    <a href="{{ route('admin.sublots-areas.pdf', [
-                        'area' => $area,
-                    ]) }}">
+                    <a href="{{ route('admin.sublots-areas.pdf', ['area' => $area]) }}">
                         <x-jet-danger-button>
                             <i class="fas fa-file-pdf mr-2"></i>
                             <p class="py-1 px-1">Descargar PDF</p>

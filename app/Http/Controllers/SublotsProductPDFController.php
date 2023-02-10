@@ -14,15 +14,13 @@ class SublotsProductPDFController extends Controller
     public function pdf(Request $request)
     {
         $product_id = $request->product;
-        dd($product_id);
-        $product = $product_id ? Product::find($product_id)->name : null;
 
         $filtros = [
-            'Producto' => $product ?? 'Todas',
+            'Producto' => $product_id ? Product::find($product_id)->name : 'Todos los productos',
         ];
 
         $company_stats = $this->getCompanyStats();
-        $report_title = 'Reporte de sublotes por producto';
+        $report_title = 'Reporte de sublotes de ' . $filtros['Producto'];
         $stats = $this->getStats($product_id);
         $totals = $this->getTotals($stats);
 
@@ -34,7 +32,7 @@ class SublotsProductPDFController extends Controller
             'filtros' => $filtros,
         ]);
 
-        return $pdf->stream('sublotes-por-area.pdf');
+        return $pdf->stream('sublotes-por-producto.pdf');
 
     }
 
