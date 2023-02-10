@@ -55,6 +55,10 @@
                         <span class="font-normal">{{ $data['supplier']}}</span>
                     </p>
                     <p class="text-sm font-mono font-bold">
+                        CUIT:
+                        <span class="font-normal">{{ $data['cuit']}}</span>
+                    </p>
+                    <p class="text-sm font-mono font-bold">
                         Condición ante IVA:
                         <span class="font-normal">{{ $data['iva_condition'] }} ({{ $data['discriminate'] }})</span>
                     </p>

@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use PDF;
 use App\Models\User;
 use App\Models\Company;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\PurchaseOrder;
 use Illuminate\Support\Facades\Date;
-use PDF;
 
 class PurchaseOrderDetailPDFController extends Controller
 {
@@ -27,7 +28,8 @@ class PurchaseOrderDetailPDFController extends Controller
         // return view('livewire.purchase-orders.pdf', compact('supplier_discriminates_iva', 'company_stats', 'report_title', 'data', 'titles', 'stats', 'totals', 'user_who_cancelled', 'purchaseOrder'));
 
         $pdf = PDF::loadView('livewire.purchase-orders.pdf', compact('supplier_discriminates_iva', 'company_stats', 'report_title', 'data', 'titles', 'stats', 'totals', 'user_who_cancelled', 'purchaseOrder'));
-        return $pdf->stream('detalle-compra.pdf');
+        $supplier = Str::slug($purchaseOrder->supplier->business_name);
+        return $pdf->stream('detalle-orden-compra-' . $supplier . '.pdf');
     }
 
     public function getData($purchase)
@@ -35,6 +37,7 @@ class PurchaseOrderDetailPDFController extends Controller
         $data = [
             'id' => $purchase->id,
             'supplier' => $purchase->supplier->business_name,
+            'cuit' => $purchase->supplier->cuit,
             'iva_condition' => $purchase->supplier->iva_condition->name,
             'discriminate' => $purchase->supplier->iva_condition->discriminate ? 'Discrimina IVA' : 'No discrimina IVA',
             'date' => Date::parse($purchase->registration_date)->format('d/m/Y'),

@@ -41,6 +41,7 @@ class ShowPurchaseOrder extends Component
         $this->data = [
             'id' => $this->purchaseOrder->id,
             'supplier' => $this->purchaseOrder->supplier->business_name,
+            'cuit' => $this->purchaseOrder->supplier->cuit,
             'iva_condition' => $this->purchaseOrder->supplier->iva_condition->name,
             'discriminate' => $this->purchaseOrder->supplier->iva_condition->discriminate ? 'Discrimina IVA' : 'No discrimina IVA',
             'date' => Date::parse($this->purchaseOrder->registration_date)->format('d/m/Y'),

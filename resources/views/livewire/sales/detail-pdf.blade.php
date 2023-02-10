@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Detalle compra PDF</title>
+    <title>Detalle venta PDF</title>
 
     <style>
         @page {
@@ -149,11 +149,11 @@
         </h1>
     </div>
 
-    @if (!$purchaseOrder->is_active)
+    @if (!$sale->is_active)
     <div style="margin: 10px 0px; border: 1px solid #EC4747; font-size: 0.8rem; padding: 5px; text-align: justify; color: #EC4747;">
-        ¡Atención! La presente orden compra no es válida ya que anulada por el usuario {{ $user_who_cancelled }}
-        el día {{ Date::parse($purchaseOrder->cancelled_at)->format('d/m/Y H:i') }}
-        por el siguiente motivo: {{ $purchaseOrder->cancel_reason }}
+        ¡Atención! La presente venta no es válida ya que anulada por el usuario {{ $user_who_cancelled }}
+        el día {{ Date::parse($sale->cancelled_at)->format('d/m/Y H:i') }}
+        por el siguiente motivo: {{ $sale->cancel_reason }}
     </div>
     @endif
 
@@ -165,7 +165,7 @@
         <p style="font-weight: 700; font-size: 0.8rem; margin: 0px;">
             Razón social del proveedor:
             <span style="font-weight: 400;">
-                {{ $data['supplier'] }}
+                {{ $data['client'] }}
             </span>
         </p>
         <p style="font-weight: 700; font-size: 0.8rem; margin: 0px;">
@@ -186,18 +186,51 @@
                 {{ $data['date'] }}
             </span>
         </p>
-        <p style="font-weight: 700; font-size: 0.8rem; margin: 0px;">
-            Peso total
-            <span style="font-weight: 400;">
-                {{ $data['total_weight'] }}
-            </span>
-        </p>
-        <p style="font-weight: 700; font-size: 0.8rem; margin: 0px;">
-            Tipo de compra:
-            <span style="font-weight: 400;">
-                {{ $data['type_of_purchase'] }}
-            </span>
-        </p>
+    </div>
+
+    <div>
+        <h2 class="subtitle">
+            Datos del pago
+            <hr>
+        </h2>
+        <table>
+            <tr>
+                <td style="width: 50%;">
+                    <p style="font-weight: 700; font-size: 0.8rem; margin: 0px;">
+                        Método de pago:
+                        <span style="font-weight: 400;">
+                            {{ $data['payment_method'] }}
+                        </span>
+                    </p>
+                </td>
+                <td style="width: 50%; padding-left: 50px;">
+                    <p style="font-weight: 700; font-size: 0.8rem; margin: 0px;">
+                        Condición de pago:
+                        <span style="font-weight: 400;">
+                            {{ $data['payment_condition'] }}
+                        </span>
+                    </p>
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 50%">
+                    <p style="font-weight: 700; font-size: 0.8rem; margin: 0px;">
+                        Tipo de comprobante:
+                        <span style="font-weight: 400;">
+                            {{ $data['voucher_type'] }}
+                        </span>
+                    </p>
+                </td>
+                <td style="width: 50%; padding-left: 50px;">
+                    <p style="font-weight: 700; font-size: 0.8rem; margin: 0px;">
+                        Número de comprobante
+                        <span style="font-weight: 400;">
+                            {{ $data['voucher_number'] }}
+                        </span>
+                    </p>
+                </td>
+            </tr>
+        </table>
     </div>
 
     <div style="margin-top: 15px;">
@@ -208,19 +241,25 @@
         <table class="content-table">
             <thead class="table-head">
                 <tr class="table-head-row">
-                    <td style="width: 30%">
+                    <td style="width: 40%%">
                         <p>{{ $titles['product'] }}</p>
+                    </td>
+                    <td style="width: 10%">
+                        <p>{{ $titles['sublot'] }}</p>
+                    </td>
+                    <td style="width: 10%">
+                        <p>{{ $titles['m2_unitary'] }}</p>
                     </td>
                     <td style="width: 10%">
                         <p>{{ $titles['quantity'] }}</p>
                     </td>
-                    <td style="width: 20%">
-                        <p>{{ $titles['tn_total'] }}</p>
+                    <td style="width: 10%">
+                        <p>{{ $titles['m2_total'] }}</p>
                     </td>
-                    <td style="width: 20%">
-                        <p>{{ $titles['tn_price'] }}</p>
+                    <td style="width: 10%">
+                        <p>{{ $titles['m2_price'] }}</p>
                     </td>
-                    <td style="width: 20%">
+                    <td style="width: 10%">
                         <p>{{ $titles['subtotal'] }}</p>
                     </td>
                 </tr>
@@ -233,13 +272,19 @@
                                 <p>{{ $product['name'] }}</p>
                             </td>
                             <td>
+                                <p>{{ $product['sublot'] }}</p>
+                            </td>
+                            <td>
+                                <p>{{ $product['m2_unitary'] }}</p>
+                            </td>
+                            <td>
                                 <p>{{ $product['quantity'] }}</p>
                             </td>
                             <td>
-                                <p>{{ $product['tn_total'] }}</p>
+                                <p>{{ $product['m2_total'] }}</p>
                             </td>
                             <td>
-                                <p>{{ $product['tn_price'] }}</p>
+                                <p>{{ $product['m2_price'] }}</p>
                             </td>
                             <td>
                                 <p>{{ $product['subtotal'] }}</p>
@@ -247,9 +292,9 @@
                         </tr>
                     @endforeach
 
-                    @if ($supplier_discriminates_iva)
+                    @if ($client_discriminates_iva)
                         <tr style="font-weight: 700;">
-                            <td colspan="4" style="text-align: right; font-size: 0.8rem; ">
+                            <td colspan="6" style="text-align: right; font-size: 0.8rem; ">
                                 Subtotal:
                             </td>
                             <td style="text-align: center; font-size: 0.8rem;">
@@ -257,7 +302,7 @@
                             </td>
                         </tr>
                         <tr style="font-weight: 700;">
-                            <td colspan="4" style="text-align: right; font-size: 0.8rem; ">
+                            <td colspan="6" style="text-align: right; font-size: 0.8rem; ">
                                 IVA:
                             </td>
                             <td style="text-align: center; font-size: 0.8rem;">
@@ -265,7 +310,7 @@
                             </td>
                         </tr>
                         <tr style="font-weight: 700;">
-                            <td colspan="4" style="text-align: right; font-size: 0.8rem; ">
+                            <td colspan="6" style="text-align: right; font-size: 0.8rem; ">
                                 Total:
                             </td>
                             <td style="text-align: center; font-size: 0.8rem;">
@@ -274,7 +319,7 @@
                         </tr>
                     @else
                         <tr style="font-weight: 700;">
-                            <td colspan="4" style="text-align: right; font-size: 0.8rem; ">
+                            <td colspan="6" style="text-align: right; font-size: 0.8rem; ">
                                 Total:
                             </td>
                             <td style="text-align: center; font-size: 0.8rem;">
@@ -302,7 +347,7 @@
         </div>
 
         <div style="margin-top: 30px; border: 1px solid black; font-size: 0.7rem; padding: 5px; text-align: center;">
-            DETALLE DE ORDEN COMPRA PARA USO INTERNO. DOCUMENTO NO VÁLIDO COMO FACTURA.
+            DETALLE DE VENTA PARA USO INTERNO. DOCUMENTO NO VÁLIDO COMO FACTURA.
         </div>
     </div>
 

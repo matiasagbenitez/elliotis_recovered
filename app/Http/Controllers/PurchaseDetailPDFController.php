@@ -35,6 +35,7 @@ class PurchaseDetailPDFController extends Controller
         $data = [
             'id' => $purchase->id,
             'supplier' => $purchase->supplier->business_name,
+            'cuit' => $purchase->supplier->cuit,
             'iva_condition' => $purchase->supplier->iva_condition->name,
             'discriminate' => $purchase->supplier->iva_condition->discriminate ? 'Discrimina IVA' : 'No discrimina IVA',
             'date' => Date::parse($purchase->registration_date)->format('d/m/Y'),

@@ -12,7 +12,7 @@
             </a>
 
             {{-- PDF BUTTON --}}
-            <a href="#">
+            <a href="{{ route('admin.sale-detail.pdf', $sale) }}">
                 <x-jet-danger-button>
                     <i class="fas fa-file-pdf mr-2"></i>
                     Descargar PDF

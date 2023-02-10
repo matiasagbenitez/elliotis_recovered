@@ -12,7 +12,7 @@
             </a>
 
             {{-- PDF BUTTON --}}
-            <a href="#">
+            <a href="{{ route('admin.sale-order-detail.pdf', $saleOrder) }}">
                 <x-jet-danger-button>
                     <i class="fas fa-file-pdf mr-2"></i>
                     Descargar PDF
@@ -68,6 +68,12 @@
                         <span class="font-normal">
                             {{ $saleOrder->client->business_name }}
                             ({{ $saleOrder->client->iva_condition->name }})
+                        </span>
+                    </p>
+                    <p class="text-sm font-mono font-bold">
+                        CUIT:
+                        <span class="font-normal">
+                            {{ $saleOrder->client->cuit }}
                         </span>
                     </p>
                     <p class="text-sm font-mono font-bold">

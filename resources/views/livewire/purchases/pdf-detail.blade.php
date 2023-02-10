@@ -169,6 +169,12 @@
             </span>
         </p>
         <p style="font-weight: 700; font-size: 0.8rem; margin: 0px;">
+            CUIT:
+            <span style="font-weight: 400;">
+                {{ $data['cuit'] }}
+            </span>
+        </p>
+        <p style="font-weight: 700; font-size: 0.8rem; margin: 0px;">
             Condición ante IVA:
             <span style="font-weight: 400;">
                 {{ $data['iva_condition'] }} ({{ $data['discriminate'] }})

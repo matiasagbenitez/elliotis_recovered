@@ -59,6 +59,7 @@ use App\Http\Livewire\Suppliers\IndexSuppliers;
 use App\Http\Livewire\Tenderings\ShowTendering;
 use App\Http\Livewire\TrunkLots\IndexTrunkLots;
 use App\Http\Livewire\WoodTypes\IndexWoodTypes;
+use App\Http\Controllers\SaleDetailPDFController;
 use App\Http\Livewire\Audits\ProductosAnteriores;
 use App\Http\Livewire\Audits\ProductosSiguientes;
 use App\Http\Livewire\Localities\IndexLocalities;
@@ -77,6 +78,8 @@ use App\Http\Livewire\Products\CreatePreviousProduct;
 use App\Http\Livewire\ProductTypes\IndexProductTypes;
 use App\Http\Livewire\TaskStatuses\IndexTaskStatuses;
 use App\Http\Livewire\TypesOfTasks\IndexTypesOfTasks;
+use App\Http\Controllers\SaleOrderDetailPDFController;
+use App\Http\Controllers\SaleDetailClientPDFController;
 use App\Http\Livewire\IvaConditions\IndexIvaConditions;
 use App\Http\Livewire\Notifications\IndexNotifications;
 use App\Http\Livewire\Products\CreateFollowingProducts;
@@ -222,5 +225,9 @@ Route::get('/purchase/{purchase}/detail/pdf', [PurchaseDetailPDFController::clas
 Route::get('/purchase-order/{purchase_order}/detail/pdf', [PurchaseOrderDetailPDFController::class, 'pdf'])->name('admin.purchase-order-detail.pdf');
 
 Route::get('/sales/pdf', [SalePDFController::class, 'pdf'])->name('admin.sales.pdf');
+Route::get('/sale/{sale}/detail/pdf', [SaleDetailPDFController::class, 'pdf'])->name('admin.sale-detail.pdf');
+Route::get('/sale/{sale}/detail-client/pdf', [SaleDetailClientPDFController::class, 'pdf'])->name('admin.sale-detail-client.pdf');
+Route::get('/sale-order/{sale_order}/detail/pdf', [SaleOrderDetailPDFController::class, 'pdf'])->name('admin.sale-order-detail.pdf');
+
 // Route::get('/sublots/areas/pdf', [SublotsAreaPDFController::class, 'pdf'])->name('admin.sublots-areas.pdf');
 // Route::get('/sublots/products/pdf', [SublotsProductPDFController::class, 'pdf'])->name('admin.sublots-products.pdf');

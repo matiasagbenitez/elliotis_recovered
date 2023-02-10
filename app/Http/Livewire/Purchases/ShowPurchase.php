@@ -39,6 +39,7 @@ class ShowPurchase extends Component
         $this->data = [
             'id' => $this->purchase->id,
             'supplier' => $this->purchase->supplier->business_name,
+            'cuit' => $this->purchase->supplier->cuit,
             'iva_condition' => $this->purchase->supplier->iva_condition->name,
             'discriminate' => $this->purchase->supplier->iva_condition->discriminate ? 'Discrimina IVA' : 'No discrimina IVA',
             'date' => Date::parse($this->purchase->registration_date)->format('d/m/Y'),
