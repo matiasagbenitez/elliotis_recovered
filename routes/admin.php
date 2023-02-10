@@ -60,6 +60,7 @@ use App\Http\Livewire\Suppliers\IndexSuppliers;
 use App\Http\Livewire\Tenderings\ShowTendering;
 use App\Http\Livewire\TrunkLots\IndexTrunkLots;
 use App\Http\Livewire\WoodTypes\IndexWoodTypes;
+use App\Http\Controllers\LotDetailPDFController;
 use App\Http\Controllers\SaleDetailPDFController;
 use App\Http\Livewire\Audits\ProductosAnteriores;
 use App\Http\Livewire\Audits\ProductosSiguientes;
@@ -231,6 +232,7 @@ Route::get('/sale/{sale}/detail-client/pdf', [SaleDetailClientPDFController::cla
 Route::get('/sale-order/{sale_order}/detail/pdf', [SaleOrderDetailPDFController::class, 'pdf'])->name('admin.sale-order-detail.pdf');
 
 Route::get('/lots/pdf', [LotPDFController::class, 'pdf'])->name('admin.lots.pdf');
+Route::get('/lots/{lot}/sublots/pdf', [LotDetailPDFController::class, 'pdf'])->name('admin.lot-detail.pdf');
 
 Route::get('/sublots/areas/pdf', [SublotsAreaPDFController::class, 'pdf'])->name('admin.sublots-areas.pdf');
 Route::get('/sublots/products/pdf', [SublotsProductPDFController::class, 'pdf'])->name('admin.sublots-products.pdf');

@@ -16,10 +16,15 @@ class SublotsIndex extends Component
     {
         $this->lot = $lot;
         $this->lotData = [
+            'taskId' => $lot->task->id,
             'taskName' => $lot->task->typeOfTask->name,
+            'startedBy' => User::find($lot->task->started_by)->name,
+            'startedAt' => Date::parse($lot->task->started_at)->format('d-m-Y H:i'),
             'finishedBy' => User::find($lot->task->finished_by)->name,
             'finishedAt' => Date::parse($lot->task->finished_at)->format('d-m-Y H:i'),
-            'taskId' => $lot->task->id
+            'sublots_count' => $lot->sublots->count(),
+            'initial_production' => $lot->sublots->sum('initial_m2') . ' m2',
+            'actual_m2' => $lot->sublots->sum('actual_m2') . ' m2',
         ];
     }
 
