@@ -49,12 +49,15 @@
 
             <table class="text-gray-600 min-w-full divide-y divide-gray-200">
                 <thead class="border-b border-gray-300 bg-gray-200">
-                    <tr class="text-center text-sm text-gray-500 uppercase">
+                    <tr class="text-center text-sm text-gray-500 uppercase whitespace-nowrap">
                         <th class="px-4 py-2">
                             Fecha
                         </th>
                         <th class="px-4 py-2">
                             Temperatura (T°)
+                        </th>
+                        <th class="px-4 py-2">
+                            Sensación
                         </th>
                         <th class="px-4 py-2">
                             Mínima
@@ -83,13 +86,18 @@
                     @foreach ($weatherStats as $stat)
                         <tr class="bg-gray-50 text-center">
                             <td class="px-6 py-3">
-                                <p class="text-sm uppercase">
+                                <p class="text-sm uppercase whitespace-nowrap">
                                     {{ $stat['date'] }}
                                 </p>
                             </td>
                             <td class="px-6 py-3 text-center">
                                 <p class="text-sm uppercase">
                                     {{ $stat['temp'] }}°
+                                </p>
+                            </td>
+                            <td class="px-6 py-3 text-center">
+                                <p class="text-sm uppercase">
+                                    {{ $stat['feels_like'] }}°
                                 </p>
                             </td>
                             <td class="px-6 py-3 text-center">
