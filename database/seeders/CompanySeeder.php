@@ -11,6 +11,7 @@ class CompanySeeder extends Seeder
     {
         $company = [
             'name' => 'CHP e hijos',
+            'cuit' => '30-71111111-1',
             'slogan' => 'Primero los machimbres. Segundo, Francia.',
             'email' => 'chpehijos@gmail.com',
             'phone' => '+5493743445566',

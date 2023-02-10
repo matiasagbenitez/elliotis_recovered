@@ -95,16 +95,22 @@
             <tr>
                 <td style="width: 40%;" valign="top">
                     {{-- <img src="{{ asset('/img/logo_empresa.png') }}" alt="Logo" style="width: 250px; height: 170px;"> --}}
-                    <img src="{{ public_path('/img/logo_empresa.png') }}" alt="Logo"
+                    <img src="{{ public_path($company_stats['logo']) }}" alt="Logo"
                         style="width: 130; height: 65; margin-right: 15px;">
                 </td>
                 <td style="width: 30%; margin-right: 15px" valign="top">
-                    <p style="font-weight: 700; font-size: 0.8rem; margin: 0px;">
-                        Empresa:
+                    <span style="font-weight: 700; font-size: 0.8rem; margin: 0px;">
+                        Razón social:
                         <span style="font-weight: 400;">
                             {{ $company_stats['name'] }}
                         </span>
-                    </p>
+                    </span>
+                    <span style="font-weight: 700; font-size: 0.8rem; margin: 0px;">
+                        CUIT:
+                        <span style="font-weight: 400;">
+                            {{ $company_stats['cuit'] }}
+                        </span>
+                    </span>
                     <p style="font-weight: 700; font-size: 0.8rem; margin: 0px;">
                         Dirección:
                         <span style="font-weight: 400;">
@@ -150,11 +156,12 @@
     </div>
 
     @if (!$sale->is_active)
-    <div style="margin: 10px 0px; border: 1px solid #EC4747; font-size: 0.8rem; padding: 5px; text-align: justify; color: #EC4747;">
-        ¡Atención! La presente venta no es válida ya que anulada por el usuario {{ $user_who_cancelled }}
-        el día {{ Date::parse($sale->cancelled_at)->format('d/m/Y H:i') }}
-        por el siguiente motivo: {{ $sale->cancel_reason }}
-    </div>
+        <div
+            style="margin: 10px 0px; border: 1px solid #EC4747; font-size: 0.8rem; padding: 5px; text-align: justify; color: #EC4747;">
+            ¡Atención! La presente venta no es válida ya que anulada por el usuario {{ $user_who_cancelled }}
+            el día {{ Date::parse($sale->cancelled_at)->format('d/m/Y H:i') }}
+            por el siguiente motivo: {{ $sale->cancel_reason }}
+        </div>
     @endif
 
     <div>

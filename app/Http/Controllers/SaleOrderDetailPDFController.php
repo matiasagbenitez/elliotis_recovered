@@ -106,11 +106,13 @@ class SaleOrderDetailPDFController extends Controller
         $company = Company::find(1);
         $company_stats = [
             'name' => $company->name,
+            'cuit' => $company->cuit,
             'slogan' => $company->slogan,
             'address' => $company->address,
             'phone' => $company->phone,
             'email' => $company->email,
             'cp' => $company->cp,
+            'logo' => $company->logo,
             'date' => date('d/m/Y H:i'),
             'user' => User::find(auth()->user()->id)->name
         ];
