@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\ProductPDFController;
 use App\Http\Livewire\Tests\Test;
 use App\Http\Livewire\API\IndexApi;
 use App\Http\Livewire\Audits\Lotes;
@@ -32,10 +31,12 @@ use App\Http\Livewire\Tasks\RegisterTask;
 use App\Http\Livewire\Weather\WeatherApi;
 use App\Http\Livewire\Audits\Licitaciones;
 use App\Http\Livewire\Dashboard\Dashboard;
+use App\Http\Controllers\SalePDFController;
 use App\Http\Livewire\Clients\CreateClient;
 use App\Http\Livewire\Clients\IndexClients;
 use App\Http\Livewire\Lots\SublotsProducts;
 use App\Http\Livewire\Products\ShowProduct;
+use App\Http\Livewire\Sales\ShowSaleClient;
 use App\Http\Livewire\Unities\IndexUnities;
 use App\Http\Livewire\Audits\OrdenesDeVenta;
 use App\Http\Livewire\Ranking\PruebaRanking;
@@ -46,6 +47,8 @@ use App\Http\Livewire\Products\CreateProduct;
 use App\Http\Livewire\Products\IndexProducts;
 use App\Http\Livewire\Purchases\ShowPurchase;
 use App\Http\Livewire\Suppliers\EditSupplier;
+use App\Http\Controllers\ProductPDFController;
+use App\Http\Controllers\PurchasePDFController;
 use App\Http\Livewire\Countries\IndexCountries;
 use App\Http\Livewire\Provinces\IndexProvinces;
 use App\Http\Livewire\Purchases\CreatePurchase;
@@ -83,7 +86,6 @@ use App\Http\Livewire\PreviousProducts\IndexPreviousProducts;
 use App\Http\Livewire\FollowingProducts\IndexFollowingProducts;
 use App\Http\Livewire\PucharseParameters\IndexPucharseParameters;
 use App\Http\Livewire\NecesaryProduction\IndexNecessaryProduction;
-use App\Http\Livewire\Sales\ShowSaleClient;
 
 // PAÍSES, PROVINCIAS Y LOCALIDADES
 Route::get('/countries', IndexCountries::class)->name('admin.countries.index')->middleware('can:admin.countries.index');
@@ -210,3 +212,5 @@ Route::get('/dashboard', Dashboard::class)->name('admin.dashboard');
 
 // RUTAS PDF
 Route::get('/products/pdf', [ProductPDFController::class, 'pdf'])->name('admin.products.pdf');
+Route::get('/purchases/pdf', [PurchasePDFController::class, 'pdf'])->name('admin.purchases.pdf');
+Route::get('/sales/pdf', [SalePDFController::class, 'pdf'])->name('admin.sales.pdf');

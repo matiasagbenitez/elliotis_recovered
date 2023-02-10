@@ -28,7 +28,7 @@ class ProductPDFController extends Controller
         ];
 
         $company_stats = $this->getCompanyStats();
-        $report_title = 'Listado de productos';
+        $report_title = 'Reporte de productos';
         $stats = $this->getStats($search, $product_name, $measure, $wood_type, $stock_parameter);
 
         $pdf = PDF::loadView('livewire.products.pdf', [

@@ -54,9 +54,16 @@
                 <x-jet-button wire:click="resetFilters">
                     <i class="fas fa-eraser"></i>
                 </x-jet-button>
-                <x-jet-danger-button>
-                    <i class="fas fa-file-pdf"></i>
-                </x-jet-danger-button>
+                <a href="{{ route('admin.purchases.pdf', [
+                    'supplier' => $filters['supplier'],
+                    'voucherType' => $filters['voucherType'],
+                    'fromDate' => $filters['fromDate'],
+                    'toDate' => $filters['toDate'],
+                ]) }}">
+                    <x-jet-danger-button>
+                        <i class="fas fa-file-pdf"></i>
+                    </x-jet-danger-button>
+                </a>
             </div>
         </div>
 
@@ -105,7 +112,7 @@
                                 </p>
                             </td>
                             <td class="px-6 py-2">
-                                <p class="text-sm uppercase text-center">
+                                <p class="text-sm uppercase whitespace-nowrap text-center">
                                     {{ $purchase->supplier->business_name }}
                                 </p>
                             </td>
