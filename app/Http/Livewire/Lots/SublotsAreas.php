@@ -9,7 +9,7 @@ use Livewire\Component;
 class SublotsAreas extends Component
 {
     public $sublots, $areas, $sublotStats;
-    public $filter = '';
+    public $area;
 
     public function mount()
     {
@@ -33,11 +33,11 @@ class SublotsAreas extends Component
         }
     }
 
-    public function updatedFilter()
+    public function updatedArea()
     {
-        if ($this->filter != '') {
+        if ($this->area != '') {
             $this->sublots = Sublot::where('available', true)
-            ->where('area_id', $this->filter)->orderBy('created_at', 'desc')
+            ->where('area_id', $this->area)->orderBy('created_at', 'desc')
             ->get();
         } else {
             $this->sublots = Sublot::where('available', true)->orderBy('created_at', 'desc')->get();

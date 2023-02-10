@@ -3,20 +3,31 @@
     <x-slot name="header">
         <div class="flex items-center justify-between">
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">Sublotes por área</h2>
+
         </div>
     </x-slot>
 
     <x-responsive-table>
         <div class="px-6 py-4 bg-gray-200">
             <div class="grid grid-cols-6 gap-4">
-                <div class="col-span-6">
+                <div class="col-span-5">
                     <x-jet-label class="mb-2 text-lg font-semibold">Área</x-jet-label>
-                    <select wire:model='filter' class="input-control w-full">
+                    <select wire:model="area" class="input-control w-full">
                         <option value="">Todas las áreas</option>
                         @foreach ($areas as $area)
                             <option value="{{ $area->id }}">{{ $area->name }}</option>
                         @endforeach
                     </select>
+                </div>
+                <div class="flex items-end justify-center">
+                    <a href="{{ route('admin.sublots-areas.pdf', [
+                        'area' => $area,
+                    ]) }}">
+                        <x-jet-danger-button>
+                            <i class="fas fa-file-pdf mr-2"></i>
+                            <p class="py-1 px-1">Descargar PDF</p>
+                        </x-jet-danger-button>
+                    </a>
                 </div>
             </div>
         </div>

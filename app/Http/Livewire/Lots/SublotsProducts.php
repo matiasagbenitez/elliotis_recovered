@@ -9,7 +9,7 @@ use Livewire\Component;
 class SublotsProducts extends Component
 {
     public $sublots, $products, $sublotStats;
-    public $filter = '';
+    public $product = '';
 
     public function mount()
     {
@@ -33,11 +33,11 @@ class SublotsProducts extends Component
         }
     }
 
-    public function updatedFilter()
+    public function updatedproduct()
     {
-        if ($this->filter != '') {
+        if ($this->product != '') {
             $this->sublots = Sublot::where('available', true)
-            ->where('product_id', $this->filter)->orderBy('created_at', 'desc')
+            ->where('product_id', $this->product)->orderBy('created_at', 'desc')
             ->get();
         } else {
             $this->sublots = Sublot::where('available', true)->orderBy('created_at', 'desc')->get();
