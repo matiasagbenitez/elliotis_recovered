@@ -29,6 +29,7 @@ use App\Http\Livewire\Clients\EditClient;
 use App\Http\Livewire\Phases\IndexPhases;
 use App\Http\Livewire\Tasks\RegisterTask;
 use App\Http\Livewire\Weather\WeatherApi;
+use App\Http\Controllers\LotPDFController;
 use App\Http\Livewire\Audits\Licitaciones;
 use App\Http\Livewire\Dashboard\Dashboard;
 use App\Http\Controllers\SalePDFController;
@@ -228,6 +229,8 @@ Route::get('/sales/pdf', [SalePDFController::class, 'pdf'])->name('admin.sales.p
 Route::get('/sale/{sale}/detail/pdf', [SaleDetailPDFController::class, 'pdf'])->name('admin.sale-detail.pdf');
 Route::get('/sale/{sale}/detail-client/pdf', [SaleDetailClientPDFController::class, 'pdf'])->name('admin.sale-detail-client.pdf');
 Route::get('/sale-order/{sale_order}/detail/pdf', [SaleOrderDetailPDFController::class, 'pdf'])->name('admin.sale-order-detail.pdf');
+
+Route::get('/lots/pdf', [LotPDFController::class, 'pdf'])->name('admin.lots.pdf');
 
 Route::get('/sublots/areas/pdf', [SublotsAreaPDFController::class, 'pdf'])->name('admin.sublots-areas.pdf');
 Route::get('/sublots/products/pdf', [SublotsProductPDFController::class, 'pdf'])->name('admin.sublots-products.pdf');

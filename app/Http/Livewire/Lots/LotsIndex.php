@@ -18,8 +18,8 @@ class LotsIndex extends Component
     public $filters = [
         'type_of_task' => '',
         'sublots_availability' => 'all',
-        'date_from' => '',
-        'date_to' => '',
+        'fromDate' => '',
+        'toDate' => '',
     ];
 
     public function mount()
@@ -54,9 +54,17 @@ class LotsIndex extends Component
         }
 
         // Filter by date
-        if ($this->filters['date_from'] != '' && $this->filters['date_to'] != '') {
+        if ($this->filters['fromDate'] != '' && $this->filters['toDate'] != '') {
             $this->lots = $this->lots->filter(function ($lot) {
-                return $lot->created_at->between($this->filters['date_from'], $this->filters['date_to']);
+                return $lot->created_at->between($this->filters['fromDate'], $this->filters['toDate']);
+            });
+        } elseif ($this->filters['fromDate'] != '') {
+            $this->lots = $this->lots->filter(function ($lot) {
+                return $lot->created_at >= $this->filters['fromDate'];
+            });
+        } elseif ($this->filters['toDate'] != '') {
+            $this->lots = $this->lots->filter(function ($lot) {
+                return $lot->created_at <= $this->filters['toDate'];
             });
         }
 
@@ -96,6 +104,19 @@ class LotsIndex extends Component
                 'created_at' => $lot->created_at->format('d-m-Y H:i'),
             ];
         }
+    }
+
+    public function resetFilters()
+    {
+        $this->filters = [
+            'type_of_task' => '',
+            'sublots_availability' => 'all',
+            'fromDate' => '',
+            'toDate' => '',
+        ];
+
+        $this->lots = Lot::orderBy('created_at', 'desc')->get();
+        $this->getStats();
 
     }
 

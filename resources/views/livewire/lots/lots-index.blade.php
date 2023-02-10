@@ -9,7 +9,7 @@
     <x-responsive-table>
         <div class="px-8 py-3 bg-gray-200">
             <h1 class="mb-2 text-lg font-bold text-gray-500">Listado de lotes</h1>
-            <div class="grid grid-cols-8 gap-4">
+            <div class="grid grid-cols-9 gap-4">
                 <div class="col-span-2">
                     <x-jet-label class="mb-1 font-bold text-gray-600">Tipo de tarea</x-jet-label>
                     <select wire:model='filters.type_of_task' class="input-control w-full">
@@ -30,13 +30,31 @@
                 </div>
                 <div class="col-span-2 rounded-lg">
                     <x-jet-label class="mb-1 font-bold text-gray-600">Desde fecha</x-jet-label>
-                    <x-jet-input wire:model="filters.fromDate" type="date" class="w-full" />
+                    <x-jet-input wire:model="filters.fromDate" type="datetime-local" class="w-full" />
                 </div>
 
                 {{-- Hasta fecha --}}
                 <div class="col-span-2 rounded-lg">
                     <x-jet-label class="mb-1 font-bold text-gray-600">Hasta fecha</x-jet-label>
-                    <x-jet-input wire:model="filters.toDate" type="date" class="w-full" />
+                    <x-jet-input wire:model="filters.toDate" type="datetime-local" class="w-full" />
+                </div>
+
+                {{-- Limpiar filtros --}}
+                <div class="col-span-1 rounded-lg flex items-end justify-center pb-1 space-x-3">
+                    <x-jet-button wire:click="resetFilters">
+                        <i class="fas fa-eraser"></i>
+                    </x-jet-button>
+                    <a
+                        href="{{ route('admin.lots.pdf', [
+                            'type_of_task' => $filters['type_of_task'],
+                            'sublots_availability' => $filters['sublots_availability'],
+                            'fromDate' => $filters['fromDate'],
+                            'toDate' => $filters['toDate'],
+                        ]) }}">
+                        <x-jet-danger-button>
+                            <i class="fas fa-file-pdf"></i>
+                        </x-jet-danger-button>
+                    </a>
                 </div>
             </div>
         </div>
