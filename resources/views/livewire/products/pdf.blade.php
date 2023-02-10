@@ -211,7 +211,7 @@
             //Shows number center-bottom of A4 page with $x,$y values
             $x = 490;  //X-axis i.e. vertical position
             $y = 795; //Y-axis horizontal position
-            $text = "Pagina {PAGE_NUM} de {PAGE_COUNT}";  //format of display message
+            $text = "Página {PAGE_NUM} de {PAGE_COUNT}";  //format of display message
             $font =  $fontMetrics->get_font("helvetica", "bold");
             $size = 9;
             $color = array(0.2, 0.094, 0.0);

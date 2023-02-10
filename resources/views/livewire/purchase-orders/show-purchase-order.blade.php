@@ -12,7 +12,7 @@
             </a>
 
             {{-- PDF BUTTON --}}
-            <a href="#">
+            <a href="{{ route('admin.purchase-order-detail.pdf', $purchaseOrder) }}">
                 <x-jet-danger-button>
                     <i class="fas fa-file-pdf mr-2"></i>
                     Descargar PDF
@@ -22,7 +22,7 @@
     </x-slot>
 
     @if (!$purchaseOrder->is_active)
-        <div class="max-w-6xl mx-auto bg-red-100 flex justify-center items-center text-red-700 px-4 py-3 rounded relative gap-4 mb-5"
+        <div class="max-w-5xl mx-auto bg-red-100 flex justify-center items-center text-red-700 px-4 py-3 rounded relative gap-4 mb-5"
             role="alert">
             {{-- <div> --}}
             <i class="fas fa-ban mr-5 text-5xl"></i>
@@ -37,7 +37,7 @@
             </div>
         </div>
     @elseif ($purchaseOrder->its_done)
-        <div class="max-w-6xl mx-auto bg-green-100 flex justify-center items-center text-green-700 px-4 py-3 rounded relative gap-4 mb-5""
+        <div class="max-w-5xl mx-auto bg-green-100 flex justify-center items-center text-green-700 px-4 py-3 rounded relative gap-4 mb-5""
             role="alert">
             {{-- <div> --}}
             <i class="fas fa-check mr-5 text-5xl"></i>
@@ -52,7 +52,7 @@
     @endif
 
     {{-- Purchase detail --}}
-    <div class="max-w-6xl mx-auto bg-white p-10 rounded-lg border-2">
+    <div class="max-w-5xl mx-auto bg-white p-10 rounded-lg border-2">
         <h2 class=" font-mono font-semibold text-2xl text-gray-800 leading-tight mb-4 uppercase text-center">
             Detalle de orden de compra N° {{ $purchaseOrder->id }}
         </h2>

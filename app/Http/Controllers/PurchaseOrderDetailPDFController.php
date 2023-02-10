@@ -4,29 +4,29 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\Company;
-use App\Models\Purchase;
 use Illuminate\Http\Request;
+use App\Models\PurchaseOrder;
 use Illuminate\Support\Facades\Date;
 use PDF;
 
-class PurchaseDetailPDFController extends Controller
+class PurchaseOrderDetailPDFController extends Controller
 {
-    public function pdf(Purchase $purchase)
+    public function pdf(PurchaseOrder $purchaseOrder)
     {
-        $supplier_discriminates_iva = $purchase->supplier->iva_condition->discriminate;
-        $type_of_purchase = $purchase->type_of_purchase;
-        $user_who_cancelled = $purchase->cancelled_by ? User::find($purchase->cancelled_by)->name : '';
+        $supplier_discriminates_iva = $purchaseOrder->supplier->iva_condition->discriminate;
+        $type_of_purchase = $purchaseOrder->type_of_purchase;
+        $user_who_cancelled = $purchaseOrder->cancelled_by ? User::find($purchaseOrder->cancelled_by)->name : '';
 
         $company_stats = $this->getCompanyStats();
-        $report_title = 'Detalle de compra N° ' . $purchase->id;
-        $data = $this->getData($purchase);
+        $report_title = 'Detalle de orden de compra N° ' . $purchaseOrder->id;
+        $data = $this->getData($purchaseOrder);
         $titles = $this->getTitles($type_of_purchase, $supplier_discriminates_iva);
-        $stats = $this->getStats($purchase, $supplier_discriminates_iva);
-        $totals = $this->getTotals($purchase);
+        $stats = $this->getStats($purchaseOrder, $supplier_discriminates_iva);
+        $totals = $this->getTotals($purchaseOrder);
 
-        // return view('livewire.purchases.pdf-detail', compact('supplier_discriminates_iva', 'company_stats', 'report_title', 'data', 'titles', 'stats', 'totals', 'user_who_cancelled', 'purchase'));
+        // return view('livewire.purchase-orders.pdf', compact('supplier_discriminates_iva', 'company_stats', 'report_title', 'data', 'titles', 'stats', 'totals', 'user_who_cancelled', 'purchaseOrder'));
 
-        $pdf = PDF::loadView('livewire.purchases.pdf-detail', compact('supplier_discriminates_iva', 'company_stats', 'report_title', 'data', 'titles', 'stats', 'totals', 'user_who_cancelled', 'purchase'));
+        $pdf = PDF::loadView('livewire.purchase-orders.pdf', compact('supplier_discriminates_iva', 'company_stats', 'report_title', 'data', 'titles', 'stats', 'totals', 'user_who_cancelled', 'purchaseOrder'));
         return $pdf->stream('detalle-compra.pdf');
     }
 
@@ -40,11 +40,6 @@ class PurchaseDetailPDFController extends Controller
             'date' => Date::parse($purchase->registration_date)->format('d/m/Y'),
             'total_weight' => $purchase->total_weight . ' TN',
             'type_of_purchase' => $purchase->type_of_purchase == '1' ? 'Detallada' : 'Mixta',
-            'payment_method' => $purchase->payment_method->name,
-            'payment_condition' => $purchase->payment_condition->name,
-            'purchase_order_id' => $purchase->supplier_order_id ? $purchase->supplier_order_id : 'No tiene',
-            'voucher_type' => $purchase->voucher_type->name,
-            'voucher_number' => $purchase->voucher_number,
             'observations' => $purchase->observations ? $purchase->observations : 'No tiene',
         ];
 
@@ -74,12 +69,12 @@ class PurchaseDetailPDFController extends Controller
         return $titles;
     }
 
-    public function getStats($purchase, $supplier_discriminates_iva)
+    public function getStats($purchaseOrder, $supplier_discriminates_iva)
     {
         $stats = [];
 
         if ($supplier_discriminates_iva) {
-            foreach ($purchase->products as $product) {
+            foreach ($purchaseOrder->products as $product) {
                 $stats[] = [
                     'name' => $product->name,
                     'quantity' => $product->pivot->quantity,
@@ -89,7 +84,7 @@ class PurchaseDetailPDFController extends Controller
                 ];
             }
         } else {
-            foreach ($purchase->products as $product) {
+            foreach ($purchaseOrder->products as $product) {
                 $stats[] = [
                     'name' => $product->name,
                     'quantity' => $product->pivot->quantity,
@@ -103,12 +98,12 @@ class PurchaseDetailPDFController extends Controller
         return $stats;
     }
 
-    public function getTotals($purchase)
+    public function getTotals($purchaseOrder)
     {
         $totals = [
-            'subtotal' => '$' . number_format($purchase->subtotal, 2, ',', '.'),
-            'iva' => '$' . number_format($purchase->iva, 2, ',', '.'),
-            'total' => '$' . number_format($purchase->total, 2, ',', '.'),
+            'subtotal' => '$' . number_format($purchaseOrder->subtotal, 2, ',', '.'),
+            'iva' => '$' . number_format($purchaseOrder->iva, 2, ',', '.'),
+            'total' => '$' . number_format($purchaseOrder->total, 2, ',', '.'),
         ];
 
         return $totals;

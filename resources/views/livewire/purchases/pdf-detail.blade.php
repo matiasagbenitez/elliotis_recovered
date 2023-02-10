@@ -149,6 +149,14 @@
         </h1>
     </div>
 
+    @if (!$purchase->is_active)
+    <div style="margin: 10px 0px; border: 1px solid #EC4747; font-size: 0.8rem; padding: 5px; text-align: justify; color: #EC4747;">
+        ¡Atención! La presente compra no es válida ya que anulada por el usuario {{ $user_who_cancelled }}
+        el día {{ Date::parse($purchase->cancelled_at)->format('d/m/Y H:i') }}
+        por el siguiente motivo: {{ $purchase->cancel_reason }}
+    </div>
+    @endif
+
     <div>
         <h2 class="subtitle">
             Datos de la orden
@@ -342,7 +350,7 @@
             //Shows number center-bottom of A4 page with $x,$y values
             $x = 490;  //X-axis i.e. vertical position
             $y = 795; //Y-axis horizontal position
-            $text = "Pagina {PAGE_NUM} de {PAGE_COUNT}";  //format of display message
+            $text = "Página {PAGE_NUM} de {PAGE_COUNT}";  //format of display message
             $font =  $fontMetrics->get_font("helvetica", "bold");
             $size = 9;
             $color = array(0.2, 0.094, 0.0);

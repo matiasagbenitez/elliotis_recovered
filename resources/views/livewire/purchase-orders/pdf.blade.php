@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Compras PDF</title>
+    <title>Detalle compra PDF</title>
 
     <style>
         @page {
@@ -21,6 +21,12 @@
             margin: 10px 0px;
             font-size: 1.25rem;
             text-align: center;
+            text-transform: uppercase;
+        }
+
+        .subtitle {
+            margin: 10px 0px;
+            font-size: 1rem;
             text-transform: uppercase;
         }
 
@@ -143,65 +149,133 @@
         </h1>
     </div>
 
+    @if (!$purchaseOrder->is_active)
+    <div style="margin: 10px 0px; border: 1px solid #EC4747; font-size: 0.8rem; padding: 5px; text-align: justify; color: #EC4747;">
+        ¡Atención! La presente orden compra no es válida ya que anulada por el usuario {{ $user_who_cancelled }}
+        el día {{ Date::parse($purchaseOrder->cancelled_at)->format('d/m/Y H:i') }}
+        por el siguiente motivo: {{ $purchaseOrder->cancel_reason }}
+    </div>
+    @endif
+
     <div>
+        <h2 class="subtitle">
+            Datos de la orden
+            <hr>
+        </h2>
+        <p style="font-weight: 700; font-size: 0.8rem; margin: 0px;">
+            Razón social del proveedor:
+            <span style="font-weight: 400;">
+                {{ $data['supplier'] }}
+            </span>
+        </p>
+        <p style="font-weight: 700; font-size: 0.8rem; margin: 0px;">
+            Condición ante IVA:
+            <span style="font-weight: 400;">
+                {{ $data['iva_condition'] }} ({{ $data['discriminate'] }})
+            </span>
+        </p>
+        <p style="font-weight: 700; font-size: 0.8rem; margin: 0px;">
+            Fecha compra:
+            <span style="font-weight: 400;">
+                {{ $data['date'] }}
+            </span>
+        </p>
+        <p style="font-weight: 700; font-size: 0.8rem; margin: 0px;">
+            Peso total
+            <span style="font-weight: 400;">
+                {{ $data['total_weight'] }}
+            </span>
+        </p>
+        <p style="font-weight: 700; font-size: 0.8rem; margin: 0px;">
+            Tipo de compra:
+            <span style="font-weight: 400;">
+                {{ $data['type_of_purchase'] }}
+            </span>
+        </p>
+    </div>
+
+    <div style="margin-top: 15px;">
+        <h2 class="subtitle">
+            Detalle de la orden
+            <hr>
+        </h2>
         <table class="content-table">
             <thead class="table-head">
                 <tr class="table-head-row">
-                    <td style="width: 5%">
-                        <p>ID</p>
+                    <td style="width: 30%">
+                        <p>{{ $titles['product'] }}</p>
                     </td>
-                    <td style="width: 15%">
-                        <p>Fecha </p>
+                    <td style="width: 10%">
+                        <p>{{ $titles['quantity'] }}</p>
                     </td>
-                    <td style="width: 25%">
-                        <p>Cliente</p>
+                    <td style="width: 20%">
+                        <p>{{ $titles['tn_total'] }}</p>
                     </td>
-                    <td style="width: 25%">
-                        <p>Comprobante</p>
+                    <td style="width: 20%">
+                        <p>{{ $titles['tn_price'] }}</p>
                     </td>
-                    <td style="width: 15%">
-                        <p>M2 total</p>
-                    </td>
-                    <td style="width: 15%">
-                        <p>Importe</p>
+                    <td style="width: 20%">
+                        <p>{{ $titles['subtotal'] }}</p>
                     </td>
                 </tr>
             </thead>
             <tbody>
                 @if ($stats)
-                    @foreach ($stats as $stat)
+                    @foreach ($stats as $product)
                         <tr class="table-body-row">
-                            <td style="width: 5%">
-                                <p>{{ $stat['id'] }}</p>
+                            <td style="text-align: left;">
+                                <p>{{ $product['name'] }}</p>
                             </td>
-                            <td style="width: 10%;">
-                                <p>{{ $stat['date'] }}</p>
+                            <td>
+                                <p>{{ $product['quantity'] }}</p>
                             </td>
-                            <td style="width: 30%; text-align:left;">
-                                <p>{{ $stat['client'] }}</p>
+                            <td>
+                                <p>{{ $product['tn_total'] }}</p>
                             </td>
-                            <td style="width: 25%; text-align:left;">
-                                <p>{{ $stat['voucher_type'] }} (N° {{ $stat['voucher_number'] }})</p>
+                            <td>
+                                <p>{{ $product['tn_price'] }}</p>
                             </td>
-                            <td style="width: 12.5%; text-align:right;">
-                                <p>{{ $stat['m2_formated'] }}</p>
-                            </td>
-                            <td style="width: 12.5%; text-align:right;">
-                                <p>{{ $stat['total_formated'] }}</p>
+                            <td>
+                                <p>{{ $product['subtotal'] }}</p>
                             </td>
                         </tr>
                     @endforeach
-                    <tr style="background-color: #F1F1F1; font-weight: 700;">
-                        <td colspan="4" style="text-align: right; font-size: 0.8rem; ">
-                            <p>Total:</p>
-                        </td>
-                        <td style="text-align: center; font-size: 0.8rem;">
-                            <p>{{ number_format($totals['total_m2'], 2, ',', '.') }} m2</p>
-                        </td>
-                        <td style="text-align: center; font-size: 0.8rem;">
-                            <p>${{number_format($totals['total_sales'], 2, ',', '.') }}</p>
-                        </td>
-                    </tr>
+
+                    @if ($supplier_discriminates_iva)
+                        <tr style="font-weight: 700;">
+                            <td colspan="4" style="text-align: right; font-size: 0.8rem; ">
+                                Subtotal:
+                            </td>
+                            <td style="text-align: center; font-size: 0.8rem;">
+                                <p style="margin: 5px 0px;">{{ $totals['subtotal'] }}</p>
+                            </td>
+                        </tr>
+                        <tr style="font-weight: 700;">
+                            <td colspan="4" style="text-align: right; font-size: 0.8rem; ">
+                                IVA:
+                            </td>
+                            <td style="text-align: center; font-size: 0.8rem;">
+                                <p style="margin: 5px 0px;">{{ $totals['iva'] }}</p>
+                            </td>
+                        </tr>
+                        <tr style="font-weight: 700;">
+                            <td colspan="4" style="text-align: right; font-size: 0.8rem; ">
+                                Total:
+                            </td>
+                            <td style="text-align: center; font-size: 0.8rem;">
+                                <p style="margin: 5px 0px;">{{ $totals['total'] }}</p>
+                            </td>
+                        </tr>
+                    @else
+                        <tr style="font-weight: 700;">
+                            <td colspan="4" style="text-align: right; font-size: 0.8rem; ">
+                                Total:
+                            </td>
+                            <td style="text-align: center; font-size: 0.8rem;">
+                                <p style="margin: 5px 0px;">{{ $totals['total'] }}</p>
+                            </td>
+                        </tr>
+                    @endif
                 @else
                     <tr>
                         <td colspan="6" style="text-align: center; font-size: 0.8rem;">
@@ -211,21 +285,22 @@
                 @endif
             </tbody>
         </table>
-    </div>
 
-    <div class="observaciones" style="border: .5px solid black; margin-top: 15px;">
-        <p style="font-weight: 700; font-size: 0.8rem; margin: 0px;">
-            Filtros:
-        </p>
-        <ul style="list-style-type: disc; margin: 5px 0px;">
-            @foreach ($filtros as $key => $value)
-                <li>{{ $key }}: {{ $value }}</li>
-            @endforeach
-        </ul>
+        <div>
+            <p style="font-weight: 700; font-size: 0.8rem;">
+                Observaciones:
+                <span style="font-weight: 400;">
+                    {{ $data['observations'] }}
+                </span>
+            </p>
+        </div>
+
+        <div style="margin-top: 30px; border: 1px solid black; font-size: 0.7rem; padding: 5px; text-align: center;">
+            DETALLE DE ORDEN COMPRA PARA USO INTERNO. DOCUMENTO NO VÁLIDO COMO FACTURA.
+        </div>
     </div>
 
     <script type="text/php">
-
         if (isset($pdf)) {
             //Shows number center-bottom of A4 page with $x,$y values
             $x = 490;  //X-axis i.e. vertical position
@@ -239,7 +314,6 @@
             $angle = 0.0;   //  default
             $pdf->page_text($x, $y, $text, $font, $size, $color, $word_space, $char_space, $angle);
         }
-
     </script>
 
 </body>

@@ -50,7 +50,7 @@ return new class extends Migration
 
             $table->boolean('is_active')->default(true);
             $table->integer('cancelled_by')->nullable();
-            $table->date('cancelled_at')->nullable();
+            $table->dateTime('cancelled_at')->nullable();
             $table->text('cancel_reason')->nullable();
 
             $table->timestamps();

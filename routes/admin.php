@@ -85,6 +85,7 @@ use App\Http\Livewire\Tenderings\ShowFinishedTendering;
 use App\Http\Livewire\PurchaseOrders\CreatePurchaseOrder;
 use App\Http\Livewire\PurchaseOrders\PurchaseOrdersIndex;
 use App\Http\Livewire\SaleOrders\ShowNecessaryProduction;
+use App\Http\Controllers\PurchaseOrderDetailPDFController;
 use App\Http\Livewire\PreviousProducts\IndexPreviousProducts;
 use App\Http\Livewire\FollowingProducts\IndexFollowingProducts;
 use App\Http\Livewire\PucharseParameters\IndexPucharseParameters;
@@ -218,6 +219,7 @@ Route::get('/products/pdf', [ProductPDFController::class, 'pdf'])->name('admin.p
 
 Route::get('/purchases/pdf', [PurchasePDFController::class, 'pdf'])->name('admin.purchases.pdf');
 Route::get('/purchase/{purchase}/detail/pdf', [PurchaseDetailPDFController::class, 'pdf'])->name('admin.purchase-detail.pdf');
+Route::get('/purchase-order/{purchase_order}/detail/pdf', [PurchaseOrderDetailPDFController::class, 'pdf'])->name('admin.purchase-order-detail.pdf');
 
 Route::get('/sales/pdf', [SalePDFController::class, 'pdf'])->name('admin.sales.pdf');
 // Route::get('/sublots/areas/pdf', [SublotsAreaPDFController::class, 'pdf'])->name('admin.sublots-areas.pdf');

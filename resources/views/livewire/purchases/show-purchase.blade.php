@@ -22,7 +22,7 @@
     </x-slot>
 
     @if (!$purchase->is_active)
-        <div class="max-w-6xl mx-auto bg-red-100 flex justify-center items-center text-red-700 px-4 py-3 rounded relative gap-4 mb-5"
+        <div class="max-w-5xl mx-auto bg-red-100 flex justify-center items-center text-red-700 px-4 py-3 rounded relative gap-4 mb-5"
             role="alert">
             {{-- <div> --}}
             <i class="fas fa-ban text-5xl"></i>
