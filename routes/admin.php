@@ -69,6 +69,7 @@ use App\Http\Livewire\Tenderings\CreateTendering;
 use App\Http\Livewire\Tenderings\IndexTenderings;
 use App\Http\Controllers\SublotsAreaPDFController;
 use App\Http\Livewire\Tenderings\ShowOfferTendering;
+use App\Http\Controllers\PurchaseDetailPDFController;
 use App\Http\Controllers\SublotsProductPDFController;
 use App\Http\Livewire\M2Calculator\M2CalculatorIndex;
 use App\Http\Livewire\ProductNames\IndexProductNames;
@@ -214,7 +215,10 @@ Route::get('/dashboard', Dashboard::class)->name('admin.dashboard');
 
 // RUTAS PDF
 Route::get('/products/pdf', [ProductPDFController::class, 'pdf'])->name('admin.products.pdf');
+
 Route::get('/purchases/pdf', [PurchasePDFController::class, 'pdf'])->name('admin.purchases.pdf');
+Route::get('/purchase/{purchase}/detail/pdf', [PurchaseDetailPDFController::class, 'pdf'])->name('admin.purchase-detail.pdf');
+
 Route::get('/sales/pdf', [SalePDFController::class, 'pdf'])->name('admin.sales.pdf');
-Route::get('/sublots/areas/pdf', [SublotsAreaPDFController::class, 'pdf'])->name('admin.sublots-areas.pdf');
-Route::get('/sublots/products/pdf', [SublotsProductPDFController::class, 'pdf'])->name('admin.sublots-products.pdf');
+// Route::get('/sublots/areas/pdf', [SublotsAreaPDFController::class, 'pdf'])->name('admin.sublots-areas.pdf');
+// Route::get('/sublots/products/pdf', [SublotsProductPDFController::class, 'pdf'])->name('admin.sublots-products.pdf');

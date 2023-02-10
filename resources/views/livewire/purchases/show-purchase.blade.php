@@ -12,7 +12,7 @@
             </a>
 
             {{-- PDF BUTTON --}}
-            <a href="#">
+            <a href="{{ route('admin.purchase-detail.pdf', $purchase) }}">
                 <x-jet-danger-button>
                     <i class="fas fa-file-pdf mr-2"></i>
                     Descargar PDF
@@ -59,7 +59,7 @@
                         <span class="font-normal">{{ $data['iva_condition'] }} ({{ $data['discriminate'] }})</span>
                     </p>
                     <p class="text-sm font-mono font-bold">
-                        Fecha registro:
+                        Fecha compra:
                         <span class="font-normal">{{ $data['date'] }}</span>
                     </p>
                     <p class="text-sm font-mono font-bold">

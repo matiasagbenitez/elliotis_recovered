@@ -206,6 +206,22 @@
         </ul>
     </div>
 
+    <script type="text/php">
+        if (isset($pdf)) {
+            //Shows number center-bottom of A4 page with $x,$y values
+            $x = 490;  //X-axis i.e. vertical position
+            $y = 795; //Y-axis horizontal position
+            $text = "Pagina {PAGE_NUM} de {PAGE_COUNT}";  //format of display message
+            $font =  $fontMetrics->get_font("helvetica", "bold");
+            $size = 9;
+            $color = array(0.2, 0.094, 0.0);
+            $word_space = 0.0;  //  default
+            $char_space = 0.0;  //  default
+            $angle = 0.0;   //  default
+            $pdf->page_text($x, $y, $text, $font, $size, $color, $word_space, $char_space, $angle);
+        }
+    </script>
+
 </body>
 
 </html>

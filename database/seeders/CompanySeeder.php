@@ -14,7 +14,7 @@ class CompanySeeder extends Seeder
             'slogan' => 'Primero los machimbres. Segundo, Francia.',
             'email' => 'chpehijos@gmail.com',
             'phone' => '+5493743445566',
-            'address' => 'Av. Aconcagua 1100, Jardín América, Misiones, Argentina',
+            'address' => 'Av. Aconcagua 1100, Jardín América, Misiones',
             'cp' => '3328',
             'logo' => '/img/logo_empresa.png'
         ];
