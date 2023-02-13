@@ -62,6 +62,7 @@ use App\Http\Livewire\TrunkLots\IndexTrunkLots;
 use App\Http\Livewire\WoodTypes\IndexWoodTypes;
 use App\Http\Controllers\LotDetailPDFController;
 use App\Http\Controllers\SaleDetailPDFController;
+use App\Http\Controllers\TaskDetailPDFController;
 use App\Http\Livewire\Audits\ProductosAnteriores;
 use App\Http\Livewire\Audits\ProductosSiguientes;
 use App\Http\Livewire\Localities\IndexLocalities;
@@ -236,3 +237,5 @@ Route::get('/lots/{lot}/sublots/pdf', [LotDetailPDFController::class, 'pdf'])->n
 
 Route::get('/sublots/areas/pdf', [SublotsAreaPDFController::class, 'pdf'])->name('admin.sublots-areas.pdf');
 Route::get('/sublots/products/pdf', [SublotsProductPDFController::class, 'pdf'])->name('admin.sublots-products.pdf');
+
+Route::get('/task/{task}/detail/pdf', [TaskDetailPDFController::class, 'pdf'])->name('admin.task-detail.pdf');

@@ -9,7 +9,7 @@
                 </x-jet-button>
             </a>
 
-            <a href="#">
+            <a href="{{ route('admin.task-detail.pdf', $task) }}">
                 <x-jet-danger-button>
                     <i class="fas fa-file-pdf mr-2"></i>
                     Descargar PDF
