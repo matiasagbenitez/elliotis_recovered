@@ -171,23 +171,15 @@
                 <a href="{{ route('admin.trunk-lots.index') }}"
                     class="block px-4 py-1 mt-2 text-sm font-semibold text-gray-900 rounded-lg dark-mode:bg-gray-700 dark-mode:hover:bg-gray-600 dark-mode:focus:bg-gray-600 dark-mode:focus:text-white dark-mode:hover:text-white dark-mode:text-gray-200 hover:text-gray-900 focus:text-gray-900 hover:bg-gray-200 focus:bg-gray-200 focus:outline-none focus:shadow-outline">
                     <i class="fas fa-chart-area mr-2"></i>
-                    Lotes de rollos
+                    Playa de rollos
                 </a>
             @endcan
 
             @can('admin.necessary-production.index')
                 <a href="{{ route('admin.necessary-production.index') }}"
                     class="block px-4 py-1 mt-2 text-sm font-semibold text-gray-900 rounded-lg dark-mode:bg-gray-700 dark-mode:hover:bg-gray-600 dark-mode:focus:bg-gray-600 dark-mode:focus:text-white dark-mode:hover:text-white dark-mode:text-gray-200 hover:text-gray-900 focus:text-gray-900 hover:bg-gray-200 focus:bg-gray-200 focus:outline-none focus:shadow-outline">
-                    <i class="fas fa-calculator mr-2"></i>
+                    <i class="fas fa-link mr-2"></i>
                     Producción necesaria
-                </a>
-            @endcan
-
-            @can('admin.calculator.index')
-                <a href="{{ route('admin.calculator.index') }}"
-                    class="block px-4 py-1 mt-2 text-sm font-semibold text-gray-900 rounded-lg dark-mode:bg-gray-700 dark-mode:hover:bg-gray-600 dark-mode:focus:bg-gray-600 dark-mode:focus:text-white dark-mode:hover:text-white dark-mode:text-gray-200 hover:text-gray-900 focus:text-gray-900 hover:bg-gray-200 focus:bg-gray-200 focus:outline-none focus:shadow-outline">
-                    <i class="fas fa-calculator mr-2"></i>
-                    Calculadora (m²)
                 </a>
             @endcan
 
@@ -220,6 +212,20 @@
                     class="block px-4 py-1 mt-2 text-sm font-semibold text-gray-900 rounded-lg dark-mode:bg-gray-700 dark-mode:hover:bg-gray-600 dark-mode:focus:bg-gray-600 dark-mode:focus:text-white dark-mode:hover:text-white dark-mode:text-gray-200 hover:text-gray-900 focus:text-gray-900 hover:bg-gray-200 focus:bg-gray-200 focus:outline-none focus:shadow-outline">
                     <i class="fas fa-search-location mr-2"></i>
                     Sublotes por producto
+                </a>
+            @endcan
+
+            <a href="{{ route('admin.tasks.report') }}"
+                class="block px-4 py-1 mt-2 text-sm font-semibold text-gray-900 rounded-lg dark-mode:bg-gray-700 dark-mode:hover:bg-gray-600 dark-mode:focus:bg-gray-600 dark-mode:focus:text-white dark-mode:hover:text-white dark-mode:text-gray-200 hover:text-gray-900 focus:text-gray-900 hover:bg-gray-200 focus:bg-gray-200 focus:outline-none focus:shadow-outline">
+                <i class="fas fa-clipboard-check mr-2"></i>
+                Reportes de producción
+            </a>
+
+            @can('admin.calculator.index')
+                <a href="{{ route('admin.calculator.index') }}"
+                    class="block px-4 py-1 mt-2 text-sm font-semibold text-gray-900 rounded-lg dark-mode:bg-gray-700 dark-mode:hover:bg-gray-600 dark-mode:focus:bg-gray-600 dark-mode:focus:text-white dark-mode:hover:text-white dark-mode:text-gray-200 hover:text-gray-900 focus:text-gray-900 hover:bg-gray-200 focus:bg-gray-200 focus:outline-none focus:shadow-outline">
+                    <i class="fas fa-calculator mr-2"></i>
+                    Calculadora
                 </a>
                 <br>
             @endcan

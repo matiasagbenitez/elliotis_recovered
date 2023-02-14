@@ -13,7 +13,8 @@ class LotPDFController extends Controller
 {
     public function pdf(Request $request)
     {
-        $type_of_task = TypeOfTask::find($request->type_of_task)->name ?? null;
+        $type_of_task = $request->type_of_task ?? null;
+        $type_of_task_name = TypeOfTask::find($request->type_of_task)->name ?? null;
         $sublots_availability = $request->sublots_availability ?? null;
 
         switch ($request->sublots_availability) {
@@ -35,7 +36,7 @@ class LotPDFController extends Controller
         $toDate = $request->toDate;
 
         $filtros = [
-            'Tipo de tarea' => $type_of_task ?? 'Todos',
+            'Tipo de tarea' => $type_of_task_name ?? 'Todos',
             'Disponibilidad de sublotes' => $sublots_availability_text ?? 'Todos',
             'Fecha desde' => $fromDate ?? 'Todos',
             'Fecha hasta' => $toDate ?? 'Todos',

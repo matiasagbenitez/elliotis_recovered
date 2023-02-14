@@ -92,10 +92,12 @@ use App\Http\Livewire\PurchaseOrders\CreatePurchaseOrder;
 use App\Http\Livewire\PurchaseOrders\PurchaseOrdersIndex;
 use App\Http\Livewire\SaleOrders\ShowNecessaryProduction;
 use App\Http\Controllers\PurchaseOrderDetailPDFController;
+use App\Http\Controllers\TasksReportPDFController;
 use App\Http\Livewire\PreviousProducts\IndexPreviousProducts;
 use App\Http\Livewire\FollowingProducts\IndexFollowingProducts;
 use App\Http\Livewire\PucharseParameters\IndexPucharseParameters;
 use App\Http\Livewire\NecesaryProduction\IndexNecessaryProduction;
+use App\Http\Livewire\ProductionReport\IndexProductionReport;
 
 // PAÍSES, PROVINCIAS Y LOCALIDADES
 Route::get('/countries', IndexCountries::class)->name('admin.countries.index')->middleware('can:admin.countries.index');
@@ -175,6 +177,7 @@ Route::get('/tasks', IndexTasks::class)->name('admin.tasks.index')->middleware('
 Route::get('/tasks/{task_type}/manage', ManageTasks::class)->name('admin.tasks.manage')->middleware('can:admin.tasks.manage');
 Route::get('/tasks/{task_type}/register/{task}', RegisterTask::class)->name('admin.tasks.register')->middleware('can:admin.tasks.register');
 Route::get('/tasks/show/{task}', ShowTask::class)->name('admin.tasks.show')->middleware('can:admin.tasks.show');
+Route::get('/tasks/report', IndexProductionReport::class)->name('admin.tasks.report');
 
 // LOTES Y SUBLOTES
 Route::get('/lots', LotsIndex::class)->name('admin.lots.index')->middleware('can:admin.lots.index');
@@ -239,3 +242,4 @@ Route::get('/sublots/areas/pdf', [SublotsAreaPDFController::class, 'pdf'])->name
 Route::get('/sublots/products/pdf', [SublotsProductPDFController::class, 'pdf'])->name('admin.sublots-products.pdf');
 
 Route::get('/task/{task}/detail/pdf', [TaskDetailPDFController::class, 'pdf'])->name('admin.task-detail.pdf');
+Route::get('/tasks/report/pdf', [TasksReportPDFController::class, 'pdf'])->name('admin.tasks-report.pdf');

@@ -34,7 +34,7 @@
         @if ($production)
             <table class="text-gray-600 min-w-full divide-y divide-gray-200">
                 <thead class="border-b border-gray-300 bg-gray-200">
-                    <tr class="text-center text-sm text-gray-500 uppercase">
+                    <tr class="text-center text-sm text-gray-500 uppercase whitespace-nowrap">
                         <th scope="col" class="px-6 py-2 w-1/2">
                             Producto
                         </th>
@@ -54,7 +54,7 @@
                 </thead>
                 <tbody class="divide-y divide-gray-200">
                     @foreach ($productionFormated as $product)
-                        <tr class="bg-gray-50">
+                        <tr class="bg-gray-50 whitespace-nowrap">
                             <td class="px-10 py-3">
                                 <p class="text-sm uppercase">
                                     {{ $product['name'] }}
