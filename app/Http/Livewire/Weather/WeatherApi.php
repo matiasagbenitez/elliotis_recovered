@@ -56,6 +56,7 @@ class WeatherApi extends Component
             $weatherStats[$key]['weather'] = $value['weather'][0]['main'];
             $weatherStats[$key]['wind_speed'] = $value['wind']['speed'];
             $weatherStats[$key]['pop'] = $value['pop'];
+            $weatherStats[$key]['popx100'] = $value['pop'] * 100;
             $weatherStats[$key]['rain'] = $value['rain']['3h'] ?? 0;
         }
         $this->weatherStats = $weatherStats;
