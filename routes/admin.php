@@ -98,6 +98,7 @@ use App\Http\Livewire\FollowingProducts\IndexFollowingProducts;
 use App\Http\Livewire\PucharseParameters\IndexPucharseParameters;
 use App\Http\Livewire\NecesaryProduction\IndexNecessaryProduction;
 use App\Http\Livewire\ProductionReport\IndexProductionReport;
+use App\Http\Livewire\SublotsTracking\SublotTrackingIndex;
 
 // PAÍSES, PROVINCIAS Y LOCALIDADES
 Route::get('/countries', IndexCountries::class)->name('admin.countries.index')->middleware('can:admin.countries.index');
@@ -196,6 +197,7 @@ Route::get('/notifications', IndexNotifications::class)->name('admin.notificatio
 // Route::get('/tests-orders', TestOrders::class)->name('admin.tests-orders.index');
 // Route::get('/m2-test', M2Test::class)->name('admin.m2-test.index');
 // Route::get('/ranking/{tendering}', PruebaRanking::class)->name('admin.ranking.index');
+Route::get('/sublots-tracking', SublotTrackingIndex::class)->name('admin.sublots-tracking.index');
 
 // PRODUCCIÓN NECESARIA
 Route::get('/necessary-production', IndexNecessaryProduction::class)->name('admin.necessary-production.index')->middleware('can:admin.necessary-production.index');
