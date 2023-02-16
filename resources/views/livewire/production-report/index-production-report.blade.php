@@ -3,7 +3,7 @@
     <x-slot name="header">
         <div class="flex items-center justify-between">
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                Reporte de producción
+                Reporte de tareas
             </h2>
         </div>
     </x-slot>
@@ -15,7 +15,7 @@
             <div class="col-span-10">
                 <span class="font-bold text-gray-700 text-lg">
                     <i class="fas fa-info-circle text-gray-700 text-lg mr-2"></i>
-                    Reporte de producción
+                    Reporte de tareas
                 </span>
             </div>
 

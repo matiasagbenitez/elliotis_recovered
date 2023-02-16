@@ -13,7 +13,7 @@ class EstadisticaService
 {
     public static function estadisticasGenerales($fecha_inicio = null, $fecha_fin = null)
     {
-        $last_week = strtotime('-1 week');
+        $last_week = strtotime('-3 week');
         $tasks_corte = Task::where('type_of_task_id', 2)
             ->where('cancelled', false)
             ->where('started_at', '>=', date('Y-m-d H:i:s', $last_week))

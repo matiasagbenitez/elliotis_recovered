@@ -61,6 +61,7 @@ use App\Http\Livewire\Tenderings\ShowTendering;
 use App\Http\Livewire\TrunkLots\IndexTrunkLots;
 use App\Http\Livewire\WoodTypes\IndexWoodTypes;
 use App\Http\Controllers\LotDetailPDFController;
+use App\Http\Controllers\ProduccionLineaCortePDFController;
 use App\Http\Controllers\SaleDetailPDFController;
 use App\Http\Controllers\TaskDetailPDFController;
 use App\Http\Livewire\Audits\ProductosAnteriores;
@@ -98,6 +99,7 @@ use App\Http\Livewire\FollowingProducts\IndexFollowingProducts;
 use App\Http\Livewire\PucharseParameters\IndexPucharseParameters;
 use App\Http\Livewire\NecesaryProduction\IndexNecessaryProduction;
 use App\Http\Livewire\ProductionReport\IndexProductionReport;
+use App\Http\Livewire\Stadistics\IndexStadistics;
 use App\Http\Livewire\SublotsTracking\SublotTrackingIndex;
 
 // PAÍSES, PROVINCIAS Y LOCALIDADES
@@ -245,3 +247,5 @@ Route::get('/sublots/products/pdf', [SublotsProductPDFController::class, 'pdf'])
 
 Route::get('/task/{task}/detail/pdf', [TaskDetailPDFController::class, 'pdf'])->name('admin.task-detail.pdf');
 Route::get('/tasks/report/pdf', [TasksReportPDFController::class, 'pdf'])->name('admin.tasks-report.pdf');
+Route::get('/stadistics', IndexStadistics::class)->name('admin.stadistics.index');
+Route::get('/stadistics/1/pdf', [ProduccionLineaCortePDFController::class, 'pdf'])->name('admin.produccion-linea-corte.pdf');
