@@ -129,7 +129,7 @@ class ProduccionLineaCorte extends Component
             $this->cantidad_sublotes_fajas_cortadas = $cantidad_sublotes_fajas_cortadas;
 
             // M2 x hora
-            $m2_x_hora = $tiempo_corte > 0 ? round($total_m2_cortados / TimeService::secondsToHours($tiempo_corte), 2) : 0;
+            $m2_x_hora = $tiempo_corte > 0 ? round($total_m2_cortados / ($tiempo_corte / 3600)) : 0;
             $this->m2_x_hora = $m2_x_hora;
 
             // M2 x rollo
@@ -137,7 +137,7 @@ class ProduccionLineaCorte extends Component
             $this->m2_x_rollo = $m2_x_rollo;
 
             // Rollos x hora
-            $rollos_x_hora = $tiempo_corte > 0 ? round($total_rollos / TimeService::secondsToHours($tiempo_corte), 2) : 0;
+            $rollos_x_hora = $tiempo_corte > 0 ? round($total_rollos / ($tiempo_corte / 3600)) : 0;
             $this->rollos_x_hora = $rollos_x_hora;
 
             // Top 5 días con mayor producción
@@ -190,11 +190,12 @@ class ProduccionLineaCorte extends Component
         $chart1 = new ProduccionLineaCorteChart1;
         $chart1->labels($labels)->options([
             'legend' => [
-                'position' => 'top',
-                'labels' => [
-                    'boxWidth' => 10,
-                    'fontSize' => 13,
-                ],
+                'display' => false,
+            ],
+            'title' => [
+                'display' => true,
+                'text' => 'Rollos procesados',
+                'fontSize' => 20,
             ],
         ]);
         $colors = range(1, count($labels));
@@ -209,7 +210,7 @@ class ProduccionLineaCorte extends Component
             }
         }
 
-        $chart1->dataset('Cantidad de rollos cortadoss', 'bar', $data)
+        $chart1->dataset('Cantidad de rollos cortados', 'bar', $data)
             ->backgroundColor($colorArray)
             ->color($colorArray);
 
@@ -218,6 +219,11 @@ class ProduccionLineaCorte extends Component
 
         $chart2 = new ProduccionLineaCorteChart2;
         $chart2->labels($labels)->options([
+            'title' => [
+                'display' => true,
+                'text' => 'Fajas producidas',
+                'fontSize' => 20,
+            ],
             'legend' => [
                 'position' => 'bottom',
                 'labels' => [

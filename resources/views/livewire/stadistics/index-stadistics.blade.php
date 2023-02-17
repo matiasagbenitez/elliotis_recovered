@@ -61,7 +61,7 @@
         @if ($filters['stadistic_type'] == 1)
             @livewire('stadistics.produccion-linea-corte', ['filters' => $filters], key('produccion_linea_corte'))
         @elseif ($filters['stadistic_type'] == 2)
-            Estadística 2
+            @livewire('stadistics.produccion-machimbradora', ['filters' => $filters], key('produccion_machimbradora'))
         @elseif ($filters['stadistic_type'] == 3)
             Estadística 3
         @else

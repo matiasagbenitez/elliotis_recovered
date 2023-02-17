@@ -200,27 +200,6 @@ class ProduccionLineaCortePDFController extends Controller
                 ->color($colorArray)
                 ->backgroundColor($colorArray);
 
-                // return view('livewire.stadistics.produccion-linea-corte-pdf', compact(
-                //     'company_stats',
-                //     'report_title',
-                //     'report_subtitle',
-                //     'total_tareas_corte',
-                //     'cantidad_sublotes_cortados',
-                //     'total_rollos',
-                //     'tiempo_corte_formateado',
-                //     'rollos_x_hora',
-                //     'productos_cortados',
-                //     'total_fajas_cortados',
-                //     'total_m2_cortados',
-                //     'cantidad_sublotes_fajas_cortadas',
-                //     'productos_fajas_cortadas',
-                //     'm2_x_hora',
-                //     'm2_x_rollo',
-                //     'top_5_dias',
-                //     'chart1',
-                //     'chart2'
-                // ));
-
             $pdf = PDF::loadView('livewire.stadistics.produccion-linea-corte-pdf', compact(
                 'company_stats',
                 'report_title',

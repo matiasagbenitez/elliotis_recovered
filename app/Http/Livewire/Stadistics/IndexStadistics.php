@@ -16,13 +16,12 @@ class IndexStadistics extends Component
     public $stadistics_types = [
         0 => 'Seleccione un tipo de estadística',
         1 => 'Producción en línea de corte (corte de rollos)',
-        2 => 'Estadística 2',
+        2 => 'Producción en machimbradora',
         3 => 'Estadística 3',
     ];
 
     public function mount()
     {
-
         if (request()->has('stadistic_type') && request()->has('from_datetime') && request()->has('to_datetime')) {
             $this->stadistic_type = request()->get('stadistic_type');
             $this->from_datetime = request()->get('from_datetime');

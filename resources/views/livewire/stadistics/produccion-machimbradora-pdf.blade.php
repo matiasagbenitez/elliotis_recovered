@@ -163,35 +163,33 @@
         </h2>
         <table style="width: 100%;">
             <tr>
-                <td style="width: 1/4;">
+                <td style="width: 25%;">
                     <p style="font-weight: 700;font-size: 0.8rem; margin: 0px; text-transform: uppercase;">Total
                         tareas
-                        de corte</p>
+                        de machimbrado</p>
                     <span style="font-weight: 400; font-size: 0.8rem;">
-                        {{ $total_tareas_corte }} tareas
+                        {{ $total_tareas_machimbrado }} tareas
                     </span>
                 </td>
-                <td style="width: 1/4;">
+                <td style="width: 25%;">
                     <p style="font-weight: 700; font-size: 0.8rem; margin: 0px; text-transform: uppercase;">Total de
                         sublotes</p>
                     <span style="font-weight: 400; font-size: 0.8rem;">
-                        {{ $cantidad_sublotes_cortados }} sublotes
+                        {{ $cantidad_sublotes_entrada }} sublotes
                     </span>
                 </td>
-                <td style="width: 1/4;">
+                <td style="width: 25%;">
                     <p style="font-weight: 700; font-size: 0.8rem; margin: 0px; text-transform: uppercase;">Total
-                        rollos
-                        cortados</p>
+                        fajas procesadas</p>
                     <span style="font-weight: 400; font-size: 0.8rem;">
-                        {{ $total_rollos }} rollos
+                        {{ $total_fajas_entrada }} ({{ $total_fajas_entrada_m2 }} m²)
                     </span>
                 </td>
-                <td style="width: 1/4" valign="top">
+                <td style="width: 25%" valign="top">
                     <p style="font-weight: 700; font-size: 0.8rem; margin: 0px; text-transform: uppercase;">Tiempo
-                        de
-                        corte total</p>
+                        machimbrado</p>
                     <span style="font-weight: 400; font-size: 0.8rem;">
-                        {{ $tiempo_corte_formateado }}
+                        {{ $tiempo_machimbrado_formateado }}
                     </span>
                 </td>
             </tr>
@@ -201,11 +199,11 @@
             <tr>
                 <td style="width: 2/3">
                     <p style="font-weight: 700; font-size: 0.8rem; margin: 0px; text-transform: uppercase;">Detalle de
-                        rollos</p>
+                        fajas secas procesadas</p>
                     <ul>
-                        @foreach ($productos_cortados as $item)
+                        @foreach ($productos_machimbrados_entrada as $item)
                             <li>
-                                {{ $item['nombre'] }}: {{ $item['cantidad_consumida'] }} unidades
+                                {{ $item['producto'] }}: {{ $item['m2'] }} unidades
                             </li>
                         @endforeach
                     </ul>
@@ -216,21 +214,21 @@
         <table style="width: 100%;">
             <tr>
                 <td style="width: 1/5;">
-                    <p style="font-weight: 700;font-size: 0.8rem; margin: 0px; text-transform: uppercase;">Total de fajas</p>
+                    <p style="font-weight: 700;font-size: 0.8rem; margin: 0px; text-transform: uppercase;">Total de machimbres</p>
                     <span style="font-weight: 400; font-size: 0.8rem;">
-                        {{ $total_fajas_cortados }} unidades
+                        {{ $total_fajas_salida }} unidades
                     </span>
                 </td>
                 <td style="width: 1/5;">
                     <p style="font-weight: 700; font-size: 0.8rem; margin: 0px; text-transform: uppercase;">Total m²</p>
                     <span style="font-weight: 400; font-size: 0.8rem;">
-                        {{ $total_m2_cortados }} m²
+                        {{ $total_fajas_salida_m2 }} m²
                     </span>
                 </td>
                 <td style="width: 1/5;">
                     <p style="font-weight: 700; font-size: 0.8rem; margin: 0px; text-transform: uppercase;">Sublotes generados</p>
                     <span style="font-weight: 400; font-size: 0.8rem;">
-                        {{ $cantidad_sublotes_fajas_cortadas }} sublotes
+                        {{ $cantidad_sublotes_salida }} sublotes
                     </span>
                 </td>
                 <td style="width: 1/5" valign="top">
@@ -240,9 +238,9 @@
                     </span>
                 </td>
                 <td style="width: 1/5" valign="top">
-                    <p style="font-weight: 700; font-size: 0.8rem; margin: 0px; text-transform: uppercase;">Rollos x hora</p>
+                    <p style="font-weight: 700; font-size: 0.8rem; margin: 0px; text-transform: uppercase;">Tasa de producción</p>
                     <span style="font-weight: 400; font-size: 0.8rem;">
-                        {{ $rollos_x_hora }} rollos/h
+                        {{ $tasa_produccion }} %
                     </span>
                 </td>
             </tr>
@@ -252,11 +250,11 @@
             <tr>
                 <td>
                     <p style="font-weight: 700; font-size: 0.8rem; margin: 0px; text-transform: uppercase;">Detalle de
-                        fajas</p>
+                        fajas machimbradas</p>
                     <ul>
-                        @foreach ($productos_fajas_cortadas as $item)
+                        @foreach ($productos_machimbrados_salida as $item)
                             <li>
-                                {{ $item['nombre'] }}: {{ $item['m2_producidos'] }} m²
+                                {{ $item['producto'] }}: {{ $item['m2'] }} m²
                             </li>
                         @endforeach
                     </ul>
@@ -270,7 +268,7 @@
                         @if ($top_5_dias)
                         @foreach ($top_5_dias as $item)
                             <li>
-                                {{ $item['fecha'] }}: {{ $item['initial_m2'] }} m²
+                                {{ $item['fecha'] }}: {{ $item['m2'] }} m²
                             </li>
                         @endforeach
                     @else
