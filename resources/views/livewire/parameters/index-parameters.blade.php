@@ -68,6 +68,17 @@
 
         </div>
 
+        <div class="mb-5">
+            <div class="flex items-center">
+                <i class="fas fa-cloud-rain mr-2"></i>
+                <h1 class="font-bold uppercase">Previsión meteorológica</h1>
+            </div>
+            <hr class="my-2">
+
+            <a href="{{ route('admin.api.index') }}"><p class="font-normal hover:font-bold">Configurar API del clima</p></a>
+
+        </div>
+
     </div>
 
 </div>

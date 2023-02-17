@@ -10,6 +10,7 @@ class PermissionSeeder extends Seeder
     public function run()
     {
         $permissions = [
+            // PAÍSES, PROVINCIAS Y LOCALIDADES
             [
                 'name' => 'admin.countries.index',
                 'guard_name' => 'web',
@@ -22,6 +23,8 @@ class PermissionSeeder extends Seeder
                 'name' => 'admin.localities.index',
                 'guard_name' => 'web',
             ],
+
+            // IVA Y PARÁMETROS DE COMPRA
             [
                 'name' => 'admin.iva-conditions.index',
                 'guard_name' => 'web',
@@ -34,6 +37,8 @@ class PermissionSeeder extends Seeder
                 'name' => 'admin.purchase-parameters.index',
                 'guard_name' => 'web',
             ],
+
+            // CLIENTES
             [
                 'name' => 'admin.clients.index',
                 'guard_name' => 'web',
@@ -46,6 +51,8 @@ class PermissionSeeder extends Seeder
                 'name' => 'admin.clients.edit',
                 'guard_name' => 'web',
             ],
+
+            // PROVEEDORES
             [
                 'name' => 'admin.suppliers.index',
                 'guard_name' => 'web',
@@ -58,6 +65,8 @@ class PermissionSeeder extends Seeder
                 'name' => 'admin.suppliers.edit',
                 'guard_name' => 'web',
             ],
+
+            // PARÁMETROS PARA CREAR PRODUCTOS
             [
                 'name' => 'admin.measures.index',
                 'guard_name' => 'web',
@@ -78,6 +87,8 @@ class PermissionSeeder extends Seeder
                 'name' => 'admin.product-types.index',
                 'guard_name' => 'web',
             ],
+
+            // PRODUCTOS
             [
                 'name' => 'admin.products.index',
                 'guard_name' => 'web',
@@ -98,6 +109,8 @@ class PermissionSeeder extends Seeder
                 'name' => 'admin.products.create-following-products',
                 'guard_name' => 'web',
             ],
+
+            // COMPRAS
             [
                 'name' => 'admin.purchases.index',
                 'guard_name' => 'web',
@@ -110,6 +123,8 @@ class PermissionSeeder extends Seeder
                 'name' => 'admin.purchases.show-detail',
                 'guard_name' => 'web',
             ],
+
+            // VENTAS
             [
                 'name' => 'admin.sales.index',
                 'guard_name' => 'web',
@@ -123,6 +138,13 @@ class PermissionSeeder extends Seeder
                 'guard_name' => 'web',
             ],
             [
+                'name' => 'admin.sales.show-detail-client',
+                'guard_name' => 'web',
+            ],
+
+
+            // PEDIDOS DE COMPRA
+            [
                 'name' => 'admin.purchase-orders.index',
                 'guard_name' => 'web',
             ],
@@ -134,6 +156,8 @@ class PermissionSeeder extends Seeder
                 'name' => 'admin.purchase-orders.show-detail',
                 'guard_name' => 'web',
             ],
+
+            // PEDIDOS DE VENTA
             [
                 'name' => 'admin.sale-orders.index',
                 'guard_name' => 'web',
@@ -150,6 +174,8 @@ class PermissionSeeder extends Seeder
                 'name' => 'admin.sale-orders.show-necessary-production',
                 'guard_name' => 'web',
             ],
+
+            // LICITACIONES
             [
                 'name' => 'admin.tenderings.index',
                 'guard_name' => 'web',
@@ -170,10 +196,14 @@ class PermissionSeeder extends Seeder
                 'name' => 'admin.tenderings.show-finished-tendering',
                 'guard_name' => 'web',
             ],
+
+            // PARÁMETROS DEL SISTEMA
             [
                 'name' => 'admin.parameters.index',
                 'guard_name' => 'web',
             ],
+
+            // PARÁMETROS PARA CREAR TAREAS
             [
                 'name' => 'admin.trunk-lots.index',
                 'guard_name' => 'web',
@@ -202,6 +232,8 @@ class PermissionSeeder extends Seeder
                 'name' => 'admin.previous-products.index',
                 'guard_name' => 'web',
             ],
+
+            // TAREAS
             [
                 'name' => 'admin.tasks.index',
                 'guard_name' => 'web',
@@ -219,6 +251,12 @@ class PermissionSeeder extends Seeder
                 'guard_name' => 'web',
             ],
             [
+                'name' => 'admin.tasks.report',
+                'guard_name' => 'web',
+            ],
+
+            // LOTES Y SUBLOTES
+            [
                 'name' => 'admin.lots.index',
                 'guard_name' => 'web',
             ],
@@ -234,22 +272,42 @@ class PermissionSeeder extends Seeder
                 'name' => 'admin.sublots-products.index',
                 'guard_name' => 'web',
             ],
+
+            // CALCULADORA
             [
                 'name' => 'admin.calculator.index',
                 'guard_name' => 'web',
             ],
+
+            // NOTIFICACIONES
             [
                 'name' => 'admin.notifications.index',
                 'guard_name' => 'web',
             ],
+
+            // PRODUCCIÓN NECESARIA
             [
                 'name' => 'admin.necessary-production.index',
                 'guard_name' => 'web',
             ],
+
+            // AUDITORÍA
             [
                 'name' => 'admin.auditory.index',
                 'guard_name' => 'web',
-            ]
+            ],
+
+            // API
+            [
+                'name' => 'admin.api.index',
+                'guard_name' => 'web',
+            ],
+
+            // ESTADÍSTICAS
+            [
+                'name' => 'admin.stadistics.index',
+                'guard_name' => 'web',
+            ],
         ];
 
         foreach ($permissions as $permission) {

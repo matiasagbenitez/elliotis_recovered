@@ -148,7 +148,8 @@ Route::get('/purchase/{purchase}/detail', ShowPurchase::class)->name('admin.purc
 Route::get('/sales', IndexSales::class)->name('admin.sales.index')->middleware('can:admin.sales.index');
 Route::get('/sale/create', CreateSale::class)->name('admin.sales.create')->middleware('can:admin.sales.create');
 Route::get('/sale/{sale}/detail', ShowSale::class)->name('admin.sales.show-detail')->middleware('can:admin.sales.show-detail');
-Route::get('/sale/{sale}/detail-client', ShowSaleClient::class)->name('admin.sales.show-detail-client');
+Route::get('/sale/{sale}/detail-client', ShowSaleClient::class)->name('admin.sales.show-detail-client')->middleware('can:admin.sales.show-detail-client');
+
 // ORDENES DE VENTA
 Route::get('/sale-orders', SaleOrdersIndex::class)->name('admin.sale-orders.index')->middleware('can:admin.sale-orders.index');
 Route::get('/sale-order/create', CreateSaleOrder::class)->name('admin.sale-orders.create')->middleware('can:admin.sale-orders.create');
@@ -166,6 +167,7 @@ Route::get('/tendering/create/{notification?}', CreateTendering::class)->name('a
 Route::get('/tendering/{tendering}/detail', ShowTendering::class)->name('admin.tenderings.show-detail')->middleware('can:admin.tenderings.show-detail');
 Route::get('/tendering/{tendering}/hash/{hash:hash}/detail', ShowOfferTendering::class)->name('admin.tenderings.show-offer-detail')->middleware('can:admin.tenderings.show-offer-detail');
 Route::get('/tendering/{tendering}/finished', ShowFinishedTendering::class)->name('admin.tenderings.show-finished-tendering')->middleware('can:admin.tenderings.show-finished-tendering');
+
 // PARÁMETROS GENERALES DEL SISTEMA
 Route::get('/parameters', IndexParameters::class)->middleware('can:admin.parameters.index')->name('admin.parameters.index')->middleware('can:admin.parameters.index');
 
@@ -183,7 +185,7 @@ Route::get('/tasks', IndexTasks::class)->name('admin.tasks.index')->middleware('
 Route::get('/tasks/{task_type}/manage', ManageTasks::class)->name('admin.tasks.manage')->middleware('can:admin.tasks.manage');
 Route::get('/tasks/{task_type}/register/{task}', RegisterTask::class)->name('admin.tasks.register')->middleware('can:admin.tasks.register');
 Route::get('/tasks/show/{task}', ShowTask::class)->name('admin.tasks.show')->middleware('can:admin.tasks.show');
-Route::get('/tasks/report', IndexProductionReport::class)->name('admin.tasks.report');
+Route::get('/tasks/report', IndexProductionReport::class)->name('admin.tasks.report')->middleware('can:admin.tasks.report');
 
 // LOTES Y SUBLOTES
 Route::get('/lots', LotsIndex::class)->name('admin.lots.index')->middleware('can:admin.lots.index');
@@ -198,10 +200,6 @@ Route::get('/calculator', M2CalculatorIndex::class)->name('admin.calculator.inde
 Route::get('/notifications', IndexNotifications::class)->name('admin.notifications.index')->middleware('can:admin.notifications.index');
 
 // RUTAS PARA PRUEBAS
-// Route::get('/tests', Test::class)->name('admin.tests.index');
-// Route::get('/tests-orders', TestOrders::class)->name('admin.tests-orders.index');
-// Route::get('/m2-test', M2Test::class)->name('admin.m2-test.index');
-// Route::get('/ranking/{tendering}', PruebaRanking::class)->name('admin.ranking.index');
 Route::get('/sublots-tracking', SublotTrackingIndex::class)->name('admin.sublots-tracking.index');
 
 // PRODUCCIÓN NECESARIA
@@ -223,12 +221,8 @@ Route::get('/audits/tasks', Tareas::class)->name('admin.auditory.tasks')->middle
 Route::get('/audits/users', Usuarios::class)->name('admin.auditory.users')->middleware('can:admin.auditory.index');
 Route::get('/audits/sales', Ventas::class)->name('admin.auditory.sales')->middleware('can:admin.auditory.index');
 
-
 // API clima
-Route::get('/weather-api', WeatherApi::class)->name('admin.api.index');
-
-Route::get('/dashboard', Dashboard::class)->name('admin.dashboard');
-
+Route::get('/weather-api', WeatherApi::class)->name('admin.api.index')->middleware('can:admin.api.index');
 
 // RUTAS PDF
 Route::get('/products/pdf', [ProductPDFController::class, 'pdf'])->name('admin.products.pdf');
@@ -250,7 +244,10 @@ Route::get('/sublots/products/pdf', [SublotsProductPDFController::class, 'pdf'])
 
 Route::get('/task/{task}/detail/pdf', [TaskDetailPDFController::class, 'pdf'])->name('admin.task-detail.pdf');
 Route::get('/tasks/report/pdf', [TasksReportPDFController::class, 'pdf'])->name('admin.tasks-report.pdf');
-Route::get('/stadistics', IndexStadistics::class)->name('admin.stadistics.index');
+
+
+// MÓDULO DE ESTADÍSTICAS
+Route::get('/stadistics', IndexStadistics::class)->name('admin.stadistics.index')->middleware('can:admin.stadistics.index');
 Route::get('/stadistics/1/pdf', [ProduccionLineaCortePDFController::class, 'pdf'])->name('admin.produccion-linea-corte.pdf');
 Route::get('/stadistics/2/pdf', [ProduccionMachimbradoraPDFController::class, 'pdf'])->name('admin.produccion-machimbradora.pdf');
 Route::get('/stadistics/3/pdf', [ProduccionEmpaquetadoraPDFController::class, 'pdf'])->name('admin.produccion-empaquetadora.pdf');

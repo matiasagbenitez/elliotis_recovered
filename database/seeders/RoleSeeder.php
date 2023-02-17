@@ -38,6 +38,7 @@ class RoleSeeder extends Seeder
             'admin.sublots-areas.index',
             'admin.sublots-products.index',
             'admin.necessary-production.index',
+            'admin.calculator.index',
         );
     }
 }
