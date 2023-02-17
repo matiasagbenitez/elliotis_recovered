@@ -17,7 +17,7 @@ class IndexStadistics extends Component
         0 => 'Seleccione un tipo de estadística',
         1 => 'Producción en línea de corte (corte de rollos)',
         2 => 'Producción en machimbradora',
-        3 => 'Estadística 3',
+        3 => 'Producción en empaquetadora',
     ];
 
     public function mount()

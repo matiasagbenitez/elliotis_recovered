@@ -166,9 +166,9 @@
                 <td style="width: 25%;">
                     <p style="font-weight: 700;font-size: 0.8rem; margin: 0px; text-transform: uppercase;">Total
                         tareas
-                        de machimbrado</p>
+                        de empaquetado</p>
                     <span style="font-weight: 400; font-size: 0.8rem;">
-                        {{ $stats['total_tareas_machimbrado'] }} tareas
+                        {{ $stats['total_tareas_empaquetado'] }} tareas
                     </span>
                 </td>
                 <td style="width: 25%;">
@@ -180,16 +180,16 @@
                 </td>
                 <td style="width: 25%;">
                     <p style="font-weight: 700; font-size: 0.8rem; margin: 0px; text-transform: uppercase;">Total
-                        fajas procesadas</p>
+                        machimbres entrada</p>
                     <span style="font-weight: 400; font-size: 0.8rem;">
                         {{ $stats['total_fajas_entrada'] }} ({{ $stats['total_fajas_entrada_m2'] }} m²)
                     </span>
                 </td>
                 <td style="width: 25%" valign="top">
                     <p style="font-weight: 700; font-size: 0.8rem; margin: 0px; text-transform: uppercase;">Tiempo
-                        machimbrado</p>
+                        empaquetado</p>
                     <span style="font-weight: 400; font-size: 0.8rem;">
-                        {{ $stats['tiempo_machimbrado_formateado'] }}
+                        {{ $stats['tiempo_empaquetado_formateado'] }}
                     </span>
                 </td>
             </tr>
@@ -199,12 +199,12 @@
             <tr>
                 <td style="width: 2/3">
                     <p style="font-weight: 700; font-size: 0.8rem; margin: 0px; text-transform: uppercase;">Detalle de
-                        fajas secas procesadas</p>
+                        fajas machimbradas procesadas</p>
                     <ul>
-                        @if ($stats['productos_machimbrados_entrada'])
-                            @foreach ($stats['productos_machimbrados_entrada'] as $item)
+                        @if ($stats['productos_entrada'])
+                            @foreach ($stats['productos_entrada'] as $item)
                                 <li>
-                                    {{ $item['producto'] }}: {{ $item['m2'] }} unidades
+                                    {{ $item['nombre'] }}: {{ $item['m2'] }} m²
                                 </li>
                             @endforeach
                         @else
@@ -219,53 +219,48 @@
         <br>
         <table style="width: 100%;">
             <tr>
-                <td style="width: 1/5;">
-                    <p style="font-weight: 700;font-size: 0.8rem; margin: 0px; text-transform: uppercase;">Total de
-                        machimbres</p>
+                <td style="width: 1/4;">
+                    <p style="font-weight: 700;font-size: 0.8rem; margin: 0px; text-transform: uppercase;">Total
+                        producción paquetes</p>
                     <span style="font-weight: 400; font-size: 0.8rem;">
-                        {{ $stats['total_fajas_salida'] }} unidades
+                        {{ $stats['total_paquetes_salida'] }} paquetes ({{ $stats['total_paquetes_salida_m2'] }} m²)
                     </span>
                 </td>
-                <td style="width: 1/5;">
-                    <p style="font-weight: 700; font-size: 0.8rem; margin: 0px; text-transform: uppercase;">Total m²</p>
-                    <span style="font-weight: 400; font-size: 0.8rem;">
-                        {{ $stats['total_fajas_salida_m2'] }} m²
-                    </span>
-                </td>
-                <td style="width: 1/5;">
+                <td style="width: 1/4;">
                     <p style="font-weight: 700; font-size: 0.8rem; margin: 0px; text-transform: uppercase;">Sublotes
                         generados</p>
                     <span style="font-weight: 400; font-size: 0.8rem;">
                         {{ $stats['cantidad_sublotes_salida'] }} sublotes
                     </span>
                 </td>
-                <td style="width: 1/5" valign="top">
+                <td style="width: 1/4" valign="top">
                     <p style="font-weight: 700; font-size: 0.8rem; margin: 0px; text-transform: uppercase;">m² x hora
                     </p>
                     <span style="font-weight: 400; font-size: 0.8rem;">
-                        {{ $stats['m2_x_hora'] }} m²/h
+                        {{ $stats['m2_por_hora'] }} m²/h
                     </span>
                 </td>
-                <td style="width: 1/5" valign="top">
-                    <p style="font-weight: 700; font-size: 0.8rem; margin: 0px; text-transform: uppercase;">Tasa de
-                        producción</p>
+                <td style="width: 1/4" valign="top">
+                    <p style="font-weight: 700; font-size: 0.8rem; margin: 0px; text-transform: uppercase;">Paquetes por
+                        hora</p>
                     <span style="font-weight: 400; font-size: 0.8rem;">
-                        {{ $stats['tasa_produccion'] }} %
+                        {{ $stats['paquetes_por_hora'] }} paq./h
                     </span>
                 </td>
             </tr>
             <br>
         </table>
+
         <table style="width: 100%;">
             <tr>
                 <td>
                     <p style="font-weight: 700; font-size: 0.8rem; margin: 0px; text-transform: uppercase;">Detalle de
-                        fajas machimbradas</p>
+                        paquetes machimbrados</p>
                     <ul>
-                        @if ($stats['productos_machimbrados_salida'])
-                            @foreach ($stats['productos_machimbrados_salida'] as $item)
+                        @if ($stats['productos_salida'])
+                            @foreach ($stats['productos_salida'] as $item)
                                 <li>
-                                    {{ $item['producto'] }}: {{ $item['m2'] }} m²
+                                    {{ $item['nombre'] }}: {{ $item['cantidad'] }} paquetes ({{ $item['m2'] }} m²)
                                 </li>
                             @endforeach
                         @else
@@ -285,7 +280,7 @@
                         @if ($stats['top_5_dias'])
                             @foreach ($stats['top_5_dias'] as $item)
                                 <li>
-                                    {{ $item['fecha'] }}: {{ $item['m2'] }} m²
+                                    {{ $item['fecha'] }}: {{ $item['paquetes'] }} paquetes ({{ $item['m2'] }} m²)
                                 </li>
                             @endforeach
                         @else

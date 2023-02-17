@@ -58,6 +58,21 @@ class ProduccionMachimbradora extends Component
 
             // Si no hay tareas de machimbrado, no hay nada que calcular
             if ($tareas_machimbrado->count() == 0) {
+                $this->total_tareas_machimbrado = 0;
+                $this->total_fajas_entrada = 0;
+                $this->total_fajas_entrada_m2 = 0;
+                $this->cantidad_sublotes_entrada = 0;
+                $this->productos_machimbrados_entrada = [];
+                $this->tiempo_machimbrado_formateado = 0;
+                $this->total_fajas_salida = 0;
+                $this->total_fajas_salida_m2 = 0;
+                $this->cantidad_sublotes_salida = 0;
+                $this->productos_machimbrados_salida = [];
+                $this->m2_x_hora = 0;
+                $this->tasa_produccion = 0;
+                $this->tasa_produccion_m2 = 0;
+                $this->top_5_dias = [];
+                $this->dias_m2 = [];
                 return;
             }
 
@@ -169,13 +184,13 @@ class ProduccionMachimbradora extends Component
                     $dias_m2[$fecha] = [
                         'fecha' => $fecha,
                         'm2' => $tarea->lot->sublots->sum('initial_m2'),
-                        'duration' => strtotime($tarea->finished_at) - strtotime($tarea->started_at),
-                        'horas' => round((strtotime($tarea->finished_at) - strtotime($tarea->started_at)) / 3600, 2),
+                        // 'duration' => strtotime($tarea->finished_at) - strtotime($tarea->started_at),
+                        // 'horas' => round((strtotime($tarea->finished_at) - strtotime($tarea->started_at)) / 3600, 2),
                     ];
                 } else {
                     $dias_m2[$fecha]['m2'] += $tarea->lot->sublots->sum('initial_m2');
-                    $dias_m2[$fecha]['duration'] += strtotime($tarea->finished_at) - strtotime($tarea->started_at);
-                    $dias_m2[$fecha]['horas'] += round((strtotime($tarea->finished_at) - strtotime($tarea->started_at)) / 3600, 2);
+                    // $dias_m2[$fecha]['duration'] += strtotime($tarea->finished_at) - strtotime($tarea->started_at);
+                    // $dias_m2[$fecha]['horas'] += round((strtotime($tarea->finished_at) - strtotime($tarea->started_at)) / 3600, 2);
                 }
             }
             $this->dias_m2 = $dias_m2;
@@ -190,13 +205,30 @@ class ProduccionMachimbradora extends Component
             // Encriptar filtros
             $filters = Crypt::encrypt($this->filters);
 
+            $stats = [
+                'total_tareas_machimbrado' => $this->total_tareas_machimbrado,
+                'tiempo_machimbrado_formateado' => $this->tiempo_machimbrado_formateado,
+                'total_fajas_entrada' => $this->total_fajas_entrada,
+                'total_fajas_entrada_m2' => $this->total_fajas_entrada_m2,
+                'cantidad_sublotes_entrada' => $this->cantidad_sublotes_entrada,
+                'total_fajas_salida' => $this->total_fajas_salida,
+                'total_fajas_salida_m2' => $this->total_fajas_salida_m2,
+                'cantidad_sublotes_salida' => $this->cantidad_sublotes_salida,
+                'm2_x_hora' => $this->m2_x_hora,
+                'tasa_produccion' => $this->tasa_produccion,
+                'tasa_produccion_m2' => $this->tasa_produccion_m2,
+                'top_5_dias' => $this->top_5_dias,
+                'dias_m2' => $this->dias_m2,
+                'productos_machimbrados_entrada' => $this->productos_machimbrados_entrada,
+                'productos_machimbrados_salida' => $this->productos_machimbrados_salida,
+            ];
+
+            $stats_encrypted = Crypt::encrypt($stats);
+
             return redirect()->route('admin.produccion-machimbradora.pdf', [
-                // 'stadistic_type' => $this->filters['stadistic_type'],
-                // 'from_datetime' => $this->filters['from_datetime'],
-                // 'to_datetime' => $this->filters['to_datetime']
+                'stats' => $stats_encrypted,
                 'filters' => $filters
             ]);
-
         } catch (\Throwable $th) {
             $this->emit('error', 'Error al generar la estadística. Revise los datos ingresados.');
         }
@@ -209,15 +241,15 @@ class ProduccionMachimbradora extends Component
 
         $chart1 = new ProduccionMachimbradoraChart1;
         $chart1->labels($labels)->options([
-                'legend' => [
-                    'display' => false,
-                ],
-                'title' => [
-                    'display' => true,
-                    'text' => 'Fajas secas procesadas',
-                    'fontSize' => 20,
-                ],
-            ]);
+            'legend' => [
+                'display' => false,
+            ],
+            'title' => [
+                'display' => true,
+                'text' => 'Fajas secas procesadas',
+                'fontSize' => 20,
+            ],
+        ]);
         $colors = range(1, count($labels));
         shuffle($colors);
         $colorArray = [];
@@ -268,11 +300,7 @@ class ProduccionMachimbradora extends Component
 
         $chart3->labels(collect($this->dias_m2)->pluck('fecha'));
 
-        $chart3->dataset('Horas', 'line', collect($this->dias_m2)->pluck('horas'))
-            ->color('#94a3b8')
-            ->fill(false);
-
-        $chart3->dataset('M2', 'line', collect($this->dias_m2)->pluck('m2'))
+        $chart3->dataset('Metros cuadrados machimbrados', 'line', collect($this->dias_m2)->pluck('m2'))
             ->color('#475569')
             ->fill(false);
 
@@ -287,17 +315,7 @@ class ProduccionMachimbradora extends Component
                             'beginAtZero' => true,
                         ],
                     ],
-                    [
-                        'id' => 'Horas',
-                        'type' => 'linear',
-                        'position' => 'right',
-                        'ticks' => [
-                            'beginAtZero' => true,
-                            'max' => 12
-                        ],
-                    ],
                 ],
-
             ],
             'legend' => [
                 'display' => true,

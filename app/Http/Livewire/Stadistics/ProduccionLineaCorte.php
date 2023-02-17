@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\Crypt;
 use App\Charts\ProduccionLineaCorteChart1;
 use App\Charts\ProduccionLineaCorteChart2;
+use App\Charts\ProduccionLineaCorteChart3;
 
 class ProduccionLineaCorte extends Component
 {
@@ -22,7 +23,7 @@ class ProduccionLineaCorte extends Component
 
     public $total_tareas_corte, $cantidad_sublotes_cortados, $total_rollos, $tiempo_corte_formateado, $rollos_x_hora, $productos_cortados;
     public $total_fajas_cortados, $total_m2_cortados, $cantidad_sublotes_fajas_cortadas, $productos_fajas_cortadas, $m2_x_hora, $m2_x_rollo;
-    public $top_5_dias;
+    public $top_5_dias, $dias_m2;
 
     public $neutralColors = [
         '#fafafa',
@@ -54,6 +55,23 @@ class ProduccionLineaCorte extends Component
                 ->where('started_at', '>=', $this->filters['from_datetime'])
                 ->where('finished_at', '<=', $this->filters['to_datetime'])
                 ->get();
+
+            if ($tareas_corte->count() == 0) {
+                $this->total_tareas_corte = 0;
+                $this->cantidad_sublotes_cortados = 0;
+                $this->total_rollos = 0;
+                $this->tiempo_corte_formateado = 0;
+                $this->rollos_x_hora = 0;
+                $this->productos_cortados = [];
+                $this->total_fajas_cortados = 0;
+                $this->total_m2_cortados = 0;
+                $this->cantidad_sublotes_fajas_cortadas = 0;
+                $this->productos_fajas_cortadas = [];
+                $this->m2_x_hora = 0;
+                $this->m2_x_rollo = 0;
+                $this->top_5_dias = [];
+                return;
+            }
 
             // Total de rollos cortados
             $total_rollos = InputTaskDetail::whereIn('task_id', $tareas_corte->pluck('id'))->sum('consumed_quantity');
@@ -159,6 +177,21 @@ class ProduccionLineaCorte extends Component
             $dias = $dias->sortByDesc('initial_m2');
             $top_5_dias = $dias->take(5);
             $this->top_5_dias = $top_5_dias;
+
+            $dias_m2 = [];
+            foreach ($tareas_corte as $tarea) {
+                $fecha = Date::parse($tarea->started_at)->format('Y-m-d');
+                if (!isset($dias_m2[$fecha])) {
+                    $dias_m2[$fecha] = [
+                        'fecha' => Date::parse($fecha)->format('d/m/Y'),
+                        'm2' => $task->lot->sublots->sum('initial_m2')
+                    ];
+                } else {
+                    $dias_m2[$fecha]['m2'] += $task->lot->sublots->sum('initial_m2');
+                }
+            }
+            $this->dias_m2 = $dias_m2;
+
         } catch (\Throwable $th) {
             $this->emit('error', 'Error al cargar los datos de la línea de corte');
         }
@@ -170,11 +203,27 @@ class ProduccionLineaCorte extends Component
             // Encriptar filtros
             $filters = Crypt::encrypt($this->filters);
 
+            $stats = [
+                'total_tareas_corte' => $this->total_tareas_corte,
+                'cantidad_sublotes_cortados' => $this->cantidad_sublotes_cortados,
+                'total_rollos' => $this->total_rollos,
+                'tiempo_corte_formateado' => $this->tiempo_corte_formateado,
+                'rollos_x_hora' => $this->rollos_x_hora,
+                'productos_cortados' => $this->productos_cortados,
+                'total_fajas_cortados' => $this->total_fajas_cortados,
+                'total_m2_cortados' => $this->total_m2_cortados,
+                'cantidad_sublotes_fajas_cortadas' => $this->cantidad_sublotes_fajas_cortadas,
+                'productos_fajas_cortadas' => $this->productos_fajas_cortadas,
+                'm2_x_hora' => $this->m2_x_hora,
+                'm2_x_rollo' => $this->m2_x_rollo,
+                'top_5_dias' => $this->top_5_dias,
+            ];
+
+            $stats_encrypted = Crypt::encrypt($stats);
+
             return redirect()->route('admin.produccion-linea-corte.pdf', [
-                // 'stadistic_type' => $this->filters['stadistic_type'],
-                // 'from_datetime' => $this->filters['from_datetime'],
-                // 'to_datetime' => $this->filters['to_datetime']
-                'filters' => $filters
+                'filters' => $filters,
+                'stats' => $stats_encrypted
             ]);
 
         } catch (\Throwable $th) {
@@ -249,11 +298,26 @@ class ProduccionLineaCorte extends Component
             ->color($colorArray)
             ->backgroundColor($colorArray);
 
+        $chart3 = new ProduccionLineaCorteChart3;
+        $chart3->labels(collect($this->dias_m2)->pluck('fecha'))->options([
+            'title' => [
+                'display' => true,
+                'text' => 'M2 cortados por día',
+                'fontSize' => 20,
+            ],
+            'legend' => [
+                'display' => false,
+            ],
+        ]);
 
+        $chart3->dataset('M2 cortados', 'line', collect($this->dias_m2)->pluck('m2'))
+            ->color('#475569')
+            ->fill('#false');
 
         return view('livewire.stadistics.produccion-linea-corte', [
             'chart1' => $chart1,
-            'chart2' => $chart2
+            'chart2' => $chart2,
+            'chart3' => $chart3,
         ]);
     }
 }

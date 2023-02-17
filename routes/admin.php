@@ -61,6 +61,7 @@ use App\Http\Livewire\Tenderings\ShowTendering;
 use App\Http\Livewire\TrunkLots\IndexTrunkLots;
 use App\Http\Livewire\WoodTypes\IndexWoodTypes;
 use App\Http\Controllers\LotDetailPDFController;
+use App\Http\Controllers\ProduccionEmpaquetadoraPDFController;
 use App\Http\Controllers\SaleDetailPDFController;
 use App\Http\Controllers\TaskDetailPDFController;
 use App\Http\Livewire\Audits\ProductosAnteriores;
@@ -102,6 +103,7 @@ use App\Http\Controllers\ProduccionMachimbradoraPDFController;
 use App\Http\Livewire\FollowingProducts\IndexFollowingProducts;
 use App\Http\Livewire\PucharseParameters\IndexPucharseParameters;
 use App\Http\Livewire\NecesaryProduction\IndexNecessaryProduction;
+use App\Http\Livewire\Stadistics\ProduccionEmpaquetadora;
 
 // PAÍSES, PROVINCIAS Y LOCALIDADES
 Route::get('/countries', IndexCountries::class)->name('admin.countries.index')->middleware('can:admin.countries.index');
@@ -251,3 +253,4 @@ Route::get('/tasks/report/pdf', [TasksReportPDFController::class, 'pdf'])->name(
 Route::get('/stadistics', IndexStadistics::class)->name('admin.stadistics.index');
 Route::get('/stadistics/1/pdf', [ProduccionLineaCortePDFController::class, 'pdf'])->name('admin.produccion-linea-corte.pdf');
 Route::get('/stadistics/2/pdf', [ProduccionMachimbradoraPDFController::class, 'pdf'])->name('admin.produccion-machimbradora.pdf');
+Route::get('/stadistics/3/pdf', [ProduccionEmpaquetadoraPDFController::class, 'pdf'])->name('admin.produccion-empaquetadora.pdf');

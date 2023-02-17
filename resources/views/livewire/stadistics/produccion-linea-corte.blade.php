@@ -145,6 +145,11 @@
         </ul>
     </div>
 
+    <div class="w-full">
+        {!! $chart3->container() !!}
+        {!! $chart3->script() !!}
+    </div>
+
 </div>
 
 @push('script')

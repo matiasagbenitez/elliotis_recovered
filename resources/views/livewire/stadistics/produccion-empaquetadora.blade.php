@@ -3,7 +3,7 @@
     <div>
         <div class="flex justify-between">
             <h2 class="font-bold text-xl uppercase text-gray-800 leading-tight text-center my-3">
-                Estadísticas de producción en machimbradora
+                Estadísticas de producción en empaquetadora
             </h2>
             <x-jet-danger-button wire:click="generatePDF">
                 <i class="fas fa-file-pdf mr-2"></i>
@@ -26,9 +26,9 @@
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 md:w-1/2">
             <div>
-                <p class="text-xl text-gray-700 font-bold">Total de tareas de machimbrado</p>
+                <p class="text-xl text-gray-700 font-bold">Total de tareas de empaquetado</p>
                 <hr>
-                <span class="text-lg font-semibold text-gray-500">{{ $total_tareas_machimbrado }} tareas</span>
+                <span class="text-lg font-semibold text-gray-500">{{ $total_tareas_empaquetado }} tareas</span>
             </div>
 
             <div>
@@ -38,7 +38,7 @@
             </div>
 
             <div>
-                <p class="text-xl text-gray-700 font-bold">Total fajas secas procesadas</p>
+                <p class="text-xl text-gray-700 font-bold">Total machimbres entrada</p>
                 <hr>
                 <span class="text-lg font-semibold text-gray-500">{{ $total_fajas_entrada }}
                     ({{ $total_fajas_entrada_m2 }} m²)</span>
@@ -47,21 +47,21 @@
             <div>
                 <p class="text-xl text-gray-700 font-bold">Tiempo de trabajo total</p>
                 <hr>
-                <span class="text-lg font-semibold text-gray-500">{{ $tiempo_machimbrado_formateado }}</span>
+                <span class="text-lg font-semibold text-gray-500">{{ $tiempo_empaquetado_formateado }}</span>
             </div>
 
             <div class="col-span-2">
-                <p class="text-xl text-gray-700 font-bold">Detalle de fajas secas procesadas</p>
+                <p class="text-xl text-gray-700 font-bold">Detalle de fajas machimbradas procesadas</p>
                 <hr>
                 <ul class="list-disc ml-10">
-                    @if ($productos_machimbrados_entrada)
-                        @foreach ($productos_machimbrados_entrada as $item)
+                    @if ($productos_entrada)
+                        @foreach ($productos_entrada as $item)
                             <li class="font-semibold text-gray-500">
-                                {{ $item['producto'] }}: {{ $item['m2'] }} m²
+                                {{ $item['nombre'] }}: {{ $item['m2'] }} m²
                             </li>
                         @endforeach
                     @else
-                        <li>
+                        <li class="font-semibold text-gray-500">
                             No hay datos para mostrar
                         </li>
                     @endif
@@ -83,10 +83,10 @@
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 md:w-1/2">
             <div>
-                <p class="text-xl text-gray-700 font-bold">Total de fajas machimbradas</p>
+                <p class="text-xl text-gray-700 font-bold">Total producción paquetes</p>
                 <hr>
-                <span class="text-lg font-semibold text-gray-500">{{ $total_fajas_salida }}
-                    ({{ $total_fajas_salida_m2 }} m²)</span>
+                <span class="text-lg font-semibold text-gray-500">{{ $total_paquetes_salida }} paquetes
+                    ({{ $total_paquetes_salida_m2 }} m²)</span>
             </div>
 
             <div>
@@ -98,27 +98,27 @@
             <div>
                 <p class="text-xl text-gray-700 font-bold">m² x hora</p>
                 <hr>
-                <span class="text-lg font-semibold text-gray-500">{{ $m2_x_hora }} m²/h</span>
+                <span class="text-lg font-semibold text-gray-500">{{ $m2_por_hora }} m²/h</span>
             </div>
 
             <div>
-                <p class="text-xl text-gray-700 font-bold">Tasa de producción</p>
+                <p class="text-xl text-gray-700 font-bold">Paquetes por hora</p>
                 <hr>
-                <span class="text-lg font-semibold text-gray-500">{{ $tasa_produccion }}%</span>
+                <span class="text-lg font-semibold text-gray-500">{{ $paquetes_por_hora }} paq./h</span>
             </div>
 
             <div class="col-span-2">
-                <p class="text-xl text-gray-700 font-bold">Detalle de fajas machimbradas</p>
+                <p class="text-xl text-gray-700 font-bold">Detalle de paquetes producidos</p>
                 <hr>
                 <ul class="list-disc ml-10">
-                    @if ($productos_machimbrados_salida)
-                        @foreach ($productos_machimbrados_salida as $item)
+                    @if ($productos_salida)
+                        @foreach ($productos_salida as $item)
                             <li class="font-semibold text-gray-500">
-                                {{ $item['producto'] }}: {{ $item['m2'] }} m²
+                                {{ $item['nombre'] }}: {{ $item['cantidad'] }} paquetes
                             </li>
                         @endforeach
                     @else
-                        <li>
+                        <li class="font-semibold text-gray-500">
                             No hay datos para mostrar
                         </li>
                     @endif
@@ -134,7 +134,7 @@
             @if ($top_5_dias)
                 @foreach ($top_5_dias as $item)
                     <li class="font-semibold text-gray-500">
-                        {{ $item['fecha'] }}: {{ $item['m2'] }} m²
+                        {{ $item['fecha'] }}: {{ $item['paquetes'] }} paquetes
                     </li>
                 @endforeach
             @else
@@ -143,11 +143,6 @@
                 </li>
             @endif
         </ul>
-    </div>
-
-    <div class="w-full">
-        {!! $chart3->container() !!}
-        {!! $chart3->script() !!}
     </div>
 
 </div>
