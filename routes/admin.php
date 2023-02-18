@@ -31,6 +31,7 @@ use App\Http\Livewire\Tasks\RegisterTask;
 use App\Http\Livewire\Weather\WeatherApi;
 use App\Http\Controllers\LotPDFController;
 use App\Http\Livewire\Audits\Licitaciones;
+use App\Http\Livewire\Company\EditCompany;
 use App\Http\Livewire\Dashboard\Dashboard;
 use App\Http\Controllers\SalePDFController;
 use App\Http\Livewire\Clients\CreateClient;
@@ -61,7 +62,6 @@ use App\Http\Livewire\Tenderings\ShowTendering;
 use App\Http\Livewire\TrunkLots\IndexTrunkLots;
 use App\Http\Livewire\WoodTypes\IndexWoodTypes;
 use App\Http\Controllers\LotDetailPDFController;
-use App\Http\Controllers\ProduccionEmpaquetadoraPDFController;
 use App\Http\Controllers\SaleDetailPDFController;
 use App\Http\Controllers\TaskDetailPDFController;
 use App\Http\Livewire\Audits\ProductosAnteriores;
@@ -94,16 +94,20 @@ use App\Http\Livewire\Tenderings\ShowFinishedTendering;
 use App\Http\Livewire\PurchaseOrders\CreatePurchaseOrder;
 use App\Http\Livewire\PurchaseOrders\PurchaseOrdersIndex;
 use App\Http\Livewire\SaleOrders\ShowNecessaryProduction;
+use App\Http\Livewire\Stadistics\ProduccionEmpaquetadora;
 use App\Http\Controllers\PurchaseOrderDetailPDFController;
 use App\Http\Livewire\SublotsTracking\SublotTrackingIndex;
 use App\Http\Controllers\ProduccionLineaCortePDFController;
 use App\Http\Livewire\PreviousProducts\IndexPreviousProducts;
 use App\Http\Livewire\ProductionReport\IndexProductionReport;
+use App\Http\Controllers\ProduccionEmpaquetadoraPDFController;
 use App\Http\Controllers\ProduccionMachimbradoraPDFController;
 use App\Http\Livewire\FollowingProducts\IndexFollowingProducts;
 use App\Http\Livewire\PucharseParameters\IndexPucharseParameters;
 use App\Http\Livewire\NecesaryProduction\IndexNecessaryProduction;
-use App\Http\Livewire\Stadistics\ProduccionEmpaquetadora;
+
+// RUTA DE EMPRESA
+Route::get('/company/edit', EditCompany::class)->name('admin.company.edit')->middleware('can:admin.company.edit');
 
 // PAÍSES, PROVINCIAS Y LOCALIDADES
 Route::get('/countries', IndexCountries::class)->name('admin.countries.index')->middleware('can:admin.countries.index');

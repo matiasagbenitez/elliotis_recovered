@@ -95,7 +95,7 @@
             <tr>
                 <td style="width: 40%;" valign="top">
                     {{-- <img src="{{ asset('/img/logo_empresa.png') }}" alt="Logo" style="width: 250px; height: 170px;"> --}}
-                    <img src="{{ public_path($company_stats['logo']) }}" alt="Logo"
+                    <img src="{{ base_path('storage/app/public/img' . $company_stats['logo'])  }}" alt="Logo"
                         style="width: 130; height: 65; margin-right: 15px;">
                 </td>
                 <td style="width: 30%; margin-right: 15px" valign="top">

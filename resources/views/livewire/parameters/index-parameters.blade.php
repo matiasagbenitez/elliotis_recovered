@@ -1,12 +1,22 @@
 <div class="container py-6">
 
-    <x-slot name="header" class="pl-0">
-        <div class="flex items-center justify-center">
-            <h1 class="font-bold text-xl text-gray-800 leading-tight">Parámetros del sistema</h1>
-        </div>
+    <x-slot name="header">
+            <h1 class="font-semibold text-center text-xl text-gray-800 leading-tight">Parámetros del sistema</h1>
+
     </x-slot>
 
-    <div class="px-6 py-4 bg-white rounded-lg shadow">
+    <div class="px-12 py-8 bg-white rounded-lg shadow">
+
+        {{-- Empresa --}}
+        <div class="mb-5">
+            <div class="flex items-center">
+                <i class="fas fa-chart-area mr-2"></i>
+                <h1 class="font-bold uppercase">Configuración general del sistema</h1>
+            </div>
+            <hr class="my-2">
+
+            <a href="{{ route('admin.company.edit') }}"><p class="font-normal hover:underline">Información de la empresa</p></a>
+        </div>
 
         {{-- GEOGRAFÍA --}}
         <div class="mb-5">
@@ -16,9 +26,9 @@
             </div>
             <hr class="my-2">
 
-            <a href="{{ route('admin.countries.index') }}"><p class="font-normal hover:font-bold">Países</p></a>
-            <a href="{{ route('admin.provinces.index') }}"><p class="font-normal hover:font-bold">Provincias</p></a>
-            <a href="{{ route('admin.localities.index') }}"><p class="font-normal hover:font-bold">Localidades</p></a>
+            <a href="{{ route('admin.countries.index') }}"><p class="font-normal hover:underline">Países</p></a>
+            <a href="{{ route('admin.provinces.index') }}"><p class="font-normal hover:underline">Provincias</p></a>
+            <a href="{{ route('admin.localities.index') }}"><p class="font-normal hover:underline">Localidades</p></a>
         </div>
 
 
@@ -30,9 +40,9 @@
             </div>
             <hr class="my-2">
 
-            <a href="{{ route('admin.pucharse-parameters.index') }}"><p class="font-normal hover:font-bold">Parámetros de compras y ventas</p></a>
-            <a href="{{ route('admin.iva-conditions.index') }}"><p class="font-normal hover:font-bold">Condiciones ante IVA</p></a>
-            <a href="{{ route('admin.iva-types.index') }}"><p class="font-normal hover:font-bold">Tipos de IVA</p></a>
+            <a href="{{ route('admin.pucharse-parameters.index') }}"><p class="font-normal hover:underline">Parámetros de compras y ventas</p></a>
+            <a href="{{ route('admin.iva-conditions.index') }}"><p class="font-normal hover:underline">Condiciones ante IVA</p></a>
+            <a href="{{ route('admin.iva-types.index') }}"><p class="font-normal hover:underline">Tipos de IVA</p></a>
         </div>
 
 
@@ -44,12 +54,12 @@
             </div>
             <hr class="my-2">
 
-            <a href="{{ route('admin.product-names.index') }}"><p class="font-normal hover:font-bold">Nombres y denominaciones</p></a>
-            <a href="{{ route('admin.measures.index') }}"><p class="font-normal hover:font-bold">Medidas</p></a>
-            <a href="{{ route('admin.unities.index') }}"><p class="font-normal hover:font-bold">Unidades</p></a>
-            <a href="{{ route('admin.phases.index') }}"><p class="font-normal hover:font-bold">Etapas de productos en producción</p></a>
-            <a href="{{ route('admin.product-types.index') }}"><p class="font-normal hover:font-bold">Tipos de productos</p></a>
-            <a href="{{ route('admin.wood-types.index') }}"><p class="font-normal hover:font-bold">Tipos de madera</p></a>
+            <a href="{{ route('admin.product-names.index') }}"><p class="font-normal hover:underline">Nombres y denominaciones</p></a>
+            <a href="{{ route('admin.measures.index') }}"><p class="font-normal hover:underline">Medidas</p></a>
+            <a href="{{ route('admin.unities.index') }}"><p class="font-normal hover:underline">Unidades</p></a>
+            <a href="{{ route('admin.phases.index') }}"><p class="font-normal hover:underline">Etapas de productos en producción</p></a>
+            <a href="{{ route('admin.product-types.index') }}"><p class="font-normal hover:underline">Tipos de productos</p></a>
+            <a href="{{ route('admin.wood-types.index') }}"><p class="font-normal hover:underline">Tipos de madera</p></a>
         </div>
 
         {{-- PRODUCTOS --}}
@@ -60,11 +70,11 @@
             </div>
             <hr class="my-2">
 
-            <a href="{{ route('admin.types-of-tasks.index') }}"><p class="font-normal hover:font-bold">Tipos de tareas</p></a>
-            <a href="{{ route('admin.task-statuses.index') }}"><p class="font-normal hover:font-bold">Estados de tareas</p></a>
-            <a href="{{ route('admin.areas.index') }}"><p class="font-normal hover:font-bold">Áreas de la empresa</p></a>
-            <a href="{{ route('admin.following-products.index') }}"><p class="font-normal hover:font-bold">Productos de salida</p></a>
-            <a href="{{ route('admin.previous-products.index') }}"><p class="font-normal hover:font-bold">Productos anteriores</p></a>
+            <a href="{{ route('admin.types-of-tasks.index') }}"><p class="font-normal hover:underline">Tipos de tareas</p></a>
+            <a href="{{ route('admin.task-statuses.index') }}"><p class="font-normal hover:underline">Estados de tareas</p></a>
+            <a href="{{ route('admin.areas.index') }}"><p class="font-normal hover:underline">Áreas de la empresa</p></a>
+            <a href="{{ route('admin.following-products.index') }}"><p class="font-normal hover:underline">Productos de salida</p></a>
+            <a href="{{ route('admin.previous-products.index') }}"><p class="font-normal hover:underline">Productos anteriores</p></a>
 
         </div>
 
@@ -75,7 +85,7 @@
             </div>
             <hr class="my-2">
 
-            <a href="{{ route('admin.api.index') }}"><p class="font-normal hover:font-bold">Configurar API del clima</p></a>
+            <a href="{{ route('admin.api.index') }}"><p class="font-normal hover:underline">Configurar API del clima</p></a>
 
         </div>
 

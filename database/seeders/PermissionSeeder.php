@@ -10,6 +10,11 @@ class PermissionSeeder extends Seeder
     public function run()
     {
         $permissions = [
+            // EMPRESA
+            [
+                'name' => 'admin.company.edit',
+                'guard_name' => 'web',
+            ],
             // PAÍSES, PROVINCIAS Y LOCALIDADES
             [
                 'name' => 'admin.countries.index',

@@ -14,10 +14,10 @@ return new class extends Migration
             $table->string('cuit')->unique();
             $table->string('slogan')->nullable();
             $table->string('email')->unique();
-            $table->string('phone')->nullable();
-            $table->string('address')->nullable();
-            $table->string('cp')->nullable();
-            $table->string('logo')->nullable();
+            $table->string('phone');
+            $table->string('address');
+            $table->string('cp');
+            $table->string('logo')->nullable()->default('/img/default.png');
             $table->timestamps();
         });
     }
