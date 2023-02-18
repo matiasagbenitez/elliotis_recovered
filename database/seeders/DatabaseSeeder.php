@@ -84,5 +84,7 @@ class DatabaseSeeder extends Seeder
         }
 
         // $this->call(NecessaryProductionSeeder::class);
+
+        $this->call(WeatherApiSeeder::class);
     }
 }

@@ -7,15 +7,16 @@
     </x-slot>
 
     <div class="bg-white rounded-lg shadow mb-5">
-        <div class="px-6 py-4">
-            <span class="font-bold text-gray-500">
-                <i class="fas fa-info-circle mr-1"></i>
-                OpenWeather API
-            </span>
-            <hr class="my-3">
+        <div class="px-8 py-6">
 
-            <div class="flex">
-                <div class="w-1/2 uppercase">
+            <div class="flex gap-10">
+                <div class="w-1/2 space-y-1">
+                    <span class="font-bold text-gray-700">
+                        <i class="fas fa-cloud mr-1"></i>
+                        Información general
+                    </span>
+                    <hr class="my-3">
+
                     <p class="font-bold">
                         Respuesta servidor:
                         <span class="font-normal">
@@ -41,21 +42,78 @@
                         </span>
                     </p>
                     <p class="font-bold">
-                        Pronósitico:
+                        Pronóstico:
                         <span class="font-normal">
                             Próximos 5 días, intervalo de 3 horas
                         </span>
                     </p>
                     <p class="font-bold">
-                        Total datos:
+                        Total de registros:
                         <span class="font-normal">
                             {{ $general_stats['count'] }} registros
                         </span>
                     </p>
                 </div>
 
-                <div class="w-1/2 uppercase">
-                    <p class="font-bold">Condiciones lanzamiento de alarma</p>
+                <div class="w-1/2 space-y-1">
+                    <div class="flex justify-between">
+                        <span class="font-bold text-gray-700">
+                            <i class="fas fa-signal mr-1"></i>
+                            Alarma por inclemencias
+                        </span>
+                        <div class="flex gap-2">
+                            @livewire('weather-api.edit-conditions', ['id' => $conditions['id']], key($conditions['id']))
+                            <button wire:click="testAlert" title="Probar alarma">
+                                <i class="fas fa-bell"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <hr class="my-3">
+
+                    <p class="font-bold">
+                        Temperatura mínima promedio:
+                        <span class="font-normal">
+                            {{ $conditions['temp'] }}° C
+                        </span>
+                    </p>
+                    <p class="font-bold">
+                        Probabilidad de lluvia promedio:
+                        <span class="font-normal">
+                            {{ $conditions['rain_prob'] }}% ({{ $conditions['rain_prob_x100'] }}%)
+                        </span>
+                    </p>
+                    <p class="font-bold">
+                        Milímetros promedio:
+                        <span class="font-normal">
+                            {{ $conditions['rain_mm'] }}mm
+                        </span>
+                    </p>
+                    <p class="font-bold">
+                        Humedad máxima promedio:
+                        <span class="font-normal">
+                            {{ $conditions['humidity'] }}% ({{ $conditions['humidity_x100'] }}%)
+                        </span>
+                    </p>
+                    <p class="font-bold">
+                        Velocidad del viento:
+                        <span class="font-normal">
+                            {{ $conditions['wind_speed'] }} km/h
+                        </span>
+                    </p>
+                    <div class="flex justify-between">
+                        <p class="font-bold">
+                            Condiciones mínimas:
+                            <span class="font-normal">
+                                {{ $conditions['max_conditions'] }}/5
+                            </span>
+                        </p>
+                        <p class="font-bold">
+                            Días en consideración:
+                            <span class="font-normal">
+                                {{ $conditions['days_in_row'] }} días
+                            </span>
+                        </p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -105,7 +163,7 @@
                                     {{ $stat['date'] }}
                                 </p>
                             </td>
-                            <td class="px-6 py-3 text-center">
+                            <td class="px-6 py-3 text-center font-bold">
                                 <p class="text-sm uppercase">
                                     {{ $stat['temp'] }}°
                                 </p>
@@ -158,3 +216,27 @@
         </x-responsive-table>
     </div>
 </div>
+
+@push('script')
+    <script>
+         Livewire.on('success', message => {
+            Swal.fire({
+                icon: 'success',
+                title: '¡Sin problemas!',
+                text: message,
+                showConfirmButton: true,
+                confirmButtonColor: '#1f2937',
+            });
+        });
+
+        Livewire.on('warning', message => {
+            Swal.fire({
+                icon: 'warning',
+                title: '¡Atención!',
+                text: message,
+                showConfirmButton: true,
+                confirmButtonColor: '#1f2937',
+            });
+        });
+    </script>
+@endpush
