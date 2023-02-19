@@ -16,10 +16,12 @@ use App\Http\Livewire\Audits\Sublotes;
 use App\Http\Livewire\Audits\Usuarios;
 use App\Http\Livewire\Areas\IndexAreas;
 use App\Http\Livewire\Audits\Productos;
+use App\Http\Livewire\Roles\RolesIndex;
 use App\Http\Livewire\Sales\CreateSale;
 use App\Http\Livewire\Sales\IndexSales;
 use App\Http\Livewire\Tasks\IndexTasks;
 use App\Http\Livewire\Tests\TestOrders;
+use App\Http\Livewire\Users\UsersIndex;
 use App\Http\Livewire\Lots\SublotsAreas;
 use App\Http\Livewire\Lots\SublotsIndex;
 use App\Http\Livewire\Tasks\ManageTasks;
@@ -105,7 +107,7 @@ use App\Http\Controllers\ProduccionMachimbradoraPDFController;
 use App\Http\Livewire\FollowingProducts\IndexFollowingProducts;
 use App\Http\Livewire\PucharseParameters\IndexPucharseParameters;
 use App\Http\Livewire\NecesaryProduction\IndexNecessaryProduction;
-use App\Http\Livewire\Users\UsersIndex;
+use App\Http\Livewire\Roles\EditRole;
 
 // RUTA DE EMPRESA
 Route::get('/company/edit', EditCompany::class)->name('admin.company.edit')->middleware('can:admin.company.edit');
@@ -258,3 +260,5 @@ Route::get('/stadistics/2/pdf', [ProduccionMachimbradoraPDFController::class, 'p
 Route::get('/stadistics/3/pdf', [ProduccionEmpaquetadoraPDFController::class, 'pdf'])->name('admin.produccion-empaquetadora.pdf');
 
 Route::get('/users', UsersIndex::class)->name('admin.users.index');
+Route::get('/roles', RolesIndex::class)->name('admin.roles.index');
+Route::get('/roles/edit/{role}', EditRole::class)->name('admin.roles.edit');

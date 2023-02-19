@@ -17,6 +17,7 @@
 
             <a href="{{ route('admin.company.edit') }}"><p class="font-normal hover:underline">Información de la empresa</p></a>
             <a href="{{ route('admin.users.index') }}"><p class="font-normal hover:underline">Listado de usuarios del sistema</p></a>
+            <a href="{{ route('admin.roles.index') }}"><p class="font-normal hover:underline">Roles y permisos del sistema</p></a>
         </div>
 
         {{-- GEOGRAFÍA --}}
