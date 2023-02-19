@@ -260,7 +260,7 @@ Route::get('/stadistics/1/pdf', [ProduccionLineaCortePDFController::class, 'pdf'
 Route::get('/stadistics/2/pdf', [ProduccionMachimbradoraPDFController::class, 'pdf'])->name('admin.produccion-machimbradora.pdf');
 Route::get('/stadistics/3/pdf', [ProduccionEmpaquetadoraPDFController::class, 'pdf'])->name('admin.produccion-empaquetadora.pdf');
 
-Route::get('/users', UsersIndex::class)->name('admin.users.index');
-Route::get('/roles', RolesIndex::class)->name('admin.roles.index');
-Route::get('/roles/create', CreateRole::class)->name('admin.roles.create');
-Route::get('/roles/edit/{role}', EditRole::class)->name('admin.roles.edit');
+Route::get('/users', UsersIndex::class)->name('admin.users.index')->middleware('can:admin.users.index');
+Route::get('/roles', RolesIndex::class)->name('admin.roles.index')->middleware('can:admin.roles.index');
+Route::get('/roles/create', CreateRole::class)->name('admin.roles.create')->middleware('can:admin.roles.create');
+Route::get('/roles/edit/{role}', EditRole::class)->name('admin.roles.edit')->middleware('can:admin.roles.edit');

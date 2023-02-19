@@ -24,6 +24,8 @@ class RoleSeeder extends Seeder
         $role3->revokePermissionTo('admin.products.create');
         $role3->revokePermissionTo('admin.products.create-previous-product');
         $role3->revokePermissionTo('admin.products.create-following-products');
+        $role3->revokePermissionTo('admin.roles.create');
+        $role3->revokePermissionTo('admin.roles.edit');
 
         $role4 = Role::create(['name' => 'empleado']);
         $role4->givePermissionTo(

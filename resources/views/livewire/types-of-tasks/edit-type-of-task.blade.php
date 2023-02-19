@@ -94,6 +94,28 @@
                 </div>
             </div>
 
+
+
+            {{-- Prefix --}}
+            <div class="mb-4 grid grid-cols-3 gap-3">
+                <div>
+                    <x-jet-label class="mb-2">Ícono actual</x-jet-label>
+                    <img src="{{ asset('storage/img' . $editForm['icon']) }}" alt="Logo actual" class="w-32 h-32">
+                </div>
+                <div>
+                    <x-jet-label class="mb-2">Actualizar ícono</x-jet-label>
+                    <x-jet-input wire:model="newIcon" type="file" accept="image/*" class="w-full">
+                    </x-jet-input>
+                    <x-jet-input-error class="mt-2 text-xs font-semibold" for="newIcon" />
+                </div>
+                @if ($newIcon)
+                    <div>
+                        <x-jet-label class="mb-2">Ícono</x-jet-label>
+                        <img src="{{ $newIcon->temporaryUrl() }}" alt="Logo nuevo" class="w-32 h-32">
+                    </div>
+                @endif
+            </div>
+
         </x-slot>
 
         <x-slot name="footer">

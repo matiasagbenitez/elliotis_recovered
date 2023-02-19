@@ -18,7 +18,7 @@
                 class="text-3xl font-extrabold text-gray-900 uppercase rounded-lg dark-mode:text-white focus:outline-none focus:shadow-outline text-center">
                 <div class="flex items-center justify-center">
                     {{-- <img src="{{ asset('img/logo2.png') }}" class="h-32" alt="Logo"> --}}
-                    <img src="{{ asset('img/logo.png') }}" class="" alt="Logo">
+                    <img src="{{ asset('storage/img/logo.png') }}" class="" alt="Logo">
 
                 </div>
             </a>

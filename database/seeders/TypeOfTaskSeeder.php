@@ -21,7 +21,7 @@ class TypeOfTaskSeeder extends Seeder
                 'transformation' => false,
                 'initial_phase_id' => 1,
                 'final_phase_id' => 1,
-                'icon' => '/img/natural-resources.png'
+                'icon' => '/natural-resources.png'
             ],
             [
                 'type' => 'Producción',
@@ -34,7 +34,7 @@ class TypeOfTaskSeeder extends Seeder
                 'transformation' => true,
                 'initial_phase_id' => 1,
                 'final_phase_id' => 2,
-                'icon' => '/img/cortadora.png',
+                'icon' => '/cortadora.png',
             ],
             [
                 'type' => 'Movimiento',
@@ -47,7 +47,7 @@ class TypeOfTaskSeeder extends Seeder
                 'transformation' => false,
                 'initial_phase_id' => 2,
                 'final_phase_id' => 2,
-                'icon' => '/img/loader.png',
+                'icon' => '/loader.png',
             ],
             [
                 'type' => 'Movimiento/Producción',
@@ -60,7 +60,7 @@ class TypeOfTaskSeeder extends Seeder
                 'transformation' => true,
                 'initial_phase_id' => 2,
                 'final_phase_id' => 3,
-                'icon' => '/img/loader.png',
+                'icon' => '/loader.png',
             ],
             [
                 'type' => 'Movimiento',
@@ -73,7 +73,7 @@ class TypeOfTaskSeeder extends Seeder
                 'transformation' => false,
                 'initial_phase_id' => 3,
                 'final_phase_id' => 3,
-                'icon' => '/img/forklift.png',
+                'icon' => '/forklift.png',
             ],
             [
                 'type' => 'Producción',
@@ -86,7 +86,7 @@ class TypeOfTaskSeeder extends Seeder
                 'transformation' => true,
                 'initial_phase_id' => 3,
                 'final_phase_id' => 4,
-                'icon' => '/img/machimbradora.png',
+                'icon' => '/machimbradora.png',
             ],
             [
                 'type' => 'Movimiento',
@@ -99,7 +99,7 @@ class TypeOfTaskSeeder extends Seeder
                 'transformation' => false,
                 'initial_phase_id' => 4,
                 'final_phase_id' => 4,
-                'icon' => '/img/forklift.png',
+                'icon' => '/forklift.png',
             ],
             [
                 'type' => 'Movimiento',
@@ -112,7 +112,7 @@ class TypeOfTaskSeeder extends Seeder
                 'transformation' => false,
                 'initial_phase_id' => 4,
                 'final_phase_id' => 4,
-                'icon' => '/img/forklift.png',
+                'icon' => '/forklift.png',
             ],
             [
                 'type' => 'Producción',
@@ -126,7 +126,7 @@ class TypeOfTaskSeeder extends Seeder
                 'transformation' => true,
                 'initial_phase_id' => 4,
                 'final_phase_id' => 5,
-                'icon' => '/img/empaquetadora.png',
+                'icon' => '/empaquetadora.png',
             ],
             [
                 'type' => 'Movimiento',
@@ -139,7 +139,7 @@ class TypeOfTaskSeeder extends Seeder
                 'transformation' => false,
                 'initial_phase_id' => 5,
                 'final_phase_id' => 5,
-                'icon' => '/img/forklift.png',
+                'icon' => '/forklift.png',
             ]
         ];
 

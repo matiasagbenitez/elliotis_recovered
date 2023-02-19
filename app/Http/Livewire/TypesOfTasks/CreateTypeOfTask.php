@@ -6,9 +6,12 @@ use App\Models\Area;
 use App\Models\Phase;
 use Livewire\Component;
 use App\Models\TypeOfTask;
+use Livewire\WithFileUploads;
 
 class CreateTypeOfTask extends Component
 {
+    use WithFileUploads;
+
     public $isOpen = 0;
 
     public $areas = [], $phases = [];
@@ -24,6 +27,7 @@ class CreateTypeOfTask extends Component
         'transformation' => '',
         'initial_phase_id' => '',
         'final_phase_id' => '',
+        'icon' => ''
     ];
 
     protected $rules = [
@@ -33,6 +37,7 @@ class CreateTypeOfTask extends Component
         'createForm.destination_area_id' => 'required|integer',
         'createForm.initial_phase_id' => 'required|integer',
         'createForm.final_phase_id' => 'required|integer',
+        'createForm.icon' => 'nullable|file|max:1024',
     ];
 
     protected $validationAttributes = [
@@ -43,6 +48,7 @@ class CreateTypeOfTask extends Component
         'createForm.destination_area_id' => 'destination area',
         'createForm.initial_phase_id' => 'initial phase',
         'createForm.final_phase_id' => 'final phase',
+        'createForm.icon' => 'icon',
     ];
 
     public function mount()
@@ -79,7 +85,13 @@ class CreateTypeOfTask extends Component
             $this->createForm['origin_area_id'] == $this->createForm['destination_area_id'] ? $this->createForm['movement'] = false : $this->createForm['movement'] = true;
             $this->createForm['initial_phase_id'] == $this->createForm['final_phase_id'] ? $this->createForm['transformation'] = false : $this->createForm['transformation'] = true;
 
-            // dd($this->createForm);
+            if ($this->createForm['icon']) {
+                $icono = $this->createForm['icon']->store('public/img');
+                $this->createForm['icon'] = str_replace('public/img', '', $icono);
+            } else {
+                $this->createForm['icon'] = '/default.png';
+            }
+
             TypeOfTask::create($this->createForm);
 
             $this->reset('createForm');

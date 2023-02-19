@@ -25,7 +25,7 @@
                         class="hover:bg-gray-50 hover:shadow-lg rounded-lg p-2 hover:cursor-pointer h-full flex items-center">
                         <div class="w-2/3 flex items-center gap-10 font-mono">
                             <div class="hidden md:flex md:justify-center">
-                                <img class="h-24 w-24" src="{{ asset($stat['icon']) }}" alt="Ícono de la tarea">
+                                <img class="h-24 w-24" src="{{ asset('storage/img' . $stat['icon']) }}" alt="Ícono de la tarea">
                             </div>
 
                             <div class="flex flex-col items-start">

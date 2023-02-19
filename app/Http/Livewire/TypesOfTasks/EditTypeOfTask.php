@@ -5,14 +5,20 @@ namespace App\Http\Livewire\TypesOfTasks;
 use App\Models\Area;
 use App\Models\Phase;
 use App\Models\TypeOfTask;
+use Illuminate\Support\Facades\Storage;
 use Livewire\Component;
+use Livewire\WithFileUploads;
 
 class EditTypeOfTask extends Component
 {
+    use WithFileUploads;
+
     public $isOpen = 0;
 
     public $typeOfTask, $typeOfTask_id;
     public $areas = [], $phases = [];
+
+    public $newIcon;
 
     public $editForm = [
         'type' => '',
@@ -25,6 +31,7 @@ class EditTypeOfTask extends Component
         'transformation' => '',
         'initial_phase_id' => '',
         'final_phase_id' => '',
+        'icon' => '',
     ];
 
     protected $validationAttributes = [
@@ -35,6 +42,7 @@ class EditTypeOfTask extends Component
         'editForm.destination_area_id' => 'destination area',
         'editForm.initial_phase_id' => 'initial phase',
         'editForm.final_phase_id' => 'final phase',
+        'editForm.icon' => 'icon',
     ];
 
     public function mount(TypeOfTask $type_of_task)
@@ -45,7 +53,6 @@ class EditTypeOfTask extends Component
 
     public function editTypeOfTask()
     {
-        // dd($this->typeOfTask);
         $this->openModal();
 
         $this->areas = Area::all();
@@ -62,6 +69,7 @@ class EditTypeOfTask extends Component
             'transformation' => $this->typeOfTask->transformation,
             'initial_phase_id' => $this->typeOfTask->initial_phase_id,
             'final_phase_id' => $this->typeOfTask->final_phase_id,
+            'icon' => $this->typeOfTask->icon,
         ];
     }
 
@@ -95,6 +103,19 @@ class EditTypeOfTask extends Component
                 'editForm.initial_phase_id' => 'required',
                 'editForm.final_phase_id' => 'required',
             ]);
+
+            if ($this->newIcon) {
+                $icon = $this->newIcon->store('public/img');
+                $this->editForm['icon'] = str_replace('public/img', '', $icon);
+
+                // Delete old icon
+                if ($this->typeOfTask->icon) {
+                    $oldIcon = str_replace('/', '', $this->typeOfTask->icon);
+                    Storage::delete('public/img/' . $oldIcon);
+                }
+            } else {
+                $this->editForm['icon'] = $this->typeOfTask->icon;
+            }
 
             $typeOfTask = TypeOfTask::find($this->typeOfTask_id);
             $typeOfTask->update($this->editForm);

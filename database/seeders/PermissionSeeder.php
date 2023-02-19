@@ -313,6 +313,24 @@ class PermissionSeeder extends Seeder
                 'name' => 'admin.stadistics.index',
                 'guard_name' => 'web',
             ],
+
+            // USUARIOS Y ROLES
+            [
+                'name' => 'admin.users.index',
+                'guard_name' => 'web',
+            ],
+            [
+                'name' => 'admin.roles.index',
+                'guard_name' => 'web',
+            ],
+            [
+                'name' => 'admin.roles.create',
+                'guard_name' => 'web',
+            ],
+            [
+                'name' => 'admin.roles.edit',
+                'guard_name' => 'web',
+            ]
         ];
 
         foreach ($permissions as $permission) {

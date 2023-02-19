@@ -95,6 +95,22 @@
                 </div>
             </div>
 
+            {{-- Prefix --}}
+            <div class="mb-4 grid grid-cols-2 gap-3">
+                <div>
+                    <x-jet-label class="mb-2">Ícono</x-jet-label>
+                    <x-jet-input wire:model="createForm.icon" type="file" accept="image/*" class="w-full">
+                    </x-jet-input>
+                    <x-jet-input-error class="mt-2 text-xs font-semibold" for="createForm.icon" />
+                </div>
+                @if ($createForm['icon'])
+                    <div>
+                        <x-jet-label class="mb-2">Ícono</x-jet-label>
+                        <img src="{{ $createForm['icon']->temporaryUrl() }}" alt="Logo nuevo" class="w-32 h-32">
+                    </div>
+                @endif
+            </div>
+
         </x-slot>
 
         <x-slot name="footer">
@@ -104,7 +120,7 @@
                 </x-jet-danger-button>
 
                 <x-jet-button wire:click="save">
-                    Crear etapa
+                    Crear tipo de tarea
                 </x-jet-button>
             </div>
         </x-slot>

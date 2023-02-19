@@ -5,7 +5,7 @@
 
     </x-slot>
 
-    <div class="px-12 py-8 bg-white rounded-lg shadow">
+    <div class="px-12 py-8 bg-white rounded-lg shadow columns-1">
 
         {{-- Empresa --}}
         <div class="mb-5">
