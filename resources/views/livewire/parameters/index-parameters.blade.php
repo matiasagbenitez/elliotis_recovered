@@ -16,6 +16,7 @@
             <hr class="my-2">
 
             <a href="{{ route('admin.company.edit') }}"><p class="font-normal hover:underline">Información de la empresa</p></a>
+            <a href="{{ route('admin.users.index') }}"><p class="font-normal hover:underline">Listado de usuarios del sistema</p></a>
         </div>
 
         {{-- GEOGRAFÍA --}}

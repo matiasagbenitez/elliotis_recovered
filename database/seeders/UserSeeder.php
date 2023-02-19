@@ -17,26 +17,52 @@ class UserSeeder extends Seeder
         ])->assignRole('sudo');
 
         User::create([
-            'name' => 'Auditor',
+            'name' => 'Auditor José Hernández',
             'company_id' => 1,
-            'email' => 'auditor@correo.com',
+            'email' => 'jose@correo.com',
             'password' => bcrypt('password')
         ])->assignRole('auditor');
 
         User::create([
-            'name' => 'Admin',
+            'name' => 'Ale Pujalski',
             'company_id' => 1,
-            'email' => 'admin@correo.com',
+            'email' => 'ale@correo.com',
             'password' => bcrypt('password')
-        ])->assignRole('admin');
+        ])->assignRole('administrador');
 
         User::create([
-            'name' => 'Empleado',
+            'name' => 'Victor Benítez',
             'company_id' => 1,
-            'email' => 'empleado@correo.com',
+            'email' => 'victor@correo.com',
             'password' => bcrypt('password')
-        ])->assignRole('employee');
+        ])->assignRole('administrador');
 
-        // User::factory(5)->create();
+        User::create([
+            'name' => 'Darío Benedetto',
+            'company_id' => 1,
+            'email' => 'dario@correo.com',
+            'password' => bcrypt('password')
+        ])->assignRole('empleado');
+
+        User::create([
+            'name' => 'Lucas Pratto',
+            'company_id' => 1,
+            'email' => 'lucas@correo.com',
+            'password' => bcrypt('password')
+        ])->assignRole('empleado');
+
+        User::create([
+            'name' => 'Juan Fernando Quintero',
+            'company_id' => 1,
+            'email' => 'juan@correo.com',
+            'password' => bcrypt('password')
+        ])->assignRole('empleado');
+
+        User::create([
+            'name' => 'Gonzalo Martínez',
+            'company_id' => 1,
+            'email' => 'gonzalo@correo.com',
+            'password' => bcrypt('password')
+        ])->assignRole('empleado');
     }
 }

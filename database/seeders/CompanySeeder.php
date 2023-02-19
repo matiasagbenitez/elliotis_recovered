@@ -17,7 +17,7 @@ class CompanySeeder extends Seeder
             'phone' => '+5493743445566',
             'address' => 'Av. Aconcagua 1100, Jardín América, Misiones',
             'cp' => '3328',
-            'logo' => '/img/logo_empresa.png'
+            'logo' => '/logo_empresa.png'
         ];
 
         \App\Models\Company::create($company);

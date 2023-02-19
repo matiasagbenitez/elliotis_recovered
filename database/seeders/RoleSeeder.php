@@ -18,14 +18,14 @@ class RoleSeeder extends Seeder
         $role2 = Role::create(['name' => 'auditor']);
         $role2->givePermissionTo('admin.auditory.index');
 
-        $role3 = Role::create(['name' => 'admin']);
+        $role3 = Role::create(['name' => 'administrador']);
         $role3->givePermissionTo(Permission::all());
         $role3->revokePermissionTo('admin.auditory.index');
         $role3->revokePermissionTo('admin.products.create');
         $role3->revokePermissionTo('admin.products.create-previous-product');
         $role3->revokePermissionTo('admin.products.create-following-products');
 
-        $role4 = Role::create(['name' => 'employee']);
+        $role4 = Role::create(['name' => 'empleado']);
         $role4->givePermissionTo(
             'admin.trunk-lots.index',
             'admin.products.index',

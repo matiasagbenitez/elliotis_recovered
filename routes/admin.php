@@ -105,6 +105,7 @@ use App\Http\Controllers\ProduccionMachimbradoraPDFController;
 use App\Http\Livewire\FollowingProducts\IndexFollowingProducts;
 use App\Http\Livewire\PucharseParameters\IndexPucharseParameters;
 use App\Http\Livewire\NecesaryProduction\IndexNecessaryProduction;
+use App\Http\Livewire\Users\UsersIndex;
 
 // RUTA DE EMPRESA
 Route::get('/company/edit', EditCompany::class)->name('admin.company.edit')->middleware('can:admin.company.edit');
@@ -255,3 +256,5 @@ Route::get('/stadistics', IndexStadistics::class)->name('admin.stadistics.index'
 Route::get('/stadistics/1/pdf', [ProduccionLineaCortePDFController::class, 'pdf'])->name('admin.produccion-linea-corte.pdf');
 Route::get('/stadistics/2/pdf', [ProduccionMachimbradoraPDFController::class, 'pdf'])->name('admin.produccion-machimbradora.pdf');
 Route::get('/stadistics/3/pdf', [ProduccionEmpaquetadoraPDFController::class, 'pdf'])->name('admin.produccion-empaquetadora.pdf');
+
+Route::get('/users', UsersIndex::class)->name('admin.users.index');
