@@ -3,43 +3,51 @@
 namespace App\Http\Livewire\Roles;
 
 use Livewire\Component;
-use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
 
 class EditRole extends Component
 {
+    public  $availablePermissions;
     public $role, $permissions;
     public $selectedPermissions = [];
 
+    protected $listeners = ['togglePermission'];
+
     public function mount($role)
     {
+        $this->availablePermissions = Permission::all();
         $this->role = Role::find($role);
         $this->permissions = $this->role->permissions()->pluck('name')->toArray();
-        $this->selectedPermissions = collect($this->permissions)->mapWithKeys(function ($permission) {
-            return [$permission => $this->role->hasPermissionTo($permission)];
-        })->toArray();
+        $this->selectedPermissions = collect($this->permissions)->map(function ($value, $key) {
+            return [$value => true];
+        })->collapse()->toArray();
 
         if (!$this->role) {
             abort(404);
         }
     }
 
+    public function togglePermission($permission_name)
+    {
+        if (array_key_exists($permission_name, $this->selectedPermissions)) {
+            unset($this->selectedPermissions[$permission_name]);
+        } else {
+            $this->selectedPermissions[$permission_name] = true;
+        }
+    }
+
     public function updateRole()
     {
-        $permissions = collect($this->selectedPermissions)->map(function ($value, $key) {
-            if (is_array($value)) {
-                return collect($value)->map(function ($value, $key) {
-                    return $value ? $key : null;
-                })->filter();
-            }
+        $this->role->syncPermissions(array_keys($this->selectedPermissions));
 
-            return $value ? $key : null;
-        })->flatten()->toArray();
+        session()->flash('flash.banner', '¡Rol actualizado exitosamente!');
+        session()->flash('flash.bannerStyle', 'success');
+        return redirect()->route('admin.roles.index');
     }
 
     public function render()
     {
-        $availablePermissions = Permission::all();
-        return view('livewire.roles.edit-role', compact('availablePermissions'));
+        return view('livewire.roles.edit-role');
     }
 }

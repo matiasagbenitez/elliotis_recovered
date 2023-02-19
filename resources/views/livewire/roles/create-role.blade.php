@@ -9,10 +9,7 @@
                 </x-jet-button>
             </a>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                Permisos del rol
-                <span class="uppercase">
-                    {{ $role->name }}
-                </span>
+                Crear un nuevo rol
             </h2>
             <div>
 
@@ -24,32 +21,36 @@
 
         <span class="font-bold text-gray-700 text-lg">
             <i class="fas fa-info-circle text-gray-700 text-lg mr-2"></i>
-            Gestión de permisos
+            Crear un nuevo rol
             <hr class="my-2">
         </span>
 
-        <p class="font-bold text-gray-700 text-lg my-3">Rol:
-            <span class="font-normal">{{ $role->name }}</span>
-        </p>
-        <p class="font-bold text-gray-700 text-lg mb-2">Listado de permisos:</p>
+        {{-- Nombre --}}
+        <div>
+            <x-jet-label class="mb-2">Nombre del rol</x-jet-label>
+            <x-jet-input wire:model="createForm.name" type="text" class="w-full" placeholder="Ingrese el nombre del rol"></x-jet-input>
+            <x-jet-input-error class="mt-2 text-xs font-semibold" for="createForm.name" />
+        </div>
+
+        <p class="font-bold text-gray-700 text-lg my-2">Listado de permisos:</p>
 
         <div class="columns-3">
             @foreach ($availablePermissions as $permission)
-            <div>
-                <label>
-                    <input type="checkbox" name="permissions[]" value="{{ $permission->name }}"
-                        {{ $role->hasPermissionTo($permission->name) ? 'checked' : '' }}
-                        wire:click="$emit('togglePermission', '{{ $permission->name }}')">
-                    {{ $permission->name }}
-                </label>
-            </div>
-        @endforeach
+                <div>
+                    <label>
+                        <input type="checkbox" name="permissions[]"
+                            value="{{ $permission->name }}"
+                            wire:click="$emit('togglePermission', '{{ $permission->name }}')"
+                            >
+                        {{ $permission->name }}
+                    </label>
+                </div>
+            @endforeach
         </div>
 
         <div class="flex mt-4 justify-end">
-            <x-jet-button wire:click='updateRole'>
-                <i class="fas fa-save mr-2"></i>
-                Guardar cambios
+            <x-jet-button wire:click='createRole'>
+                Crear nuevo rol
             </x-jet-button>
         </div>
     </div>

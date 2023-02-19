@@ -3,6 +3,13 @@
     <x-slot name="header">
         <div class="flex items-center justify-between">
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">Roles y permisos del sistema</h2>
+            <div>
+                <a href="{{ route('admin.roles.create') }}">
+                    <x-jet-secondary-button>
+                        Crear un nuevo rol
+                    </x-jet-secondary-button>
+                </a>
+            </div>
         </div>
     </x-slot>
 
@@ -30,7 +37,7 @@
                         </th>
                         <th scope="col"
                             class="px-4 py-2 text-center text-sm font-bold text-gray-500 uppercase tracking-wider">
-                            Administrar rol
+                            Editar rol
                         </th>
                     </tr>
                 </thead>
