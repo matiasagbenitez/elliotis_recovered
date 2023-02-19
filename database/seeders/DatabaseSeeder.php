@@ -37,7 +37,7 @@ class DatabaseSeeder extends Seeder
         $this->call(PhaseSeeder::class);
         $this->call(ProductSeeder::class);
 
-        for ($i = 0; $i < 10; $i++) {
+        for ($i = 0; $i < 9; $i++) {
             $this->call(Purchase1Seeder::class);
             $this->call(Purchase2Seeder::class);
             $this->call(Purchase3Seeder::class);

@@ -15,7 +15,7 @@ class WeatherApiSeeder extends Seeder
             'rain_prob' => 0.5,
             'rain_mm' => 5,
             'humidity' => 0.7,
-            'wind_speed' => 5,
+            'wind_speed' => 1,
             'days_in_row' => 5,
             'max_conditions' => 4,
         ];

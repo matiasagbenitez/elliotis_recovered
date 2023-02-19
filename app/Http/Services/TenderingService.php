@@ -28,9 +28,11 @@ class TenderingService
             ];
         }
 
-        // Notificar al usuario 1
-        $user = User::find(1);
-        $user->notify(new NewTenderingRequired($task_id, $task_name, $detail));
+        // Notificar a todos los usuarios con el rol de Administrador
+        $users = User::role('Administrador')->get();
+        foreach ($users as $user) {
+            $user->notify(new NewTenderingRequired($task_id, $task_name, $detail));
+        }
     }
 
     public static function init(Tendering $tendering)

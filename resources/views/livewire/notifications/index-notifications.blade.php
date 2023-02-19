@@ -5,7 +5,7 @@
         </h2>
     </x-slot>
 
-    <div class="max-w-6xl mx-auto bg-white rounded-lg px-10 py-8">
+    <div class="max-w-8xl mx-auto bg-white rounded-lg px-10 py-8">
         <span class="font-bold text-gray-500">
             <i class="fas fa-info-circle mr-1"></i>
             Listado de notificaciones
@@ -39,12 +39,14 @@
                                 Marcar como leída
                             </span>
                         @endif
-                        <span
-                            class="text-gray-500 text-xs font-semibold  hover:cursor-pointer hover:font-bold hover:text-gray-700"
-                            wire:click="$emit('createTendering', '{{ $item['id'] }}')">
-                            <i class="fas fa-shopping-cart"></i>
-                            Generar licitación
-                        </span>
+                        @if ($item['licitation'])
+                            <span
+                                class="text-gray-500 text-xs font-semibold  hover:cursor-pointer hover:font-bold hover:text-gray-700"
+                                wire:click="$emit('createTendering', '{{ $item['id'] }}')">
+                                <i class="fas fa-shopping-cart"></i>
+                                Generar licitación
+                            </span>
+                        @endif
                     </div>
                 </div>
 

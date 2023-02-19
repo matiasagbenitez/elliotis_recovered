@@ -2,10 +2,12 @@
 
 namespace App\Http\Livewire\Weather;
 
-use App\Models\WeatherApi as ModelsWeatherApi;
+use App\Models\User;
 use GuzzleHttp\Client;
-use Illuminate\Support\Facades\Date;
 use Livewire\Component;
+use Illuminate\Support\Facades\Date;
+use App\Models\WeatherApi as ModelsWeatherApi;
+use App\Notifications\WeatherAlertNotification;
 
 class WeatherApi extends Component
 {
@@ -190,6 +192,10 @@ class WeatherApi extends Component
 
             if ($conditions >= $max_conditions) {
                 $this->emit('warning', '¡Quizás sea conveniente guardar la producción!');
+                $users = User::role('Administrador')->get();
+                foreach ($users as $user) {
+                    $user->notify(new WeatherAlertNotification($conditions_resume));
+                }
             } else {
                 $this->emit('success', '¡No es necesario guardar la producción!');
             }
