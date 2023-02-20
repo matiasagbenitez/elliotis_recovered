@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Http\Services\DateService;
 use App\Models\User;
 use App\Models\Client;
 use App\Models\VoucherTypes;
@@ -15,7 +16,7 @@ class SaleFactory extends Factory
     public function definition()
     {
         $user_id = User::inRandomOrder()->first()->id;
-        $date = $this->faker->dateTimeBetween('-2 week', 'now');
+        $date = $this->faker->dateTimeBetween('-3 month', 'now');
         $client_id = Client::inRandomOrder()->first()->id;
         $payment_condition_id = PaymentConditions::inRandomOrder()->first()->id;
         $payment_method_id = PaymentMethods::inRandomOrder()->first()->id;

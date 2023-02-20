@@ -302,7 +302,7 @@ class ProduccionMachimbradora extends Component
 
         $chart3->dataset('Metros cuadrados machimbrados', 'line', collect($this->dias_m2)->pluck('m2'))
             ->color('#475569')
-            ->fill(false);
+            ->fill(true);
 
         $chart3->options([
             'scales' => [

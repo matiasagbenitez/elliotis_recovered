@@ -9,6 +9,7 @@ use App\Models\Sublot;
 use App\Models\Product;
 use Illuminate\Database\Seeder;
 use App\Http\Services\TaskService;
+use App\Models\User;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
@@ -108,11 +109,15 @@ class Task9Seeder extends Seeder
         $start_date = TaskService::getStartDate();
         $end_date = TaskService::getEndDate($start_date);
 
+        $user_id = User::whereHas('roles', function ($query) {
+            $query->where('name', 'empleado');
+        })->get()->random()->id;
+
         $task = Task::create([
             'type_of_task_id' => 9,
             'task_status_id' => 1,
             'started_at' => $start_date,
-            'started_by' => 1,
+            'started_by' => $user_id
         ]);
 
         $task->inputSublotsDetails()->sync($inputSelects);
@@ -174,7 +179,7 @@ class Task9Seeder extends Seeder
         $task->update([
             'task_status_id' => 2,
             'finished_at' => $end_date,
-            'finished_by' => 1,
+            'finished_by' => $user_id
         ]);
     }
 }

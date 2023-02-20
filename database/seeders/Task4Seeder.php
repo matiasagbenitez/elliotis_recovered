@@ -11,6 +11,7 @@ use App\Http\Services\M2Service;
 use App\Http\Services\TaskService;
 use Illuminate\Support\Facades\Date;
 use App\Http\Services\RandomNumberService;
+use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 class Task4Seeder extends Seeder
@@ -28,11 +29,15 @@ class Task4Seeder extends Seeder
         $start_date = TaskService::getStartDate();
         $end_date = TaskService::getEndDate($start_date);
 
+        $user_id = User::whereHas('roles', function ($query) {
+            $query->where('name', 'empleado');
+        })->get()->random()->id;
+
         $task = Task::create([
             'type_of_task_id' => 4,
             'task_status_id' => 1,
             'started_at' => $start_date,
-            'started_by' => 1,
+            'started_by' => $user_id
         ]);
 
         foreach ($sublots as $sublot) {
@@ -122,7 +127,7 @@ class Task4Seeder extends Seeder
         $task->update([
             'task_status_id' => 2,
             'finished_at' => $end_date,
-            'finished_by' => 1,
+            'finished_by' => $user_id
         ]);
     }
 }

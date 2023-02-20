@@ -11,7 +11,7 @@ class SaleSeeder extends Seeder
 {
     public function run()
     {
-        Sale::factory(5)->create();
+        Sale::factory(15)->create();
 
         // Associate random products to each sale
         Sale::all()->each(function ($sale) {
@@ -28,7 +28,7 @@ class SaleSeeder extends Seeder
 
                 // $product = Product::where('is_salable', true)->inRandomOrder()->first();
 
-                $quantity = rand(3, 5);
+                $quantity = rand(2, 4);
                 $price = $product->selling_price;
 
                 $sale->products()->attach($product->id, [

@@ -106,6 +106,7 @@ use App\Http\Livewire\PreviousProducts\IndexPreviousProducts;
 use App\Http\Livewire\ProductionReport\IndexProductionReport;
 use App\Http\Controllers\ProduccionEmpaquetadoraPDFController;
 use App\Http\Controllers\ProduccionMachimbradoraPDFController;
+use App\Http\Controllers\VentasPDFController;
 use App\Http\Livewire\FollowingProducts\IndexFollowingProducts;
 use App\Http\Livewire\PucharseParameters\IndexPucharseParameters;
 use App\Http\Livewire\NecesaryProduction\IndexNecessaryProduction;
@@ -259,6 +260,7 @@ Route::get('/stadistics', IndexStadistics::class)->name('admin.stadistics.index'
 Route::get('/stadistics/1/pdf', [ProduccionLineaCortePDFController::class, 'pdf'])->name('admin.produccion-linea-corte.pdf');
 Route::get('/stadistics/2/pdf', [ProduccionMachimbradoraPDFController::class, 'pdf'])->name('admin.produccion-machimbradora.pdf');
 Route::get('/stadistics/3/pdf', [ProduccionEmpaquetadoraPDFController::class, 'pdf'])->name('admin.produccion-empaquetadora.pdf');
+Route::get('/stadistics/4/pdf', [VentasPDFController::class, 'pdf'])->name('admin.ventas.pdf');
 
 Route::get('/users', UsersIndex::class)->name('admin.users.index')->middleware('can:admin.users.index');
 Route::get('/roles', RolesIndex::class)->name('admin.roles.index')->middleware('can:admin.roles.index');

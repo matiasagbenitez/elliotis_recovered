@@ -18,6 +18,7 @@ class IndexStadistics extends Component
         1 => 'Producción en línea de corte (corte de rollos)',
         2 => 'Producción en machimbradora',
         3 => 'Producción en empaquetadora',
+        4 => 'Estadísticas de ventas',
     ];
 
     public function mount()
