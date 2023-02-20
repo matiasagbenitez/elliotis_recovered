@@ -16,6 +16,10 @@ class CompanySeeder extends Seeder
             'email' => 'chpehijos@gmail.com',
             'phone' => '+5493743445566',
             'address' => 'Av. Aconcagua 1100, Jardín América, Misiones',
+
+            'lat' => '-27.0435',
+            'lon' => '-55.227',
+
             'cp' => '3328',
             'logo' => '/logo_empresa.png'
         ];

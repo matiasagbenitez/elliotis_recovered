@@ -88,6 +88,7 @@
             <hr class="my-2">
 
             <a href="{{ route('admin.api.index') }}"><p class="font-normal hover:underline">Configurar API del clima</p></a>
+            <a href="{{ route('admin.api.edit-coordinates') }}"><p class="font-normal hover:underline">Configurar coordenadas de localización</p></a>
 
         </div>
 

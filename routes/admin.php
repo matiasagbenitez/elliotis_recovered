@@ -46,6 +46,7 @@ use App\Http\Livewire\Sales\ShowSaleClient;
 use App\Http\Livewire\Unities\IndexUnities;
 use App\Http\Livewire\Audits\OrdenesDeVenta;
 use App\Http\Livewire\Ranking\PruebaRanking;
+use App\Http\Livewire\WeatherApi\EditLatLon;
 use App\Http\Controllers\VentasPDFController;
 use App\Http\Livewire\Audits\OrdenesDeCompra;
 use App\Http\Livewire\IvaTypes\IndexIvaTypes;
@@ -79,6 +80,7 @@ use App\Http\Livewire\SaleOrders\SaleOrdersIndex;
 use App\Http\Livewire\Stadistics\IndexStadistics;
 use App\Http\Livewire\Tenderings\CreateTendering;
 use App\Http\Livewire\Tenderings\IndexTenderings;
+use App\Http\Livewire\WeatherApi\EditCoordinates;
 use App\Http\Controllers\SublotsAreaPDFController;
 use App\Http\Controllers\TasksReportPDFController;
 use App\Http\Livewire\Tenderings\ShowOfferTendering;
@@ -233,6 +235,7 @@ Route::get('/audits/sales', Ventas::class)->name('admin.auditory.sales')->middle
 
 // API clima
 Route::get('/weather-api', WeatherApi::class)->name('admin.api.index')->middleware('can:admin.api.index');
+Route::get('/weather-api/edit-coordinates', EditCoordinates::class)->name('admin.api.edit-coordinates');
 
 // RUTAS PDF
 Route::get('/products/pdf', [ProductPDFController::class, 'pdf'])->name('admin.products.pdf');

@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Weather;
 
+use App\Models\Company;
 use App\Models\User;
 use GuzzleHttp\Client;
 use Livewire\Component;
@@ -21,8 +22,10 @@ class WeatherApi extends Component
         try {
             $client = new Client();
             $appid = '80a1f0ad792ad6a929fdcbf257dc8166';
-            $lat = '-27.0435';
-            $lon = '-55.227';
+
+            $company = Company::first();
+            $lat = $company->lat;
+            $lon = $company->lon;
 
             $response = $client->get("http://api.openweathermap.org/data/2.5/forecast?lat=$lat&lon=$lon&appid=$appid&units=metric");
             $weatherData = json_decode($response->getBody()->getContents(), true);

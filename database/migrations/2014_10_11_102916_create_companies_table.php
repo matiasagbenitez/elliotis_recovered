@@ -16,6 +16,10 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->string('phone');
             $table->string('address');
+
+            $table->string('lat')->nullable();
+            $table->string('lon')->nullable();
+
             $table->string('cp');
             $table->string('logo')->nullable()->default('/img/default.png');
             $table->timestamps();
