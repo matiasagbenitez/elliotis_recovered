@@ -66,6 +66,8 @@
             @livewire('stadistics.produccion-empaquetadora', ['filters' => $filters], key('produccion_empaquetadora'))
         @elseif ($filters['stadistic_type'] == 4)
             @livewire('stadistics.ventas', ['filters' => $filters], key('ventas'))
+        @elseif ($filters['stadistic_type'] == 5)
+            @livewire('stadistics.compras', ['filters' => $filters], key('compras'))
         @else
             <p class="font-semibold">No hay resultados que mostrar.</p>
         @endif

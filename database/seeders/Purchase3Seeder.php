@@ -2,8 +2,9 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Faker\Factory;
 use Illuminate\Database\Seeder;
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 class Purchase3Seeder extends Seeder
 {
@@ -13,15 +14,17 @@ class Purchase3Seeder extends Seeder
         // Find a supplier->iva_condition->discriminate = true
         $supplier = \App\Models\Supplier::whereHas('iva_condition', function ($query) {
             $query->where('discriminate', true);
-        })->first();
+        })->inRandomOrder()->first();
 
         if ($supplier == null) {
             return;
         }
 
+        $date = Factory::create()->dateTimeBetween('-4 month', 'now');
+
         $createForm = [
             'user_id' => \App\Models\User::inRandomOrder()->first()->id,
-            'date' => \Illuminate\Support\Facades\Date::now(),
+            'date' => $date,
             'supplier_id' => $supplier->id,
             'supplier_order_id' => null,
             'payment_condition_id' => \App\Models\PaymentConditions::inRandomOrder()->first()->id,
@@ -35,6 +38,8 @@ class Purchase3Seeder extends Seeder
             'observations' => 'Compra a proveedor que DISCRMINA IVA y de tipo MIXTA',
             'type_of_purchase' => 2,
             'total_weight' => 0,
+            'created_at' => $date,
+            'updated_at' => $date
         ];
 
         $purchase = \App\Models\Purchase::create($createForm);
@@ -55,7 +60,7 @@ class Purchase3Seeder extends Seeder
 
         foreach ($products as $product) {
 
-            $quantity = rand(18, 30);
+            $quantity = rand(15, 25);
             $tn_total = $quantity * 1.18;
             $subtotal = $tn_total * $tn_price;
 

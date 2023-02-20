@@ -19,6 +19,7 @@ class IndexStadistics extends Component
         2 => 'Producción en machimbradora',
         3 => 'Producción en empaquetadora',
         4 => 'Estadísticas de ventas',
+        5 => 'Estadísticas de compras',
     ];
 
     public function mount()
