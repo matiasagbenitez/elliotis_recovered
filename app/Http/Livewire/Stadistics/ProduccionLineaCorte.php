@@ -162,34 +162,21 @@ class ProduccionLineaCorte extends Component
             $top_5_dias = [];
             $dias = [];
             foreach ($tareas_corte as $task) {
-                $fecha = new DateTime($task->finished_at);
-                $fecha = $fecha->format('Y-m-d');
+                $fecha = Date::parse($task->started_at)->format('d/m/Y');
                 if (!isset($dias[$fecha])) {
                     $dias[$fecha] = [
-                        'fecha' => Date::parse($fecha)->format('d/m/Y'),
+                        'fecha' => $fecha,
                         'initial_m2' => $task->lot->sublots->sum('initial_m2')
                     ];
                 } else {
                     $dias[$fecha]['initial_m2'] += $task->lot->sublots->sum('initial_m2');
                 }
             }
+            $dias_m2 = $dias;
             $dias = collect($dias);
             $dias = $dias->sortByDesc('initial_m2');
             $top_5_dias = $dias->take(5);
             $this->top_5_dias = $top_5_dias;
-
-            $dias_m2 = [];
-            foreach ($tareas_corte as $tarea) {
-                $fecha = Date::parse($tarea->started_at)->format('Y-m-d');
-                if (!isset($dias_m2[$fecha])) {
-                    $dias_m2[$fecha] = [
-                        'fecha' => Date::parse($fecha)->format('d/m/Y'),
-                        'm2' => $task->lot->sublots->sum('initial_m2')
-                    ];
-                } else {
-                    $dias_m2[$fecha]['m2'] += $task->lot->sublots->sum('initial_m2');
-                }
-            }
             $this->dias_m2 = $dias_m2;
 
         } catch (\Throwable $th) {
@@ -310,7 +297,7 @@ class ProduccionLineaCorte extends Component
             ],
         ]);
 
-        $chart3->dataset('M2 cortados', 'line', collect($this->dias_m2)->pluck('m2'))
+        $chart3->dataset('M2 cortados', 'line', collect($this->dias_m2)->pluck('initial_m2'))
             ->color('#475569')
             ->fill('#false');
 

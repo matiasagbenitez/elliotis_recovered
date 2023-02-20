@@ -43,7 +43,7 @@
         </div>
     </div>
 
-    <div class="flex">
+    <div class="flex gap-10">
         <div class="w-full md:w-1/2 space-y-6">
             <div>
                 <span class="font-bold text-gray-700 text-lg">
@@ -73,24 +73,24 @@
                 </span>
                 @if ($pending)
                     @if ($productsStats)
-                        <table>
+                        <table class="w-100%">
                             <thead>
                                 <tr class="font-bold text-center uppercase">
-                                    <td class="w-2/6">Etapa</td>
-                                    <td>Requerido</td>
-                                    <td>Stock</td>
-                                    <td>Falta</td>
-                                    <td>Completo</td>
+                                    <td class="w-1/4">Etapa</td>
+                                    <td class="w-1/4">Requerido</td>
+                                    <td class="w-1/4">Stock</td>
+                                    <td class="w-1/4">Falta</td>
+                                    <td class="w-1/4">Completo</td>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach ($productsStats as $productStat)
                                     <tr class="text-center">
                                         <td class="text-left">{{ $productStat['phase_name'] }}</td>
-                                        <td>{{ $productStat['total'] }} m²</td>
-                                        <td>{{ $productStat['m2_real_stock'] }} m²</td>
-                                        <td>{{ $productStat['m2_necessary_stock'] }} m²</td>
-                                        <td>{{ $productStat['percentage'] }}%</td>
+                                        <td class="text-center">{{ $productStat['total'] }} m²</td>
+                                        <td class="text-center">{{ $productStat['m2_real_stock'] }} m²</td>
+                                        <td class="text-center">{{ $productStat['m2_necessary_stock'] }} m²</td>
+                                        <td class="text-center">{{ $productStat['percentage'] }}%</td>
                                     </tr>
                                 @endforeach
                             </tbody>
