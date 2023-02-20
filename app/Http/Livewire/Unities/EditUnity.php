@@ -17,8 +17,8 @@ class EditUnity extends Component
     ];
 
     protected $validationAttributes = [
-        'editForm.name' => 'name',
-        'editForm.unities' => 'unities'
+        'editForm.name' => 'nombre',
+        'editForm.unities' => 'unidades'
     ];
 
     public function mount(Unity $unity)

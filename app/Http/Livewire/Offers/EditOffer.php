@@ -29,6 +29,16 @@ class EditOffer extends Component
         'observations' => '',
     ];
 
+    protected $validationAttributes = [
+        'editForm.tn_total' => 'total de TN',
+        'editForm.tn_price' => 'precio por TN',
+        'editForm.subtotal' => 'subtotal',
+        'editForm.iva' => 'IVA',
+        'editForm.total' => 'total',
+        'editForm.delivery_date' => 'fecha de entrega',
+        'editForm.observations' => 'observaciones',
+    ];
+
     // PRODUCTS
     public $orderProducts = [];
     public $allProducts = [];

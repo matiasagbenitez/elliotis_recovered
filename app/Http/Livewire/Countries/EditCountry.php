@@ -12,7 +12,7 @@ class EditCountry extends Component
     public $editForm = ['name' => ''];
 
     protected $validationAttributes = [
-        'editForm.name' => 'name'
+        'editForm.name' => 'nombre'
     ];
 
     public function mount(Country $country)

@@ -16,8 +16,8 @@ class CreateIvaType extends Component
     ];
 
     protected $validationAttributes = [
-        'createForm.name' => 'name',
-        'createForm.percentage' => 'percentage'
+        'createForm.name' => 'nombre',
+        'createForm.percentage' => 'porcentaje'
     ];
 
     public function createIvaType()

@@ -19,8 +19,8 @@ class CreateProductName extends Component
     ];
 
     protected $validationAttributes = [
-        'createForm.name' => 'name',
-        'createForm.margin' => 'margin',
+        'createForm.name' => 'nombre',
+        'createForm.margin' => 'margen',
     ];
 
     public function createProductName()

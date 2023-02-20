@@ -330,6 +330,11 @@ class PermissionSeeder extends Seeder
             [
                 'name' => 'admin.roles.edit',
                 'guard_name' => 'web',
+            ],
+
+            [
+                'name' => 'admin.dashboard',
+                'guard_name' => 'web',
             ]
         ];
 

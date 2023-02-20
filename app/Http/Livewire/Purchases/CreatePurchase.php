@@ -53,6 +53,24 @@ class CreatePurchase extends Component
         'type_of_purchase' => 1
     ];
 
+    protected $validationAttributes = [
+        'createForm.date' => 'fecha',
+        'createForm.supplier_id' => 'proveedor',
+        'createForm.supplier_order_id' => 'orden de compra',
+        'createForm.payment_condition_id' => 'condición de pago',
+        'createForm.payment_method_id' => 'método de pago',
+        'createForm.voucher_type_id' => 'tipo de comprobante',
+        'createForm.voucher_number' => 'número de comprobante',
+        'createForm.subtotal' => 'subtotal',
+        'createForm.iva' => 'IVA',
+        'createForm.total' => 'total',
+        'createForm.weight_voucher' => 'voucher de peso',
+        'createForm.observations' => 'observaciones',
+        'createForm.type_of_purchase' => 'tipo de compra',
+        'orderProducts.*.product_id' => 'producto',
+        'orderProducts.*.quantity' => 'cantidad'
+    ];
+
     // VALIDATION
     protected $rules = [
         'createForm.date' => 'required|date',

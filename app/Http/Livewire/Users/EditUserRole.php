@@ -17,6 +17,10 @@ class EditUserRole extends Component
         'role_id' => ''
     ];
 
+    protected $validationAttributes = [
+        'editForm.role_id' => 'rol'
+    ];
+
     public function mount($user_id)
     {
         $this->roles = Role::where('name', '!=', 'sudo')->get();

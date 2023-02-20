@@ -42,17 +42,17 @@ class CreateSupplier extends Component
     ];
 
     protected $validationAttributes = [
-        'createForm.business_name' => 'business name',
-        'createForm.iva_condition_id' => 'IVA condition',
-        'createForm.cuit' => 'cuit',
-        'createForm.last_name' => 'last name',
-        'createForm.first_name' => 'first name',
-        'createForm.adress' => 'adress',
-        'createForm.locality_id' => 'locality',
-        'createForm.phone' => 'phone',
+        'createForm.business_name' => 'razón social',
+        'createForm.iva_condition_id' => 'condición de IVA',
+        'createForm.cuit' => 'CUIT',
+        'createForm.last_name' => 'apellido',
+        'createForm.first_name' => 'nombre',
+        'createForm.adress' => 'dirección',
+        'createForm.locality_id' => 'localidad',
+        'createForm.phone' => 'teléfono',
         'createForm.email' => 'email',
-        'createForm.active' => 'active',
-        'createForm.observations' => 'observations',
+        'createForm.active' => 'activo',
+        'createForm.observations' => 'observaciones',
     ];
 
     public function mount()

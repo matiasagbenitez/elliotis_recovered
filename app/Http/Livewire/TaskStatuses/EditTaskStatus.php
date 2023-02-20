@@ -15,7 +15,7 @@ class EditTaskStatus extends Component
     ];
 
     protected $validationAttributes = [
-        'editForm.name' => 'name'
+        'editForm.name' => 'nombre'
     ];
 
     public function mount(TaskStatus $task_status)

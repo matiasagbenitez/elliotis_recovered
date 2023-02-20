@@ -12,8 +12,8 @@ class EditProvince extends Component
     public $editForm = ['name' => '', 'country_id' => ''];
 
     protected $validationAttributes = [
-        'editForm.name' => 'name',
-        'editForm.country_id' => 'country'
+        'editForm.name' => 'nombre',
+        'editForm.country_id' => 'país'
     ];
 
     public $countries;

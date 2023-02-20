@@ -117,11 +117,12 @@ class Dashboard extends Component
 
             foreach ($products as $product) {
                 $total_real_stock += $product->real_stock;
-                $m2_real_stock += $product->real_stock * $product->m2;
+                $m2_real_stock += ($product->real_stock * $product->m2);
                 $total_necessary_stock += $product->necessary_stock;
-                $m2_necessary_stock += $product->necessary_stock * $product->m2;
-                $total += $m2_real_stock + $m2_necessary_stock;
+                $m2_necessary_stock += ($product->necessary_stock * $product->m2);
             }
+
+            $total = $m2_real_stock + $m2_necessary_stock;
 
             $stats[] = [
                 'phase_name' => Phase::find($phase_id)->name,
@@ -129,7 +130,7 @@ class Dashboard extends Component
                 'm2_real_stock' => $m2_real_stock,
                 'total_necessary_stock' => $total_necessary_stock,
                 'm2_necessary_stock' => $m2_necessary_stock,
-                'total' => $total,
+                'total' => $m2_necessary_stock > 0 ? $total : 0,
                 'percentage' => $total_necessary_stock > 0 ? round(($total_real_stock * 100) / ($total_necessary_stock + $total_real_stock), 2) : 100,
             ];
         }

@@ -35,14 +35,13 @@ class EditTypeOfTask extends Component
     ];
 
     protected $validationAttributes = [
-        'editForm.name' => 'name',
-        'editForm.initial_task' => 'initial task',
-        'editForm.description' => 'description',
-        'editForm.origin_area_id' => 'origin area',
-        'editForm.destination_area_id' => 'destination area',
-        'editForm.initial_phase_id' => 'initial phase',
-        'editForm.final_phase_id' => 'final phase',
-        'editForm.icon' => 'icon',
+        'editForm.name' => 'nombre',
+        'editForm.initial_task' => 'tarea inicial',
+        'editForm.origin_area_id' => 'área de origen',
+        'editForm.destination_area_id' => 'área de destino',
+        'editForm.initial_phase_id' => 'fase inicial',
+        'editForm.final_phase_id' => 'fase final',
+        'editForm.icon' => 'ícono',
     ];
 
     public function mount(TypeOfTask $type_of_task)

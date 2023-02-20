@@ -41,14 +41,13 @@ class CreateTypeOfTask extends Component
     ];
 
     protected $validationAttributes = [
-        'createForm.name' => 'name',
-        'createForm.description' => 'description',
-        'createForm.initial_task' => 'initial task',
-        'createForm.origin_area_id' => 'origin area',
-        'createForm.destination_area_id' => 'destination area',
-        'createForm.initial_phase_id' => 'initial phase',
-        'createForm.final_phase_id' => 'final phase',
-        'createForm.icon' => 'icon',
+        'createForm.name' => 'nombre',
+        'createForm.initial_task' => 'tarea inicial',
+        'createForm.origin_area_id' => 'área de origen',
+        'createForm.destination_area_id' => 'área de destino',
+        'createForm.initial_phase_id' => 'fase inicial',
+        'createForm.final_phase_id' => 'fase final',
+        'createForm.icon' => 'ícono',
     ];
 
     public function mount()

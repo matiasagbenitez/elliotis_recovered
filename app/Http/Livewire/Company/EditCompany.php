@@ -35,6 +35,18 @@ class EditCompany extends Component
         'newLogo' => 'nullable|image|max:1024',
     ];
 
+    protected $validationAttributes = [
+        'editForm.name' => 'nombre',
+        'editForm.cuit' => 'cuit',
+        'editForm.slogan' => 'slogan',
+        'editForm.email' => 'correo electrónico',
+        'editForm.phone' => 'teléfono',
+        'editForm.address' => 'dirección',
+        'editForm.cp' => 'código postal',
+        'editForm.logo' => 'logo',
+        'newLogo' => 'nuevo logo',
+    ];
+
     public function mount()
     {
         $this->company = Company::first();
@@ -43,33 +55,27 @@ class EditCompany extends Component
 
     public function save()
     {
-        try {
+        // New logo?
+        if ($this->newLogo) {
+            $logo = $this->newLogo->store('public/img');
+            $this->editForm['logo'] = str_replace('public/img', '', $logo);
 
-            // New logo?
-            if ($this->newLogo) {
-                $logo = $this->newLogo->store('public/img');
-                $this->editForm['logo'] = str_replace('public/img', '', $logo);
-
-                // Delete old logo
-                if ($this->company->logo) {
-                    $oldLogo = str_replace('/', '', $this->company->logo);
-                    Storage::delete('public/img/' . $oldLogo);
-                }
-            } else {
-                $this->editForm['logo'] = $this->company->logo;
+            // Delete old logo
+            if ($this->company->logo) {
+                $oldLogo = str_replace('/', '', $this->company->logo);
+                Storage::delete('public/img/' . $oldLogo);
             }
-
-            $this->validate();
-            $this->company->update($this->editForm);
-            $this->emit('success', '¡Información de la empresa actualizada correctamente!');
-            session()->flash('flash.banner', '¡Bien hecho! La información de la empresa ha sido actualizada correctamente.');
-
-            return redirect()->route('admin.company.edit');
-        } catch (\Throwable $th) {
-           dd($th);
+        } else {
+            $this->editForm['logo'] = $this->company->logo;
         }
-    }
 
+        $this->validate();
+        $this->company->update($this->editForm);
+        $this->emit('success', '¡Información de la empresa actualizada correctamente!');
+        session()->flash('flash.banner', '¡Bien hecho! La información de la empresa ha sido actualizada correctamente.');
+
+        return redirect()->route('admin.company.edit');
+    }
     public function render()
     {
         return view('livewire.company.edit-company');

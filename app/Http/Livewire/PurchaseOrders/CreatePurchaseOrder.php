@@ -36,6 +36,20 @@ class CreatePurchaseOrder extends Component
         'type_of_purchase' => 1,
     ];
 
+    protected $validationAttributes = [
+        'createForm.supplier_id' => 'proveedor',
+        'createForm.registration_date' => 'fecha de registro',
+        'createForm.subtotal' => 'subtotal',
+        'createForm.iva' => 'iva',
+        'createForm.total' => 'total',
+        'createForm.observations' => 'observaciones',
+        'createForm.type_of_purchase' => 'tipo de compra',
+        'orderProducts.*.product_id' => 'producto',
+        'orderProducts.*.quantity' => 'cantidad',
+        'orderProducts.*.tn_total' => 'tn total',
+        'orderProducts.*.tn_price' => 'precio tn',
+    ];
+
     // VALIDATION
     protected $rules = [
         'createForm.supplier_id' => 'required|integer|exists:suppliers,id',
@@ -45,7 +59,7 @@ class CreatePurchaseOrder extends Component
         'createForm.total' => 'required',
         'createForm.observations' => 'nullable|string',
         'createForm.type_of_purchase' => 'required|integer|in:1,2',
-        'orderProducts.*.product_id' => 'required',
+        'orderProducts.*.product_id' => 'required|integer|exists:products,id',
         'orderProducts.*.quantity' => 'required|numeric|min:1',
         'orderProducts.*.tn_total' => 'required|numeric|min:0',
         'orderProducts.*.tn_price' => 'required|numeric|min:0',

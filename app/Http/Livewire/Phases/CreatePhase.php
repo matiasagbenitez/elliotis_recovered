@@ -19,9 +19,9 @@ class CreatePhase extends Component
     ];
 
     protected $validationAttributes = [
-        'createForm.name' => 'name',
+        'createForm.name' => 'nombre',
         'createForm.slug' => 'slug',
-        'createForm.prefix' => 'prefix'
+        'createForm.prefix' => 'prefijo'
     ];
 
     public function createPhase()

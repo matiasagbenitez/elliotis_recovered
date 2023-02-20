@@ -31,6 +31,16 @@ class CreateOffer extends Component
         'observations' => '',
     ];
 
+    protected $validationAttributes = [
+        'createForm.tn_total' => 'total de TN',
+        'createForm.tn_price' => 'precio por TN',
+        'createForm.subtotal' => 'subtotal',
+        'createForm.iva' => 'IVA',
+        'createForm.total' => 'total',
+        'createForm.delivery_date' => 'fecha de entrega',
+        'createForm.observations' => 'observaciones',
+    ];
+
     public function mount(Hash $hash)
     {
         $this->checkHash($hash);

@@ -49,6 +49,24 @@ class CreateProduct extends Component
         'createForm.is_buyable' => 'required|numeric|in:0,1',
     ];
 
+    protected $validationAttributes = [
+        'createForm.name' => 'nombre',
+        'createForm.product_type_id' => 'tipo de producto',
+        'createForm.phase_id' => 'fase',
+        'createForm.m2' => 'm2',
+        'createForm.m2_price' => 'precio m2',
+        'createForm.cost' => 'costo',
+        'createForm.margin' => 'margen',
+        'createForm.selling_price' => 'precio de venta',
+        'createForm.real_stock' => 'stock real',
+        'createForm.minimum_stock' => 'stock mínimo',
+        'createForm.reposition' => 'reposición',
+        'createForm.wood_type_id' => 'tipo de madera',
+        'createForm.iva_type_id' => 'tipo de iva',
+        'createForm.is_salable' => 'es salable',
+        'createForm.is_buyable' => 'es comprable',
+    ];
+
     public $stock = [
         'real_stock' => '',
         'minimum_stock' => '',

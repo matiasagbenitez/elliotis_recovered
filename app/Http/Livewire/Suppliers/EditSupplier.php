@@ -29,17 +29,17 @@ class EditSupplier extends Component
     ];
 
     protected $validationAttributes = [
-        'editForm.business_name' => 'business name',
-        'editForm.iva_condition_id' => 'IVA condition',
-        'editForm.cuit' => 'cuit',
-        'editForm.last_name' => 'last name',
-        'editForm.first_name' => 'first name',
-        'editForm.adress' => 'adress',
-        'editForm.locality_id' => 'locality',
-        'editForm.phone' => 'phone',
+        'editForm.business_name' => 'razón social',
+        'editForm.iva_condition_id' => 'condición de IVA',
+        'editForm.cuit' => 'CUIT',
+        'editForm.last_name' => 'apellido',
+        'editForm.first_name' => 'nombre',
+        'editForm.adress' => 'dirección',
+        'editForm.locality_id' => 'localidad',
+        'editForm.phone' => 'teléfono',
         'editForm.email' => 'email',
-        'editForm.active' => 'active',
-        'editForm.observations' => 'observations',
+        'editForm.active' => 'activo',
+        'editForm.observations' => 'observaciones',
     ];
 
     public function mount(Supplier $supplier)

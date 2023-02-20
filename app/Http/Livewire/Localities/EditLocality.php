@@ -13,10 +13,10 @@ class EditLocality extends Component
     public $editForm = ['name' => '', 'postal_code' => '', 'province_id' => '', 'country_id' => ''];
 
     protected $validationAttributes = [
-        'editForm.name' => 'name',
-        'editForm.postal_code' => 'postal code',
-        'editForm.province_id' => 'province',
-        'editForm.country_id' => 'country'
+        'editForm.name' => 'nombre',
+        'editForm.postal_code' => 'código postal',
+        'editForm.province_id' => 'provincia',
+        'editForm.country_id' => 'país'
     ];
 
     public $countries, $provinces = [];

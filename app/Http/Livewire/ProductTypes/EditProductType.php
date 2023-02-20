@@ -15,6 +15,12 @@ class EditProductType extends Component
     public $editForm = ['product_name_id' => '', 'measure_id' => '', 'unity_id' => ''];
     public $measures = [], $unities = [], $productNames = [];
 
+    protected $validationAttributes = [
+        'editForm.product_name_id' => 'nombre de producto',
+        'editForm.measure_id' => 'medida',
+        'editForm.unity_id' => 'unidad',
+    ];
+
     public function mount($product_type)
     {
         $this->product_type = $product_type;

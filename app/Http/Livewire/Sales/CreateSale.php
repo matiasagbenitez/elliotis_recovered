@@ -48,6 +48,20 @@ class CreateSale extends Component
         'observations' => '',
     ];
 
+    protected $validationAttributes = [
+        'createForm.client_id' => 'cliente',
+        'createForm.date' => 'fecha',
+        'createForm.client_order_id' => 'orden asociada',
+        'createForm.payment_condition_id' => 'condición de pago',
+        'createForm.payment_method_id' => 'método de pago',
+        'createForm.voucher_type_id' => 'tipo de comprobante',
+        'createForm.voucher_number' => 'número de comprobante',
+        'createForm.subtotal' => 'subtotal',
+        'createForm.iva' => 'IVA',
+        'createForm.total' => 'total',
+        'createForm.observations' => 'observaciones',
+    ];
+
     // VALIDATION
     protected $rules = [
         'createForm.client_id' => 'required|integer|exists:clients,id',

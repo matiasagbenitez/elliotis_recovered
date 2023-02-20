@@ -34,7 +34,7 @@ class IndexClients extends Component
     }
     public function render()
     {
-        $clients = Client::where('business_name', 'LIKE', "%" . $this->search . "%")->orderBy($this->sort, $this->direction)->paginate(6);
+        $clients = Client::where('business_name', 'LIKE', "%" . $this->search . "%")->orderBy($this->sort, $this->direction)->paginate(10);
         return view('livewire.clients.index-clients', compact('clients'));
     }
 }

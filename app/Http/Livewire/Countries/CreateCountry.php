@@ -15,7 +15,7 @@ class CreateCountry extends Component
     ];
 
     protected $validationAttributes = [
-        'createForm.name' => 'name'
+        'createForm.name' => 'nombre'
     ];
 
     public function createCountry()

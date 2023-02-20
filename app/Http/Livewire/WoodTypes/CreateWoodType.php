@@ -15,6 +15,10 @@ class CreateWoodType extends Component
         'createForm.name' => 'required|unique:wood_types,name',
     ];
 
+    protected $validationAttributes = [
+        'createForm.name' => 'nombre',
+    ];
+
     protected $messages = [
         'createForm.name.required' => 'El campo nombre es obligatorio.',
         'createForm.name.unique' => 'El tipo de madera ya existe.',

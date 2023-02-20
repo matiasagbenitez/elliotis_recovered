@@ -42,17 +42,17 @@ class CreateClient extends Component
     ];
 
     protected $validationAttributes = [
-        'createForm.business_name' => 'business name',
-        'createForm.iva_condition_id' => 'IVA condition',
+        'createForm.business_name' => 'razón social',
+        'createForm.iva_condition_id' => 'condición ante IVA',
         'createForm.cuit' => 'cuit',
-        'createForm.last_name' => 'last name',
-        'createForm.first_name' => 'first name',
-        'createForm.adress' => 'adress',
-        'createForm.locality_id' => 'locality',
-        'createForm.phone' => 'phone',
-        'createForm.email' => 'email',
-        'createForm.active' => 'active',
-        'createForm.observations' => 'observations',
+        'createForm.last_name' => 'nombre',
+        'createForm.first_name' => 'apellido',
+        'createForm.adress' => 'dirección',
+        'createForm.locality_id' => 'localidad',
+        'createForm.phone' => 'teéfono',
+        'createForm.email' => 'correo electrónico',
+        'createForm.active' => 'activo',
+        'createForm.observations' => 'observaciones',
     ];
 
     public function mount()

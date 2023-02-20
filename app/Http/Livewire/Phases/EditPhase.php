@@ -19,9 +19,9 @@ class EditPhase extends Component
     ];
 
     protected $validationAttributes = [
-        'editForm.name' => 'name',
+        'editForm.name' => 'nombre',
         'editForm.slug' => 'slug',
-        'editForm.prefix' => 'prefix'
+        'editForm.prefix' => 'prefijo'
     ];
 
     public function mount(Phase $phase)

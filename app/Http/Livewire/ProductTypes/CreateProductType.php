@@ -16,9 +16,9 @@ class CreateProductType extends Component
     public $measures = [], $unities = [], $productNames = [];
 
     protected $validationAttributes = [
-        'createForm.product_name_id' => 'name',
-        'createForm.measure_id' => 'measure',
-        'createForm.unity_id' => 'unity'
+        'createForm.product_name_id' => 'nombre de producto',
+        'createForm.measure_id' => 'medida',
+        'createForm.unity_id' => 'unidad',
     ];
 
     public function createProductType()

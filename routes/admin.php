@@ -123,7 +123,7 @@ Route::get('/localities', IndexLocalities::class)->name('admin.localities.index'
 // IVA Y PARÁMETROS DE COMPRA
 Route::get('/iva-conditions', IndexIvaConditions::class)->name('admin.iva-conditions.index')->middleware('can:admin.iva-conditions.index');
 Route::get('/iva-types', IndexIvaTypes::class)->name('admin.iva-types.index')->middleware('can:admin.iva-types.index');
-Route::get('/pucharse-parameters', IndexPucharseParameters::class)->name('admin.pucharse-parameters.index')->middleware('can:admin.pucharse-parameters.index');
+Route::get('/pucharse-parameters', IndexPucharseParameters::class)->name('admin.pucharse-parameters.index')->middleware('can:admin.purchase-parameters.index');
 
 // CLIENTES
 Route::get('/clients', IndexClients::class)->name('admin.clients.index')->middleware('can:admin.clients.index');

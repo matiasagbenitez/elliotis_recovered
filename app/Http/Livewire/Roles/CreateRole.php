@@ -16,6 +16,11 @@ class CreateRole extends Component
         'guard_name' => 'web',
     ];
 
+    protected $validationAttributes = [
+        'createForm.name' => 'nombre',
+        'createForm.permissions' => 'permisos'
+    ];
+
     public function mount()
     {
         $this->availablePermissions = Permission::all();

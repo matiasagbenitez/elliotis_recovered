@@ -13,8 +13,8 @@ class EditIvaCondition extends Component
     public $editForm = ['name' => '', 'discriminate' => ''];
 
     protected $validationAttributes = [
-        'editForm.name' => 'name',
-        'editForm.discriminate' => 'discriminate'
+        'editForm.name' => 'nombre',
+        'editForm.discriminate' => 'discrimina'
     ];
 
     public function mount(IvaCondition $condition)

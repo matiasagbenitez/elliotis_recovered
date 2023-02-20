@@ -24,10 +24,10 @@ class EditMeasure extends Component
     ];
 
     protected $validationAttributes = [
-        'editForm.name' => 'name',
-        'editForm.height' => 'height',
-        'editForm.width' => 'width',
-        'editForm.length' => 'length',
+        'editForm.name' => 'nombre',
+        'editForm.height' => 'altura',
+        'editForm.width' => 'ancho',
+        'editForm.length' => 'largo',
     ];
 
     public function mount(Measure $measure)

@@ -17,6 +17,10 @@ class EditWoodType extends Component
         'editForm.name.unique' => 'El tipo de madera ya existe.',
     ];
 
+    protected $validationAttributes = [
+        'editForm.name' => 'nombre',
+    ];
+
     public function mount(WoodType $wood_type)
     {
         $this->wood_type = $wood_type;

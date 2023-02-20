@@ -28,6 +28,15 @@ class CreateSaleOrder extends Component
         'observations' => '',
     ];
 
+    protected $validationAttributes = [
+        'createForm.client_id' => 'cliente',
+        'createForm.registration_date' => 'fecha de registro',
+        'createForm.subtotal' => 'subtotal',
+        'createForm.iva' => 'IVA',
+        'createForm.total' => 'total',
+        'createForm.observations' => 'observaciones',
+    ];
+
     // VALIDATION
     protected $rules = [
         'createForm.client_id' => 'required|integer|exists:clients,id',

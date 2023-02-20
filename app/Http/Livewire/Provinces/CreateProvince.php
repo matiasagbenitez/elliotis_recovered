@@ -14,8 +14,8 @@ class CreateProvince extends Component
     public $countries = [];
 
     protected $validationAttributes = [
-        'createForm.name' => 'name',
-        'createForm.country_id' => 'country'
+        'createForm.name' => 'nombre',
+        'createForm.country_id' => 'país'
     ];
 
     public function createProvince()

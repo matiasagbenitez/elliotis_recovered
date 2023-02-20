@@ -17,8 +17,8 @@ class EditProductName extends Component
     ];
 
     protected $validationAttributes = [
-        'editForm.name' => 'product name',
-        'editForm.margin' => 'margin',
+        'editForm.name' => 'nombre',
+        'editForm.margin' => 'margen',
     ];
 
     public function mount(ProductName $product_name)

@@ -26,6 +26,12 @@ class CreateTendering extends Component
         'observations' => '',
     ];
 
+    protected $validationAttributes = [
+        'createForm.start_date' => 'fecha de inicio',
+        'createForm.end_date' => 'fecha de fin',
+        'createForm.observations' => 'observaciones',
+    ];
+
     public function mount($notification = null)
     {
         $this->suppliers = Supplier::where('active', true)->get();

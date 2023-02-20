@@ -25,10 +25,10 @@ class CreateMeasure extends Component
     ];
 
     protected $validationAttributes = [
-        'createForm.name' => 'name',
-        'createForm.height' => 'height',
-        'createForm.width' => 'width',
-        'createForm.length' => 'length',
+        'createForm.name' => 'nombre',
+        'createForm.height' => 'altura',
+        'createForm.width' => 'ancho',
+        'createForm.length' => 'largo',
     ];
 
     public function createMeasure()

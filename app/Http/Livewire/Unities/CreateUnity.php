@@ -16,8 +16,8 @@ class CreateUnity extends Component
     ];
 
     protected $validationAttributes = [
-        'createForm.name' => 'name',
-        'createForm.unities' => 'unities'
+        'createForm.name' => 'nombre',
+        'createForm.unities' => 'unidades'
     ];
 
     public function createUnity()

@@ -16,7 +16,7 @@ class EditArea extends Component
     ];
 
     protected $validationAttributes = [
-        'area.name' => 'name'
+        'editForm.name' => 'nombre'
     ];
 
     public function mount(Area $area)

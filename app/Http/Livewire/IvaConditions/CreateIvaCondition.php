@@ -16,8 +16,8 @@ class CreateIvaCondition extends Component
     ];
 
     protected $validationAttributes = [
-        'createForm.name' => 'name',
-        'createForm.discriminate' => 'discriminate'
+        'createForm.name' => 'nombre',
+        'createForm.discriminate' => 'discrimina'
     ];
 
     public function createIvaCondition()

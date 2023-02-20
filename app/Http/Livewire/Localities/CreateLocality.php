@@ -15,10 +15,10 @@ class CreateLocality extends Component
     public $countries = [], $provinces = [];
 
     protected $validationAttributes = [
-        'createForm.name' => 'name',
-        'createForm.postal_code' => 'postal code',
-        'createForm.province_id' => 'province',
-        'createForm.country_id' => 'country'
+        'createForm.name' => 'nombre',
+        'createForm.postal_code' => 'código postal',
+        'createForm.province_id' => 'provincia',
+        'createForm.country_id' => 'país'
     ];
 
     public function createLocality()
