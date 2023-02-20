@@ -16,6 +16,7 @@ class Dashboard extends Component
     public $tasksTypes, $taskTypesStats = [];
     public $saleOrders, $saleOrdersStats = [];
     public $products, $productsStats = [];
+    public $pending;
 
     public function mount()
     {
@@ -134,6 +135,11 @@ class Dashboard extends Component
                 'percentage' => $total_necessary_stock > 0 ? round(($total_real_stock * 100) / ($total_necessary_stock + $total_real_stock), 2) : 100,
             ];
         }
+
+        // If for each $total is 0, then $this->pending = false else $this->pending = true
+        $this->pending = collect($stats)->pluck('total')->contains(function ($value, $key) {
+            return $value > 0;
+        });
 
         return $stats;
     }

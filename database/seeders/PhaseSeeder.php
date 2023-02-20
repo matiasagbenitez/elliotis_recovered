@@ -11,28 +11,28 @@ class PhaseSeeder extends Seeder
     {
         $phases = [
             [
-                'name' => 'Rollo para cortar',
-                'slug' => 'rollo-para-cortar',
+                'name' => 'Rollos',
+                'slug' => 'rollos',
                 'prefix' => 'RO'
             ],
             [
-                'name' => 'Faja húmeda para secar',
-                'slug' => 'faja-humeda-para-secar',
+                'name' => 'Fajas húmedas',
+                'slug' => 'fajas-humedas',
                 'prefix' => 'FH'
             ],
             [
-                'name' => 'Faja seca para machimbrar',
-                'slug' => 'faja-seca-para-machimbrar',
+                'name' => 'Fajas secas',
+                'slug' => 'fajas-secas',
                 'prefix' => 'FS'
             ],
             [
-                'name' => 'Faja machimbrada para empaquetar',
-                'slug' => 'faja-machimbrada-para-empaquetar',
+                'name' => 'Fajas machimbradas',
+                'slug' => 'fajas-machimbradas',
                 'prefix' => 'FM'
             ],
             [
-                'name' => 'Paquete listo para venta',
-                'slug' => 'paquete-listo-para-venta',
+                'name' => 'Paquetes listos',
+                'slug' => 'paquetes-listos',
                 'prefix' => 'PA'
             ]
         ];

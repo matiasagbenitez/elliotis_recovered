@@ -20,7 +20,7 @@
         @if ($clients->count())
             <table class="text-gray-600 min-w-full divide-y divide-gray-200 table-fixed">
                 <thead class="border-b border-gray-300 bg-gray-200">
-                    <tr class="px-4 py-2 text-center text-sm font-bold text-gray-500 uppercase tracking-wider">
+                    <tr class="px-4 py-2 text-center text-sm font-bold text-gray-500 uppercase tracking-wider whitespace-nowrap">
 
                         <th scope="col" wire:click="order('id')"
                             class="px-4 py-2 cursor-pointer flex items-center">
@@ -33,16 +33,23 @@
                             Razón social
                         </th>
                         <th scope="col"
-                            class="w-1/4 px-4 py-2">
+                            class="w-1/5 px-4 py-2">
                             CUIT
                         </th>
-                        <th scope="col" wire:click="order('total_sales')"
-                            class="w-1/4 px-4 py-2 cursor-pointer">
-                            <i class="fas fa-sort mr-2"></i>
+                        <th scope="col"
+                            class="w-1/5 px-4 py-2">
+                            Teléfono
+                        </th>
+                        <th scope="col"
+                            class="w-1/5 px-4 py-2 cursor-pointer">
                             Total ventas
                         </th>
                         <th scope="col"
-                            class="w-1/4 px-4 py-2">
+                            class="w-1/5 px-4 py-2">
+                            Última venta
+                        </th>
+                        <th scope="col"
+                            class="w-1/5 px-4 py-2">
                             Estado
                         </th>
                         </th>
@@ -72,22 +79,36 @@
                             </td>
                             <td class="px-6 py-3 whitespace-nowrap text-center">
                                 <p class="text-sm uppercase">
+                                    {{ $client->phone }}
+                                </p>
+                            </td>
+                            <td class="px-6 py-3 whitespace-nowrap text-center">
+                                <p class="text-sm uppercase">
                                     {{-- Total sales count --}}
-                                    {{ $client->total_sales }}
+                                    {{ $client->sales->where('is_active', true)->count() }} ventas
+                                </p>
+                            </td>
+                            <td class="px-6 py-3 whitespace-nowrap text-center">
+                                <p class="text-sm uppercase">
+                                    @if ($client->sales->count() > 0)
+                                        {{ Date::parse($client->sales->last()->date)->format('d/m/Y') }}
+                                    @else
+                                        Sin ventas
+                                    @endif
                                 </p>
                             </td>
                             <td class="px-6 py-3 whitespace-nowrap text-center">
                                 @switch($client->active)
                                     @case(1)
                                         <span
-                                            class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                            class="px-6 uppercase py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
                                             Activo
                                         </span>
                                     @break
 
                                     @case(0)
                                         <span
-                                            class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
+                                            class="px-6 uppercase py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
                                             Inactivo
                                         </span>
                                     @break

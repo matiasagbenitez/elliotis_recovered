@@ -35,7 +35,7 @@ class IndexSuppliers extends Component
 
     public function render()
     {
-        $suppliers = Supplier::where('business_name', 'LIKE', "%" . $this->search . "%")->orderBy($this->sort, $this->direction)->paginate(6);
+        $suppliers = Supplier::where('business_name', 'LIKE', "%" . $this->search . "%")->orderBy($this->sort, $this->direction)->paginate(10);
         return view('livewire.suppliers.index-suppliers', compact('suppliers'));
     }
 }

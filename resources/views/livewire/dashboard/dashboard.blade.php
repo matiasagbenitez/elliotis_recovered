@@ -61,6 +61,8 @@
                             </li>
                         @endforeach
                     </ul>
+                @else
+                    <p class="text-center">No hay órdenes de venta pendientes.</p>
                 @endif
             </div>
             <div>
@@ -69,29 +71,33 @@
                     Estimación de estado de avance por etapa
                     <hr class="my-2">
                 </span>
-                @if ($productsStats)
-                    <table>
-                        <thead>
-                            <tr class="font-bold text-center uppercase">
-                                <td class="w-2/6">Etapa</td>
-                                <td>Requerido</td>
-                                <td>Stock</td>
-                                <td>Falta</td>
-                                <td>Completo</td>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($productsStats as $productStat)
-                                <tr class="text-center">
-                                    <td class="text-left">{{ $productStat['phase_name'] }}</td>
-                                    <td>{{ $productStat['total'] }} m²</td>
-                                    <td>{{ $productStat['m2_real_stock'] }} m²</td>
-                                    <td>{{ $productStat['m2_necessary_stock'] }} m²</td>
-                                    <td>{{ $productStat['percentage'] }}%</td>
+                @if ($pending)
+                    @if ($productsStats)
+                        <table>
+                            <thead>
+                                <tr class="font-bold text-center uppercase">
+                                    <td class="w-2/6">Etapa</td>
+                                    <td>Requerido</td>
+                                    <td>Stock</td>
+                                    <td>Falta</td>
+                                    <td>Completo</td>
                                 </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                                @foreach ($productsStats as $productStat)
+                                    <tr class="text-center">
+                                        <td class="text-left">{{ $productStat['phase_name'] }}</td>
+                                        <td>{{ $productStat['total'] }} m²</td>
+                                        <td>{{ $productStat['m2_real_stock'] }} m²</td>
+                                        <td>{{ $productStat['m2_necessary_stock'] }} m²</td>
+                                        <td>{{ $productStat['percentage'] }}%</td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    @endif
+                @else
+                    <p class="text-center">Dado que no hay órdenes de venta, no se requiere calcular el estado de avance por etapas.</p>
                 @endif
             </div>
         </div>

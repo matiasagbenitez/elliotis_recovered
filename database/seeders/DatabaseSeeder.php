@@ -84,7 +84,7 @@ class DatabaseSeeder extends Seeder
             $this->call(Task10Seeder::class);
         }
 
-        // $this->call(NecessaryProductionSeeder::class);
+        $this->call(NecessaryProductionSeeder::class);
 
         $this->call(WeatherApiSeeder::class);
     }

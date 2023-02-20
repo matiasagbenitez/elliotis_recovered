@@ -14,14 +14,6 @@
                 Detalle de
                 <span class="font-bold">LICITACIÓN #{{ $tendering->id }}</span>
             </h2>
-
-            {{-- PDF BUTTON --}}
-            <a href="#">
-                <x-jet-danger-button>
-                    <i class="fas fa-file-pdf mr-2"></i>
-                    Descargar PDF
-                </x-jet-danger-button>
-            </a>
         </div>
     </x-slot>
 
