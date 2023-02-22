@@ -149,7 +149,6 @@ class CreateProduct extends Component
 
     public function save()
     {
-        try {
             if ($this->createForm['selling_price'] != '' && $this->createForm['selling_price'] != 0 && $this->createForm['m2'] != '' && $this->createForm['m2'] != 0) {
                 $this->createForm['selling_price'] = $this->createForm['m2'] * $this->createForm['m2_price'] ?? 0;
                 $this->createForm['cost'] = $this->createForm['selling_price'];
@@ -170,13 +169,13 @@ class CreateProduct extends Component
                 ->where('wood_type_id', $this->createForm['wood_type_id'])
                 ->where('phase_id', $this->createForm['phase_id'])
                 ->first();
+                $this->validate();
 
             if ($product) {
                 $this->emit('error', 'El producto que intenta crear ya existe.');
                 return;
             }
 
-            $this->validate();
 
             $product = Product::create($this->createForm);
 
@@ -184,10 +183,7 @@ class CreateProduct extends Component
             session()->flash('flash.banner', $message);
 
             return redirect()->route('admin.products.index');
-        } catch (\Throwable $th) {
-            dd($th);
-            $this->emit('error', 'Ha ocurrido un error al guardar el producto.');
-        }
+
     }
 
 

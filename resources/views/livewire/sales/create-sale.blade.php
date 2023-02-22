@@ -303,7 +303,7 @@
 
 @push('script')
     <script>
-        Livewire.on('error', message => {
+        Livewire.on('stockError', message => {
             Swal.fire({
                 icon: 'error',
                 title: 'Oops...',

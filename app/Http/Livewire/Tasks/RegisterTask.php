@@ -32,6 +32,15 @@ class RegisterTask extends Component
     public $outputProducts = [];
     public $followingProducts = [];
 
+    protected $validationAttributes = [
+        'inputSelects.*.sublot_id' => 'sublote',
+        'inputSelects.*.consumed_quantity' => 'cantidad consumida',
+        'inputSelects.*.m2' => 'm2',
+        'outputSelects.*.product_id' => 'producto',
+        'outputSelects.*.produced_quantity' => 'cantidad producida',
+        'outputSelects.*.m2' => 'm2',
+    ];
+
     public $createForm = [
         'type_of_task' => '',
         'task_status_id' => '',
@@ -265,185 +274,183 @@ class RegisterTask extends Component
 
     public function save_initial()
     {
-        try {
-            // Validar cantidades consumidas
-            foreach ($this->inputSelects as $sublot) {
-                $trunk_sublot = TrunkSublot::find($sublot['sublot_id']);
-                if ($sublot['consumed_quantity'] > $trunk_sublot->actual_quantity) {
-                    $this->emit('error', 'La cantidad consumida no puede ser mayor a la cantidad actual del sublote.');
-                    return;
-                }
+
+        // Validar cantidades consumidas
+        foreach ($this->inputSelects as $sublot) {
+            $trunk_sublot = TrunkSublot::find($sublot['sublot_id']);
+            if ($sublot['consumed_quantity'] > $trunk_sublot->actual_quantity) {
+                $this->emit('error', 'La cantidad consumida no puede ser mayor a la cantidad actual del sublote.');
+                return;
             }
-            // Validación
-            $this->validate([
-                'inputSelects.*.sublot_id' => 'required',
-                'inputSelects.*.consumed_quantity' => 'required|numeric|min:1'
-            ]);
-
-            // Completamos la tabla intermedia (initial_task_detail)
-            $this->task->trunkSublots()->sync($this->inputSelects);
-
-            // Creamos el lote
-            $lot = Lot::create([
-                'task_id' => $this->task->id,
-                'code' => 'L' . TaskService::getLotCode($this->task),
-            ]);
-
-            $aux = [];
-
-            // Creamos los sublotes de salida
-            foreach ($this->inputSelects as $item) {
-
-                // Actualizamos el sublote de rollos
-                $trunk_sublot = TrunkSublot::find($item['sublot_id']);
-                $trunk_sublot->update([
-                    'actual_quantity' => $trunk_sublot->actual_quantity - $item['consumed_quantity'],
-                    'available' => $trunk_sublot->actual_quantity - $item['consumed_quantity'] > 0 ? 1 : 0
-                ]);
-
-                // Creamos el sublote de salida
-                $sublot = Sublot::create([
-                    'code' => 'S' . TaskService::getSublotCode($this->task->lot),
-                    'lot_id' => $lot->id,
-                    'phase_id' => $this->task->typeOfTask->final_phase_id,
-                    'product_id' => $trunk_sublot->product_id,
-                    'area_id' => $this->task->typeOfTask->destination_area_id,
-                    'initial_quantity' => $item['consumed_quantity'],
-                    'actual_quantity' => $item['consumed_quantity'],
-                ]);
-
-                $aux[] = [
-                    'sublot_id' => $sublot->id,
-                    'produced_quantity' => $sublot->initial_quantity,
-                ];
-            }
-
-            $this->task->outputSublotsDetails()->sync($aux);
-
-            // Actualizamos la tarea
-            $this->task->update([
-                'task_status_id' => 2,
-                'finished_at' => now(),
-                'finished_by' => auth()->user()->id,
-            ]);
-
-            // Redireccionamos con flash message
-            $name = Str::upper($this->task->typeOfTask->name);
-            session()->flash('flash.banner', 'Tarea de tipo ' . $name . ' registrada correctamente.');
-            return redirect()->route('admin.tasks.show', $this->task->id);
-        } catch (\Throwable $th) {
-            dd($th);
         }
+        // Validación
+        $this->validate([
+            'inputSelects.*.sublot_id' => 'required',
+            'inputSelects.*.consumed_quantity' => 'required|numeric|min:1'
+        ]);
+
+        $this->validate([
+            'outputSelects.*.product_id' => 'required',
+            'outputSelects.*.produced_quantity' => 'required|numeric|min:1'
+        ]);
+
+        // Completamos la tabla intermedia (initial_task_detail)
+        $this->task->trunkSublots()->sync($this->inputSelects);
+
+        // Creamos el lote
+        $lot = Lot::create([
+            'task_id' => $this->task->id,
+            'code' => 'L' . TaskService::getLotCode($this->task),
+        ]);
+
+        $aux = [];
+
+        // Creamos los sublotes de salida
+        foreach ($this->inputSelects as $item) {
+
+            // Actualizamos el sublote de rollos
+            $trunk_sublot = TrunkSublot::find($item['sublot_id']);
+            $trunk_sublot->update([
+                'actual_quantity' => $trunk_sublot->actual_quantity - $item['consumed_quantity'],
+                'available' => $trunk_sublot->actual_quantity - $item['consumed_quantity'] > 0 ? 1 : 0
+            ]);
+
+            // Creamos el sublote de salida
+            $sublot = Sublot::create([
+                'code' => 'S' . TaskService::getSublotCode($this->task->lot),
+                'lot_id' => $lot->id,
+                'phase_id' => $this->task->typeOfTask->final_phase_id,
+                'product_id' => $trunk_sublot->product_id,
+                'area_id' => $this->task->typeOfTask->destination_area_id,
+                'initial_quantity' => $item['consumed_quantity'],
+                'actual_quantity' => $item['consumed_quantity'],
+            ]);
+
+            $aux[] = [
+                'sublot_id' => $sublot->id,
+                'produced_quantity' => $sublot->initial_quantity,
+            ];
+        }
+
+        $this->task->outputSublotsDetails()->sync($aux);
+
+        // Actualizamos la tarea
+        $this->task->update([
+            'task_status_id' => 2,
+            'finished_at' => now(),
+            'finished_by' => auth()->user()->id,
+        ]);
+
+        // Redireccionamos con flash message
+        $name = Str::upper($this->task->typeOfTask->name);
+        session()->flash('flash.banner', 'Tarea de tipo ' . $name . ' registrada correctamente.');
+        return redirect()->route('admin.tasks.show', $this->task->id);
     }
 
     public function save_transformation()
     {
-        try {
-            // Validar las cantidades consumidas
-            foreach ($this->inputSelects as $item) {
-                $sublot = Sublot::find($item['sublot_id']);
-                if ($item['consumed_quantity'] > $sublot->actual_quantity) {
-                    $this->emit('error', 'La cantidad consumida no puede ser mayor a la cantidad actual del sublote.');
-                    return;
-                }
+
+        foreach ($this->inputSelects as $item) {
+            $sublot = Sublot::find($item['sublot_id']);
+            if ($item['consumed_quantity'] > $sublot->actual_quantity) {
+                $this->emit('error', 'La cantidad consumida no puede ser mayor a la cantidad actual del sublote.');
+                return;
             }
-
-            // Validación
-            $this->validate([
-                'inputSelects.*.sublot_id' => 'required',
-                'inputSelects.*.consumed_quantity' => 'required|numeric|min:1',
-                'outputSelects.*.product_id' => 'required',
-                'outputSelects.*.produced_quantity' => 'required|numeric|min:1',
-            ]);
-
-            // Calcular m2
-            foreach ($this->inputSelects as &$item) {
-                $product_id = Sublot::find($item['sublot_id'])->product_id;
-                $item['m2'] = M2Service::calculateM2($product_id, $item['consumed_quantity']);
-            }
-
-            // Completamos la tabla intermedia (input_task_detail)
-            $this->task->inputSublotsDetails()->sync($this->inputSelects);
-
-            // Actualizamos los sublotes de entrada
-            foreach ($this->inputSelects as &$item) {
-
-                $product_id = Sublot::find($item['sublot_id'])->product_id;
-
-                $sublot = Sublot::find($item['sublot_id']);
-                $sublot->update([
-                    'actual_quantity' => $sublot->actual_quantity - $item['consumed_quantity'],
-                    'available' => $sublot->actual_quantity - $item['consumed_quantity'] > 0 ? 1 : 0,
-                    'actual_m2' => $sublot->actual_m2 - M2Service::calculateM2($product_id, $item['consumed_quantity']),
-                ]);
-
-                $sublot->product->update([
-                    'real_stock' => $sublot->product->real_stock - $item['consumed_quantity']
-                ]);
-            }
-
-            // Creamos el lote
-            $lot = Lot::create([
-                'task_id' => $this->task->id,
-                'code' => 'L' . TaskService::getLotCode($this->task),
-            ]);
-
-            $aux = [];
-
-            // Creamos los sublotes de salida
-            foreach ($this->outputSelects as $item) {
-
-                $m2 = M2Service::calculateM2($item['product_id'], $item['produced_quantity']);
-
-                $sublot = Sublot::create([
-                    'code' => 'S' .  TaskService::getSublotCode($this->task->lot),
-                    'lot_id' => $lot->id,
-                    'phase_id' => $this->task->typeOfTask->final_phase_id,
-                    'product_id' => $item['product_id'],
-                    'area_id' => $this->task->typeOfTask->destination_area_id,
-                    'initial_quantity' => $item['produced_quantity'],
-                    'actual_quantity' => $item['produced_quantity'],
-                    'initial_m2' => $m2,
-                    'actual_m2' => $m2,
-                ]);
-
-                $aux[] = [
-                    'sublot_id' => $sublot->id,
-                    'produced_quantity' => $sublot->initial_quantity,
-                    'm2' => $m2,
-                ];
-
-                $sublot->product->update([
-                    'real_stock' => $sublot->product->real_stock + $sublot->initial_quantity
-                ]);
-            }
-
-            $this->task->outputSublotsDetails()->sync($aux);
-
-            // Actualizamos la tarea
-            $this->task->update([
-                'task_status_id' => 2,
-                'finished_at' => now(),
-                'finished_by' => auth()->user()->id,
-            ]);
-
-            if ($this->task->typeOfTask->initialPhase->id == 1) {
-                // If exists some buyable product with stock less than minimum stock, we send an email to the admin
-                $products = Product::where('is_buyable', 1)->where('real_stock', '<', 100)->get();
-                if (count($products) > 0) {
-                    $task_id = $this->task->id;
-                    $task_name = Str::upper($this->task->typeOfTask->name) . ' con ID: ' . $this->task->id;
-                    TenderingService::notificate($task_id, $task_name);
-                }
-            }
-
-            // Redireccionamos con flash message
-            $name = Str::upper($this->task->typeOfTask->name);
-            session()->flash('flash.banner', 'Tarea de tipo ' . $name . ' registrada correctamente.');
-            return redirect()->route('admin.tasks.show', $this->task->id);
-        } catch (\Throwable $th) {
-            dd($th);
         }
+
+        // Validación
+        $this->validate([
+            'inputSelects.*.sublot_id' => 'required',
+            'inputSelects.*.consumed_quantity' => 'required|numeric|min:1',
+            'outputSelects.*.product_id' => 'required',
+            'outputSelects.*.produced_quantity' => 'required|numeric|min:1',
+        ]);
+
+        // Calcular m2
+        foreach ($this->inputSelects as &$item) {
+            $product_id = Sublot::find($item['sublot_id'])->product_id;
+            $item['m2'] = M2Service::calculateM2($product_id, $item['consumed_quantity']);
+        }
+
+        // Completamos la tabla intermedia (input_task_detail)
+        $this->task->inputSublotsDetails()->sync($this->inputSelects);
+
+        // Actualizamos los sublotes de entrada
+        foreach ($this->inputSelects as &$item) {
+
+            $product_id = Sublot::find($item['sublot_id'])->product_id;
+
+            $sublot = Sublot::find($item['sublot_id']);
+            $sublot->update([
+                'actual_quantity' => $sublot->actual_quantity - $item['consumed_quantity'],
+                'available' => $sublot->actual_quantity - $item['consumed_quantity'] > 0 ? 1 : 0,
+                'actual_m2' => $sublot->actual_m2 - M2Service::calculateM2($product_id, $item['consumed_quantity']),
+            ]);
+
+            $sublot->product->update([
+                'real_stock' => $sublot->product->real_stock - $item['consumed_quantity']
+            ]);
+        }
+
+        // Creamos el lote
+        $lot = Lot::create([
+            'task_id' => $this->task->id,
+            'code' => 'L' . TaskService::getLotCode($this->task),
+        ]);
+
+        $aux = [];
+
+        // Creamos los sublotes de salida
+        foreach ($this->outputSelects as $item) {
+
+            $m2 = M2Service::calculateM2($item['product_id'], $item['produced_quantity']);
+
+            $sublot = Sublot::create([
+                'code' => 'S' .  TaskService::getSublotCode($this->task->lot),
+                'lot_id' => $lot->id,
+                'phase_id' => $this->task->typeOfTask->final_phase_id,
+                'product_id' => $item['product_id'],
+                'area_id' => $this->task->typeOfTask->destination_area_id,
+                'initial_quantity' => $item['produced_quantity'],
+                'actual_quantity' => $item['produced_quantity'],
+                'initial_m2' => $m2,
+                'actual_m2' => $m2,
+            ]);
+
+            $aux[] = [
+                'sublot_id' => $sublot->id,
+                'produced_quantity' => $sublot->initial_quantity,
+                'm2' => $m2,
+            ];
+
+            $sublot->product->update([
+                'real_stock' => $sublot->product->real_stock + $sublot->initial_quantity
+            ]);
+        }
+
+        $this->task->outputSublotsDetails()->sync($aux);
+
+        // Actualizamos la tarea
+        $this->task->update([
+            'task_status_id' => 2,
+            'finished_at' => now(),
+            'finished_by' => auth()->user()->id,
+        ]);
+
+        if ($this->task->typeOfTask->initialPhase->id == 1) {
+            // If exists some buyable product with stock less than minimum stock, we send an email to the admin
+            $products = Product::where('is_buyable', 1)->where('real_stock', '<', 100)->get();
+            if (count($products) > 0) {
+                $task_id = $this->task->id;
+                $task_name = Str::upper($this->task->typeOfTask->name) . ' con ID: ' . $this->task->id;
+                TenderingService::notificate($task_id, $task_name);
+            }
+        }
+
+        // Redireccionamos con flash message
+        $name = Str::upper($this->task->typeOfTask->name);
+        session()->flash('flash.banner', 'Tarea de tipo ' . $name . ' registrada correctamente.');
+        return redirect()->route('admin.tasks.show', $this->task->id);
     }
 
     public function save_movement()

@@ -350,17 +350,19 @@ class CreateSale extends Component
             return;
         }
 
-        // Validamos los campos
-        $this->validate();
 
         // Controlamos que exista stock para todos los productos de la orden, caso contrario, mostramos un mensaje de error
         foreach ($this->orderSublots as $orderSublot) {
             $sublot = Sublot::find($orderSublot['sublot_id']);
             if ($sublot->actual_quantity < $orderSublot['quantity']) {
-                $this->emit('error', 'No hay stock suficiente para el producto ' . $sublot->product->name . ' en el sublote ' . $sublot->code . '.' );
+                $this->emit('stockError', 'No hay stock suficiente para el producto ' . $sublot->product->name . ' en el sublote ' . $sublot->code . '.' );
                 return;
             }
         }
+
+        dd($orderSublot);
+        // Validamos los campos
+        $this->validate();
 
         $this->createForm['user_id'] = Auth::user()->id;
 

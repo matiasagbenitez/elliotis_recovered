@@ -30,6 +30,8 @@ class CreateTendering extends Component
         'createForm.start_date' => 'fecha de inicio',
         'createForm.end_date' => 'fecha de fin',
         'createForm.observations' => 'observaciones',
+        'orderProducts.*.product_id' => 'producto',
+        'orderProducts.*.quantity' => 'cantidad',
     ];
 
     public function mount($notification = null)

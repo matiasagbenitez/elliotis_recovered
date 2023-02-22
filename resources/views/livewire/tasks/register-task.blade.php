@@ -205,6 +205,7 @@
 
                             </div>
                             <x-jet-input-error for="outputSelects.*.product_id" class="mt-2" />
+                            <x-jet-input-error for="outputSelects.*.produced_quantity" class="mt-2" />
                         @else
                             <p class="text-center mt-4">
                                 ¡No hay productos de entrada! Intenta agregar alguno con el botón

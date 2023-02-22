@@ -164,6 +164,7 @@
                     @endforeach
                 </div>
                 <x-jet-input-error for="orderProducts.*.product_id" class="mt-2" />
+                <x-jet-input-error for="orderProducts.*.quantity" class="mt-2" />
             @else
                 <p class="text-center">¡No hay productos! Intenta agregar alguno con el botón <span
                         class="font-bold">"Agregar producto"</span>.</p>
