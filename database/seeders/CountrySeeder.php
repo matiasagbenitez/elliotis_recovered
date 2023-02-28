@@ -39,6 +39,7 @@ class CountrySeeder extends Seeder
         foreach ($localities as $locality) {
             Locality::create([
                 'name' => $locality,
+                'postal_code' => rand(1000, 9999),
                 'province_id' => 1,
             ]);
         }
@@ -58,6 +59,7 @@ class CountrySeeder extends Seeder
         foreach ($localities as $locality) {
             Locality::create([
                 'name' => $locality,
+                'postal_code' => rand(1000, 9999),
                 'province_id' => 2,
             ]);
         }

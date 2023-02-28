@@ -7,6 +7,7 @@ use App\Models\Locality;
 use App\Models\Supplier;
 use Illuminate\Support\Str;
 use App\Models\IvaCondition;
+use App\Http\Services\CUITService;
 
 class EditSupplier extends Component
 {
@@ -75,6 +76,12 @@ class EditSupplier extends Component
             'editForm.active' => 'required|boolean',
             'editForm.observations' => 'nullable',
         ]);
+
+        $valid_cuit = CUITService::ValidateCUITCUIL($this->createForm['cuit']);
+        if (!$valid_cuit) {
+            $this->emit('error', 'El CUIT/CUIL ingresado no es válido.');
+            return;
+        }
 
         $this->supplier->update([
             'business_name' => $this->editForm['business_name'],

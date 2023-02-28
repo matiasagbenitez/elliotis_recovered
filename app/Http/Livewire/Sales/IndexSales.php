@@ -2,13 +2,14 @@
 
 namespace App\Http\Livewire\Sales;
 
+use Carbon\Carbon;
 use App\Models\Sale;
 use App\Models\Client;
+use App\Models\Sublot;
 use App\Models\Product;
-use App\Models\SaleOrder;
 use Livewire\Component;
+use App\Models\SaleOrder;
 use App\Models\VoucherTypes;
-use Carbon\Carbon;
 use Livewire\WithPagination;
 
 class IndexSales extends Component
@@ -70,7 +71,18 @@ class IndexSales extends Component
 
         if ($sale_month == now()->month) {
             try {
+
                 $sale = Sale::find($id);
+
+                foreach ($sale->products as $item) {
+                    $sublot = Sublot::find($item->pivot->sublot_id);
+                    $sublot->update([
+                        'actual_quantity' => $sublot->actual_quantity + $item->pivot->quantity,
+                        'actual_m2' => $sublot->actual_m2 + $item->pivot->m2_total,
+                        'available' => true
+                    ]);
+                }
+
                 $sale->is_active = false;
                 $sale->cancelled_by = auth()->user()->id;
                 $sale->cancelled_at = now();

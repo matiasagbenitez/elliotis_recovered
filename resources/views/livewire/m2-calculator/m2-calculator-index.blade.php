@@ -6,7 +6,7 @@
         </div>
     </x-slot>
 
-    <div class="max-w-5xl mx-auto">
+    <div class="max-w-8xl mx-auto">
 
         <div class="px-6 py-4 rounded-t-lg bg-gray-200">
             <x-jet-label class="mb-2 text-lg font-semibold">Cantidad de m² requeridos</x-jet-label>

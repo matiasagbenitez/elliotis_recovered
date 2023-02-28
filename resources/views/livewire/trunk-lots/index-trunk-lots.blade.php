@@ -64,10 +64,10 @@
             <div class="pt-4 bg-gray-50 rounded-lg shadow mb-5">
 
                 <div class="flex justify-between items-center px-6 mb-2">
-                        <span class="font-bold text-gray-500">
-                            <i class="fas fa-info-circle mr-1"></i>
-                            Lote {{ $trunk_lot->code }}
-                        </span>
+                    <span class="font-bold text-gray-500">
+                        <i class="fas fa-info-circle mr-1"></i>
+                        Lote {{ $trunk_lot->code }}
+                    </span>
                     <a href="{{ route('admin.purchases.show-detail', $trunk_lot->purchase_id) }}"
                         class="hover:underline" title="Ver detalle de compra">
                         Compra #{{ $trunk_lot->purchase->id }}
@@ -146,11 +146,17 @@
                 </x-responsive-table>
             </div>
         @endforeach
-</div>
-@else
-<div class="px-6 py-4">
-    <p class="text-center font-semibold">No se encontraron registros coincidentes.</p>
-</div>
-@endif
+
+        @if ($trunk_lots->hasPages())
+            <div class="px-6 py-3">
+                {{ $trunk_lots->links() }}
+            </div>
+        @endif
+
+    @else
+        <div class="px-6 py-4">
+            <p class="text-center font-semibold">No se encontraron registros coincidentes.</p>
+        </div>
+    @endif
 
 </div>

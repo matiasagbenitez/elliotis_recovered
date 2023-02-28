@@ -2,6 +2,8 @@
 
 namespace App\Http\Livewire\Clients;
 
+use App\Http\Services\CUITService;
+use validateCUITCUIL;
 use App\Models\Client;
 use Livewire\Component;
 use App\Models\Locality;
@@ -63,6 +65,13 @@ class CreateClient extends Component
 
     public function save()
     {
+
+        $valid_cuit = CUITService::ValidateCUITCUIL($this->createForm['cuit']);
+        if (!$valid_cuit) {
+            $this->emit('error', 'El CUIT/CUIL ingresado no es válido.');
+            return;
+        }
+
         $this->validate();
 
         $this->createForm['slug'] = Str::slug($this->createForm['business_name']);

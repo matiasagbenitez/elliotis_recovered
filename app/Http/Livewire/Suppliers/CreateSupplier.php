@@ -7,6 +7,7 @@ use App\Models\Locality;
 use App\Models\Supplier;
 use Illuminate\Support\Str;
 use App\Models\IvaCondition;
+use App\Http\Services\CUITService;
 
 class CreateSupplier extends Component
 {
@@ -64,6 +65,12 @@ class CreateSupplier extends Component
     public function save()
     {
         $this->validate();
+
+        $valid_cuit = CUITService::ValidateCUITCUIL($this->createForm['cuit']);
+        if (!$valid_cuit) {
+            $this->emit('error', 'El CUIT/CUIL ingresado no es válido.');
+            return;
+        }
 
         $this->createForm['slug'] = Str::slug($this->createForm['business_name']);
 

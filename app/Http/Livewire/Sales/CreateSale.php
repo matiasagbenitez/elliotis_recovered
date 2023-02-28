@@ -102,7 +102,7 @@ class CreateSale extends Component
         $this->payment_methods = PaymentMethods::orderBy('name')->get();
         $this->voucher_types = VoucherTypes::orderBy('name')->get();
 
-        $this->allSublots = Sublot::where('available', true)->where('area_id', 8)->whereHas('product', function ($query) {
+        $this->allSublots = Sublot::where('available', true)->whereHas('product', function ($query) {
             $query->where('is_salable', true);
         })->get();
 
@@ -360,7 +360,7 @@ class CreateSale extends Component
             }
         }
 
-        dd($orderSublot);
+        // dd($orderSublot);
         // Validamos los campos
         $this->validate();
 

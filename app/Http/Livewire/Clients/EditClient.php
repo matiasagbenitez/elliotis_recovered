@@ -7,6 +7,7 @@ use Livewire\Component;
 use App\Models\Locality;
 use Illuminate\Support\Str;
 use App\Models\IvaCondition;
+use App\Http\Services\CUITService;
 
 class EditClient extends Component
 {
@@ -75,6 +76,12 @@ class EditClient extends Component
             'editForm.active' => 'required|boolean',
             'editForm.observations' => 'nullable',
         ]);
+
+        $valid_cuit = CUITService::ValidateCUITCUIL($this->createForm['cuit']);
+        if (!$valid_cuit) {
+            $this->emit('error', 'El CUIT/CUIL ingresado no es válido.');
+            return;
+        }
 
         $this->client->update([
             'business_name' => $this->editForm['business_name'],

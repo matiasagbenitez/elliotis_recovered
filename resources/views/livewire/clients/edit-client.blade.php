@@ -171,3 +171,17 @@
     </x-jet-form-section>
 
 </div>
+
+@push('script')
+    <script>
+        Livewire.on('error', message => {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: message,
+                showConfirmButton: true,
+                confirmButtonColor: '#1f2937',
+            });
+        });
+    </script>
+@endpush

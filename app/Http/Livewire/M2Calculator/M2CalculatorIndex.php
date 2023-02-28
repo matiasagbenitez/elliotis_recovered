@@ -7,7 +7,7 @@ use Livewire\Component;
 
 class M2CalculatorIndex extends Component
 {
-    public $products = [], $required_m2 = 700;
+    public $products = [], $required_m2;
     protected $listeners = ['calculate', 'resetCalculation'];
 
     public $products_quantities = [];
@@ -22,6 +22,12 @@ class M2CalculatorIndex extends Component
 
     public function calculate()
     {
+        // Check if required_m2 is valid (numeric)
+        if (!is_numeric($this->required_m2) || $this->required_m2 <= 0 || $this->required_m2 == null) {
+            $this->required_m2 = null;
+            return;
+        }
+
         $this->products_quantities = [];
         foreach ($this->products as $product) {
 

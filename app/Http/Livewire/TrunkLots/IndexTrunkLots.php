@@ -5,10 +5,11 @@ namespace App\Http\Livewire\TrunkLots;
 use App\Models\TrunkLot;
 use App\Models\TrunkSublot;
 use Livewire\Component;
+use Livewire\WithPagination;
 
 class IndexTrunkLots extends Component
 {
-    public $trunk_lots;
+    use WithPagination;
     public $products;
     public $resume_view = false;
 
@@ -19,18 +20,9 @@ class IndexTrunkLots extends Component
 
     public function render()
     {
-        // $this->trunk_lots  = TrunkLot::all();
-
-        // Order Trunk Lots by those with sublots with available = true
-        // $this->trunk_lots = TrunkLot::whereHas('trunkSublots', function ($query) {
-        //     $query->where('available', true);
-        // })->get();
-
-        $this->trunk_lots = TrunkLot::withCount(['trunkSublots' => function ($query) {
+        $trunk_lots = TrunkLot::withCount(['trunkSublots' => function ($query) {
             $query->where('available', true);
-        }])->orderBy('trunk_sublots_count', 'desc')->get();
-
-
+        }])->orderBy('trunk_sublots_count', 'desc')->paginate(5);
 
         $this->products = TrunkSublot::groupBy('product_id')
         ->join('products', 'products.id', '=', 'trunk_sublots.product_id')
@@ -40,6 +32,6 @@ class IndexTrunkLots extends Component
         ->where('available', true)
         ->orderBy('product_id', 'asc')->get();
 
-        return view('livewire.trunk-lots.index-trunk-lots');
+        return view('livewire.trunk-lots.index-trunk-lots', compact('trunk_lots'));
     }
 }

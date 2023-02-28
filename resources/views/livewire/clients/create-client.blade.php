@@ -14,7 +14,8 @@
 
         <x-slot name="description">
             <span>
-                Lea detenidamente la información solicitada y rellene los campos requeridos para registrar un nuevo cliente en el sistema.
+                Lea detenidamente la información solicitada y rellene los campos requeridos para registrar un nuevo
+                cliente en el sistema.
                 <br><br>
                 (*) Campos obligatorios.
                 <br><br>
@@ -173,3 +174,17 @@
     </x-jet-form-section>
 
 </div>
+
+@push('script')
+    <script>
+        Livewire.on('error', message => {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: message,
+                showConfirmButton: true,
+                confirmButtonColor: '#1f2937',
+            });
+        });
+    </script>
+@endpush

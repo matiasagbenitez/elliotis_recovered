@@ -134,7 +134,6 @@ class ManageTasks extends Component
         try {
             $task = Task::find($id);
             $inputSublots = InputTaskDetail::all();
-            $inputTrunkSublots = InitialTaskDetail::all();
 
             foreach ($task->outputSublotsDetails as $outputSublot) {
                 foreach ($inputSublots as $inputSublot) {
