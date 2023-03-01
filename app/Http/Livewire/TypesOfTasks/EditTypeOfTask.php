@@ -124,7 +124,6 @@ class EditTypeOfTask extends Component
             $this->emit('success', '¡El tipo de tarea se ha actualizado con éxito!');
             $this->emit('render');
         } catch (\Throwable $th) {
-            // dd($th);
             $this->emit('error', '¡No es posible crear el tipo de tarea! Verifica los campos y recuerda que no se pueden repetir la combinación de áreas y fases iniciales y finales. Además, solo puede haber una tarea inicial.');
         }
     }

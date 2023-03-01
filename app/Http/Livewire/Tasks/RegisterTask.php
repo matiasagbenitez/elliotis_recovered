@@ -537,7 +537,7 @@ class RegisterTask extends Component
             session()->flash('flash.banner', 'Tarea de tipo ' . $name . ' registrada correctamente.');
             return redirect()->route('admin.tasks.show', $this->task->id);
         } catch (\Throwable $th) {
-            dd($th);
+            $this->emit('error', '¡Ocurrió un error al registrar la tarea! Intente nuevamente.');
         }
     }
 
@@ -645,7 +645,7 @@ class RegisterTask extends Component
             session()->flash('flash.banner', 'Tarea de tipo ' . $name . ' registrada correctamente.');
             return redirect()->route('admin.tasks.show', $this->task->id);
         } catch (\Throwable $th) {
-            dd($th);
+            $this->emit('error', '¡Ocurrió un error al finalizar la tarea! Intente nuevamente.');
         }
     }
 

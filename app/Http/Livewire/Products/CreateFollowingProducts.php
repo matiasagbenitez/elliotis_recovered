@@ -36,7 +36,6 @@ class CreateFollowingProducts extends Component
             session()->flash('flash.banner', $message);
             return redirect()->route('admin.products.show', $this->product);
         } catch (\Throwable $th) {
-            dd($th);
             $this->emit('error', '¡Ocurrió un error al actualizar los productos siguientes de ' . $this->product->name . '!');
         }
 

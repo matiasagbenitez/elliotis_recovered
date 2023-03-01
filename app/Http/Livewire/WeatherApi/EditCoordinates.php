@@ -64,7 +64,7 @@ class EditCoordinates extends Component
                 $this->emit('warning', "La ciudad que coincide con las coordenadas ingresadas es $city. ¿Desea guardar los cambios?");
             }
         } catch (\Throwable $th) {
-            $this->emit('error', "No se encontró la ciudad");
+            $this->emit('error', "Ocurrió un error. ¿Está seguro que ingresó correctamente las coordenadas?");
             $this->init();
         }
     }

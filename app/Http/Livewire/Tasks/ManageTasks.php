@@ -101,7 +101,6 @@ class ManageTasks extends Component
             $this->tasks = TaskService::getTasks($this->running_task, $this->filters, $this->type_of_task_id);
             $this->emit('success', '¡Tarea de tipo: ' . $this->task_type_name . ' iniciada correctamente!');
         } catch (\Throwable $th) {
-            dd($th);
             $this->emit('error', '¡Error al iniciar la tarea de tipo: ' . $this->task_type_name . '!');
         }
         $this->render();
@@ -112,7 +111,6 @@ class ManageTasks extends Component
         try {
             return redirect()->route('admin.tasks.register', ['task_type' => $this->type_of_task_id, 'task' => $id]);
         } catch (\Throwable $th) {
-            dd($th);
             $this->emit('error', '¡Error al finalizar la tarea de tipo ' . Str::lower($this->task_type_name) . '!');
         }
         $this->render();
@@ -123,7 +121,6 @@ class ManageTasks extends Component
         try {
             return redirect()->route('admin.tasks.show', ['task' => $id]);
         } catch (\Throwable $th) {
-            dd($th);
             $this->emit('error', '¡Error al mostrar la tarea de tipo: ' . $this->task_type_name . '!');
         }
         $this->render();

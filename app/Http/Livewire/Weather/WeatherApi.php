@@ -31,7 +31,9 @@ class WeatherApi extends Component
             $weatherData = json_decode($response->getBody()->getContents(), true);
             $this->getStats($weatherData);
         } catch (\Throwable $th) {
-            dd($th);
+            session()->flash('flash.banner', 'Error al obtener los datos del clima. Inténtelo nuevamente más tarde. Si el problema persiste, contacte a soporte técnico.');
+            session()->flash('flash.bannerStyle', 'danger');
+            return redirect()->route('dashboard');
         }
     }
 
@@ -204,7 +206,7 @@ class WeatherApi extends Component
             }
 
         } catch (\Throwable $th) {
-            dd($th);
+            $this->emit('warning', '¡Ocurrió un error inesperado! Intente nuevamente.');
         }
     }
 

@@ -97,7 +97,8 @@
                         </table>
                     @endif
                 @else
-                    <p class="text-center">Dado que no hay órdenes de venta, no se requiere calcular el estado de avance por etapas.</p>
+                    <p class="text-center">Dado que no hay órdenes de venta, no se requiere calcular el estado de avance
+                        por etapas.</p>
                 @endif
             </div>
         </div>
@@ -118,30 +119,51 @@
                 </span>
             </div>
 
-            <div class="border px-3 py-4 rounded-lg font-semibold">
-                <i class="fas fa-tree mr-2"></i>
-                Productos
-            </div>
-            <div class="border px-3 py-4 rounded-lg font-semibold">
-                <i class="fas fa-link mr-2"></i>
-                Producción necesaria
-            </div>
-            <div class="border px-3 py-4 rounded-lg font-semibold">
-                <i class="fas fa-tasks mr-2"></i>
-                Tareas
-            </div>
-            <div class="border px-3 py-4 rounded-lg font-semibold">
-                <i class="fas fa-mobile mr-2"></i>
-                Soporte técnico
-            </div>
-            <div class="border px-3 py-4 rounded-lg font-semibold">
-                <i class="fas fa-video mr-2"></i>
-                Videotutoriales
-            </div>
-            <div class="border px-3 py-4 rounded-lg font-semibold">
-                <i class="fas fa-arrow-alt-circle-left mr-2"></i>
-                Cerrar sesión
-            </div>
+            <a href="{{ route('admin.products.index') }}">
+                <div class="border px-3 py-4 rounded-lg font-semibold">
+                    <i class="fas fa-tree mr-2"></i>
+                    Productos
+                </div>
+            </a>
+
+            <a href="{{ route('admin.necessary-production.index') }}">
+                <div class="border px-3 py-4 rounded-lg font-semibold">
+                    <i class="fas fa-link mr-2"></i>
+                    Producción necesaria
+                </div>
+            </a>
+
+            <a href="{{ route('admin.tasks.index') }}">
+                <div class="border px-3 py-4 rounded-lg font-semibold">
+                    <i class="fas fa-tasks mr-2"></i>
+                    Tareas
+                </div>
+            </a>
+
+            <a href="">
+                <div class="border px-3 py-4 rounded-lg font-semibold">
+                    <i class="fas fa-mobile mr-2"></i>
+                    Soporte técnico
+                </div>
+            </a>
+
+            <a href="">
+                <div class="border px-3 py-4 rounded-lg font-semibold">
+                    <i class="fas fa-video mr-2"></i>
+                    Videotutoriales
+                </div>
+            </a>
+
+            <form method="POST" action="{{ route('logout') }}" x-data>
+                @csrf
+                <a href="{{ route('logout') }}" @click.prevent="$root.submit();">
+                    <div class="border px-3 py-4 rounded-lg font-semibold">
+                        <i class="fas fa-arrow-alt-circle-left mr-2"></i>
+                        Cerrar sesión
+                    </div>
+                </a>
+            </form>
+
         </div>
     </div>
 
