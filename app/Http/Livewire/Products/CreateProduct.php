@@ -176,7 +176,6 @@ class CreateProduct extends Component
                 return;
             }
 
-
             $product = Product::create($this->createForm);
 
             $message = '¡El producto ' . $product->name . ' ha sido creado exitosamente!';

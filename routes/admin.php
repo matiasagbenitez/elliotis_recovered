@@ -41,6 +41,7 @@ use App\Http\Controllers\SalePDFController;
 use App\Http\Livewire\Clients\CreateClient;
 use App\Http\Livewire\Clients\IndexClients;
 use App\Http\Livewire\Lots\SublotsProducts;
+use App\Http\Livewire\Products\EditProduct;
 use App\Http\Livewire\Products\ShowProduct;
 use App\Http\Livewire\Sales\ShowSaleClient;
 use App\Http\Livewire\Unities\IndexUnities;
@@ -147,6 +148,7 @@ Route::get('/product-types', IndexProductTypes::class)->name('admin.product-type
 // PRODUCTOS
 Route::get('/products', IndexProducts::class)->name('admin.products.index')->middleware('can:admin.products.index');
 Route::get('/products/create', CreateProduct::class)->name('admin.products.create')->middleware('can:admin.products.create');
+Route::get('/products/{product}/edit', EditProduct::class)->name('admin.products.edit');
 Route::get('/products/{product}/show', ShowProduct::class)->name('admin.products.show')->middleware('can:admin.products.show');
 Route::get('/products/{product}/previous-product', CreatePreviousProduct::class)->name('admin.products.create-previous-product')->middleware('can:admin.products.create-previous-product');
 Route::get('/products/{product}/following-products', CreateFollowingProducts::class)->name('admin.products.create-following-products')->middleware('can:admin.products.create-following-products');

@@ -31,10 +31,10 @@
                 'wood_type' => $wood_type,
                 'stock_parameter' => $stock_parameter,
             ]) }}">
-            <x-jet-secondary-button>
+            <x-jet-danger-button>
                 <span class="text-xs p-2 mr-1">Reporte</span>
-                <i class="fas fa-file"></i>
-            </x-jet-secondary-button>
+                <i class="fas fa-file-pdf"></i>
+            </x-jet-danger-button>
         </a>
 
         </div>

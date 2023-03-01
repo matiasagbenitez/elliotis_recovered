@@ -1,13 +1,13 @@
 <div class="container py-6">
     <x-slot name="header">
         <div class="flex items-center justify-between">
-            <a href="{{ route('admin.products.index') }}">
+            <a href="{{ route('admin.products.show', $product) }}">
                 <x-jet-button>
                     <i class="fas fa-arrow-left mr-2"></i>
                     Volver
                 </x-jet-button>
             </a>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">Crear un nuevo producto</h2>
+            <h2 class="font-semibold text-xl text-gray-800 leading-tight">Editar producto</h2>
             <span></span>
         </div>
     </x-slot>
@@ -15,12 +15,12 @@
     <x-jet-form-section class="mb-6" submit="save">
 
         <x-slot name="title">
-            <p class="font-bold text-gray-700">Guía para la creación de un nuevo producto</p>
+            <p class="font-bold text-gray-700">Guía para la edición de un producto</p>
         </x-slot>
 
         <x-slot name="description">
             <p class="text-justify text-sm text-gray-600">
-                Lea detenidamente la información solicitada y rellene los campos requeridos para registrar un nuevo
+                Lea detenidamente la información solicitada y rellene los campos requeridos para editar un
                 producto en el sistema.
             </p>
             <br>
@@ -65,69 +65,69 @@
             {{-- Tipo de producto --}}
             <div class="col-span-3">
                 <x-jet-label class="mb-2">Tipo de producto *</x-jet-label>
-                <select class="input-control w-full" wire:model="createForm.product_type_id">
+                <select class="input-control w-full" wire:model="editForm.product_type_id">
                     <option value="" selected>Seleccione una opción</option>
                     @foreach ($types_of_product as $item)
                         <option value="{{ $item->id }}">{{ $item->product_name->name }} {{ $item->measure->name }}
                         </option>
                     @endforeach
                 </select>
-                <x-jet-input-error class="mt-2 text-xs font-semibold" for="createForm.product_type_id" />
+                <x-jet-input-error class="mt-2 text-xs font-semibold" for="editForm.product_type_id" />
             </div>
 
             {{-- Tipo de madera --}}
             <div class="col-span-3">
                 <x-jet-label class="mb-2">Tipo de madera *</x-jet-label>
-                <select class="input-control w-full" wire:model="createForm.wood_type_id">
+                <select class="input-control w-full" wire:model="editForm.wood_type_id">
                     <option value="" selected>Seleccione una opción</option>
                     @foreach ($types_of_wood as $item)
                         <option value="{{ $item->id }}">{{ $item->name }}</option>
                     @endforeach
                 </select>
-                <x-jet-input-error class="mt-2 text-xs font-semibold" for="createForm.wood_type_id" />
+                <x-jet-input-error class="mt-2 text-xs font-semibold" for="editForm.wood_type_id" />
             </div>
 
             {{-- Nombre --}}
             <div class="col-span-6">
                 <x-jet-label class="mb-2">Nombre del producto *</x-jet-label>
-                <x-jet-input wire:model.defer="createForm.name" type="text" class="w-full" readonly
+                <x-jet-input wire:model.defer="editForm.name" type="text" class="w-full" readonly
                     placeholder="Nombre del producto"></x-jet-input>
-                <x-jet-input-error class="mt-2 text-xs font-semibold" for="createForm.name" />
+                <x-jet-input-error class="mt-2 text-xs font-semibold" for="editForm.name" />
             </div>
 
             {{-- Fase de producción --}}
             <div class="col-span-3">
                 <x-jet-label class="mb-2">Fase de producción *</x-jet-label>
-                <select class="input-control w-full" wire:model.defer="createForm.phase_id">
+                <select class="input-control w-full" wire:model.defer="editForm.phase_id">
                     <option value="" selected>Seleccione una opción</option>
                     @foreach ($phases as $item)
                         <option value="{{ $item->id }}">{{ $item->name }}</option>
                     @endforeach
                 </select>
-                <x-jet-input-error class="mt-2 text-xs font-semibold" for="createForm.phase_id" />
+                <x-jet-input-error class="mt-2 text-xs font-semibold" for="editForm.phase_id" />
             </div>
 
             {{-- M2 --}}
             <div class="col-span-1">
                 <x-jet-label class="mb-2">m² / unidad</x-jet-label>
-                <x-jet-input wire:model="createForm.m2" type="text" class="w-full text-gray-500" readonly>
+                <x-jet-input wire:model="editForm.m2" type="text" class="w-full text-gray-500" readonly>
                 </x-jet-input>
-                <x-jet-input-error class="mt-2 text-xs font-semibold" for="createForm.m2" />
+                <x-jet-input-error class="mt-2 text-xs font-semibold" for="editForm.m2" />
             </div>
 
             <div class="col-span-1">
                 <x-jet-label class="mb-2">
-                    {{ $createForm['m2'] != 0 ? 'Precio m²' : 'Precio unitario' }}
+                    {{ $editForm['m2'] != 0 ? 'Precio m²' : 'Precio unitario' }}
                 </x-jet-label>
-                <x-jet-input wire:model="createForm.m2_price" type="number" class="w-full"></x-jet-input>
-                <x-jet-input-error class="mt-2 text-xs font-semibold" for="createForm.m2_price" />
+                <x-jet-input wire:model="editForm.m2_price" type="number" class="w-full"></x-jet-input>
+                <x-jet-input-error class="mt-2 text-xs font-semibold" for="editForm.m2_price" />
             </div>
 
             <div class="col-span-1">
                 <x-jet-label class="mb-2">Precio final</x-jet-label>
-                <x-jet-input wire:model.defer="createForm.selling_price" type="text" class="w-full" readonly>
+                <x-jet-input wire:model.defer="editForm.selling_price" type="text" class="w-full" readonly>
                 </x-jet-input>
-                <x-jet-input-error class="mt-2 text-xs font-semibold" for="createForm.selling_price" />
+                <x-jet-input-error class="mt-2 text-xs font-semibold" for="editForm.selling_price" />
             </div>
 
             <div class="col-span-6">
@@ -138,8 +138,8 @@
             {{-- Stock real --}}
             <div class="col-span-1">
                 <x-jet-label class="mb-2">Stock real</x-jet-label>
-                <x-jet-input wire:model="createForm.real_stock" type="number" class="w-full"></x-jet-input>
-                <x-jet-input-error class="mt-2 text-xs font-semibold" for="createForm.real_stock" />
+                <x-jet-input wire:model="editForm.real_stock" type="number" class="w-full"></x-jet-input>
+                <x-jet-input-error class="mt-2 text-xs font-semibold" for="editForm.real_stock" />
             </div>
 
             <div class="col-span-1 flex items-end pb-3 text-gray-500">
@@ -149,8 +149,8 @@
             {{-- Stock mínimo --}}
             <div class="col-span-1">
                 <x-jet-label class="mb-2">Stock mínimo</x-jet-label>
-                <x-jet-input wire:model="createForm.minimum_stock" type="number" class="w-full"></x-jet-input>
-                <x-jet-input-error class="mt-2 text-xs font-semibold" for="createForm.minimum_stock" />
+                <x-jet-input wire:model="editForm.minimum_stock" type="number" class="w-full"></x-jet-input>
+                <x-jet-input-error class="mt-2 text-xs font-semibold" for="editForm.minimum_stock" />
             </div>
 
             <div class="col-span-1 flex items-end pb-3 text-gray-500">
@@ -160,8 +160,8 @@
             {{-- M2 --}}
             <div class="col-span-1">
                 <x-jet-label class="mb-2">Reposición</x-jet-label>
-                <x-jet-input wire:model="createForm.reposition" type="number" class="w-full"></x-jet-input>
-                <x-jet-input-error class="mt-2 text-xs font-semibold" for="createForm.reposition" />
+                <x-jet-input wire:model="editForm.reposition" type="number" class="w-full"></x-jet-input>
+                <x-jet-input-error class="mt-2 text-xs font-semibold" for="editForm.reposition" />
             </div>
 
             <div class="col-span-1 flex items-end pb-3 text-gray-500">
@@ -173,30 +173,30 @@
                 <hr>
             </div>
 
-            {{-- Radiobutton SI/NO synchronyzed with $createForm['is_salable'] --}}
+            {{-- Radiobutton SI/NO synchronyzed with $editForm['is_salable'] --}}
             <div class="col-span-1">
                 <x-jet-label class="mb-2">Artículo comprable</x-jet-label>
                 <div class="flex items-center">
                     <input type="radio" class="form-radio" name="is_buyable" value="1"
-                        wire:model="createForm.is_buyable" />
+                        wire:model="editForm.is_buyable" />
                     <label for="yes" class="ml-2 mr-3">Sí</label>
 
                     <input type="radio" class="form-radio" name="is_buyable" value="0"
-                        wire:model="createForm.is_buyable" />
+                        wire:model="editForm.is_buyable" />
                     <label for="no" class="ml-2">No</label>
                 </div>
             </div>
 
-            {{-- Radiobutton SI/NO synchronyzed with $createForm['is_salable'] --}}
+            {{-- Radiobutton SI/NO synchronyzed with $editForm['is_salable'] --}}
             <div class="col-span-1">
                 <x-jet-label class="mb-2">Artículo vendible</x-jet-label>
                 <div class="flex items-center">
                     <input type="radio" class="form-radio" name="is_salable" value="1"
-                        wire:model="createForm.is_salable" />
+                        wire:model="editForm.is_salable" />
                     <label for="yes" class="ml-2 mr-3">Sí</label>
 
                     <input type="radio" class="form-radio" name="is_salable" value="0"
-                        wire:model="createForm.is_salable" />
+                        wire:model="editForm.is_salable" />
                     <label for="no" class="ml-2">No</label>
                 </div>
             </div>
@@ -206,7 +206,7 @@
 
         <x-slot name="actions">
             <x-jet-button class="px-6">
-                Crear producto
+                Guardar cambios
             </x-jet-button>
         </x-slot>
 

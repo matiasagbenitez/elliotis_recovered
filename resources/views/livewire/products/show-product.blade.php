@@ -11,10 +11,12 @@
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                 Detalle de producto
             </h2>
-            <x-jet-secondary-button>
-                <i class="fas fa-info-circle mr-2"></i>
-                Ayuda
+            <a href="{{ route('admin.products.edit', $product->id) }}">
+                <x-jet-secondary-button>
+                    <i class="fas fa-edit mr-2"></i>
+                    Editar
                 </x-jet-seconda-button>
+            </a>
         </div>
     </x-slot>
 
