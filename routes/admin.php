@@ -97,9 +97,11 @@ use App\Http\Controllers\SaleOrderDetailPDFController;
 use App\Http\Controllers\SaleDetailClientPDFController;
 use App\Http\Livewire\IvaConditions\IndexIvaConditions;
 use App\Http\Livewire\Notifications\IndexNotifications;
+use App\Http\Livewire\VoucherTypes\IndexVoucherTypes;
 use App\Http\Livewire\Products\CreateFollowingProducts;
 use App\Http\Livewire\PurchaseOrders\ShowPurchaseOrder;
 use App\Http\Livewire\Tenderings\ShowFinishedTendering;
+use App\Http\Livewire\PaymentMethods\IndexPaymentMethods;
 use App\Http\Livewire\PurchaseOrders\CreatePurchaseOrder;
 use App\Http\Livewire\PurchaseOrders\PurchaseOrdersIndex;
 use App\Http\Livewire\SaleOrders\ShowNecessaryProduction;
@@ -111,8 +113,8 @@ use App\Http\Livewire\PreviousProducts\IndexPreviousProducts;
 use App\Http\Livewire\ProductionReport\IndexProductionReport;
 use App\Http\Controllers\ProduccionEmpaquetadoraPDFController;
 use App\Http\Controllers\ProduccionMachimbradoraPDFController;
+use App\Http\Livewire\PaymentConditions\IndexPaymentCondition;
 use App\Http\Livewire\FollowingProducts\IndexFollowingProducts;
-use App\Http\Livewire\PucharseParameters\IndexPucharseParameters;
 use App\Http\Livewire\NecesaryProduction\IndexNecessaryProduction;
 
 // RUTA DE EMPRESA
@@ -126,7 +128,9 @@ Route::get('/localities', IndexLocalities::class)->name('admin.localities.index'
 // IVA Y PARÁMETROS DE COMPRA
 Route::get('/iva-conditions', IndexIvaConditions::class)->name('admin.iva-conditions.index')->middleware('can:admin.iva-conditions.index');
 Route::get('/iva-types', IndexIvaTypes::class)->name('admin.iva-types.index')->middleware('can:admin.iva-types.index');
-Route::get('/pucharse-parameters', IndexPucharseParameters::class)->name('admin.pucharse-parameters.index')->middleware('can:admin.purchase-parameters.index');
+Route::get('/payment-conditions', IndexPaymentCondition::class)->name('admin.payment-conditions.index');
+Route::get('/payment-methods', IndexPaymentMethods::class)->name('admin.payment-methods.index');
+Route::get('/voucher-types', IndexVoucherTypes::class)->name('admin.voucher-types.index');
 
 // CLIENTES
 Route::get('/clients', IndexClients::class)->name('admin.clients.index')->middleware('can:admin.clients.index');

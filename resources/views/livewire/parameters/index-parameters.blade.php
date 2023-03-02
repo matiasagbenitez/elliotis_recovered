@@ -38,13 +38,17 @@
         <div class="mb-5">
             <div class="flex items-center">
                 <i class="fas fa-calculator mr-2"></i>
-                <h1 class="font-bold uppercase">Compras, ventas e IVA</h1>
+                <h1 class="font-bold uppercase">Parámetros de compras, ventas e IVA</h1>
             </div>
             <hr class="my-2">
 
-            <a href="{{ route('admin.pucharse-parameters.index') }}"><p class="font-normal hover:underline">Parámetros de compras y ventas</p></a>
+            {{-- <a href="{{ route('admin.pucharse-parameters.index') }}"><p class="font-normal hover:underline">Parámetros de compras y ventas</p></a> --}}
             <a href="{{ route('admin.iva-conditions.index') }}"><p class="font-normal hover:underline">Condiciones ante IVA</p></a>
             <a href="{{ route('admin.iva-types.index') }}"><p class="font-normal hover:underline">Tipos de IVA</p></a>
+            <a href="{{ route('admin.payment-conditions.index') }}"><p class="font-normal hover:underline">Condiciones de pago</p></a>
+            <a href="{{ route('admin.payment-methods.index') }}"><p class="font-normal hover:underline">Métodos de pago</p></a>
+            <a href="{{ route('admin.voucher-types.index') }}"><p class="font-normal hover:underline">Tipos de comprobante</p></a>
+
         </div>
 
 
