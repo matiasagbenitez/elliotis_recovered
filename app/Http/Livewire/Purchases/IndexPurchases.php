@@ -161,7 +161,6 @@ class IndexPurchases extends Component
 
             $this->emit('success', '¡La compra se ha confirmado correctamente! Lotes registrados para producción.');
         } catch (\Exception $e) {
-            dd($e);
             $this->emit('error', 'No es posible confirmar la compra.');
         }
     }

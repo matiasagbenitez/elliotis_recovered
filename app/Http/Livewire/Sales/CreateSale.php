@@ -346,7 +346,6 @@ class CreateSale extends Component
                 $this->createForm['client_order_id'] = null;
             }
         } catch (\Throwable $th) {
-            dd($th);
             $this->emit('error', 'Ocurrió un error al intentar guardar la venta con la orden de venta seleccionada.');
             return;
         }
@@ -432,7 +431,6 @@ class CreateSale extends Component
             return redirect()->route('admin.sales.index');
         } catch (\Throwable $th) {
             // dd($th->getMessage());
-            dd($th->getMessage());
             $this->emit('error', '¡Ha ocurrido un error! Verifica la información ingresada.');
         }
     }

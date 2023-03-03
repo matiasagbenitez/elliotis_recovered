@@ -191,7 +191,6 @@ class CreateSaleOrder extends Component
             session()->flash('flash.banner', $message);
             return redirect()->route('admin.sale-orders.index');
         } catch (\Throwable $th) {
-            dd($th);
             $this->emit('error',  '¡Ha ocurrido un error! Verifica la información ingresada.');
         }
     }
