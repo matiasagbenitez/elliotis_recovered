@@ -46,10 +46,10 @@ class CreateSaleOrder extends Component
         'createForm.total' => 'required',
         'createForm.observations' => 'nullable|string',
         'orderProducts.*.product_id' => 'required',
-        'orderProducts.*.m2_unitary' => 'required|numeric|min:1',
+        'orderProducts.*.m2_unitary' => 'required|numeric|min:0',
         'orderProducts.*.quantity' => 'required|numeric|min:1',
         'orderProducts.*.m2_total' => 'required|numeric|min:1',
-        'orderProducts.*.m2_price' => 'required|numeric|min:1',
+        'orderProducts.*.m2_price' => 'required|numeric|min:0',
     ];
 
     public function mount()
@@ -191,6 +191,7 @@ class CreateSaleOrder extends Component
             session()->flash('flash.banner', $message);
             return redirect()->route('admin.sale-orders.index');
         } catch (\Throwable $th) {
+            dd($th);
             $this->emit('error',  '¡Ha ocurrido un error! Verifica la información ingresada.');
         }
     }

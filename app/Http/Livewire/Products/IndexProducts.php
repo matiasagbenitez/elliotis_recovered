@@ -48,7 +48,7 @@ class IndexProducts extends Component
             $query->where('name', 'LIKE', '%' . $this->wood_type . '%');
         })->when($this->stock_parameter ?? null, function($query) {
             $query->whereRaw('real_stock ' . $this->stock_parameter . ' minimum_stock');
-        })->where('name', 'LIKE', '%' . $this->search . '%')->orderBy('id', 'asc')->paginate(10);
+        })->where('name', 'LIKE', '%' . $this->search . '%')->orderBy('id', 'asc')->paginate(25);
 
         return view('livewire.products.index-products', compact('products'));
     }

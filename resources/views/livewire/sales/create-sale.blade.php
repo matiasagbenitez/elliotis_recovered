@@ -315,6 +315,18 @@
     </script>
 
     <script>
+        Livewire.on('error', message => {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: message,
+                showConfirmButton: true,
+                confirmButtonColor: '#1f2937',
+            });
+        });
+    </script>
+
+    <script>
         Livewire.on('quantitiesError', message => {
             Swal.fire({
                 title: '¡No hay suficiente stock!',

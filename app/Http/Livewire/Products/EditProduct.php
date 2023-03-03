@@ -196,7 +196,7 @@ class EditProduct extends Component
             'editForm.selling_price' => 'required|numeric|min:0',
             'editForm.real_stock' => 'required|numeric|min:1',
             'editForm.minimum_stock' => 'required|numeric|min:1',
-            'editForm.reposition' => 'required|numeric|min:1',
+            'editForm.reposition' => 'required|numeric|min:0',
             'editForm.wood_type_id' => 'required|numeric|exists:wood_types,id',
             'editForm.iva_type_id' => 'required|numeric|exists:iva_types,id',
             'editForm.is_salable' => 'required|numeric|in:0,1',

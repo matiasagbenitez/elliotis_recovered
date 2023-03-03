@@ -76,10 +76,10 @@ class CreateSale extends Component
         'createForm.total' => 'required',
         'createForm.observations' => 'nullable|string',
         'orderSublots.*.product_id' => 'required',
-        'orderSublots.*.m2_unitary' => 'required|numeric|min:1',
+        'orderSublots.*.m2_unitary' => 'required|numeric|min:0',
         'orderSublots.*.quantity' => 'required|numeric|min:1',
         'orderSublots.*.m2_total' => 'required|numeric|min:1',
-        'orderSublots.*.m2_price' => 'required|numeric|min:1',
+        'orderSublots.*.m2_price' => 'required|numeric|min:0',
     ];
 
     protected $listeners = ['bestTry'];
@@ -156,7 +156,7 @@ class CreateSale extends Component
             $this->resetOrderSublots();
         } else {
             $this->reset('client_orders');
-            $this->client_orders = SaleOrder::where('client_id', $this->createForm['client_id'])->where('is_active', true)->get();
+            $this->client_orders = SaleOrder::where('client_id', $this->createForm['client_id'])->where('is_active', true)->where('its_done', false)->get();
         }
     }
 
@@ -218,7 +218,7 @@ class CreateSale extends Component
         $orderDetail = ProductSaleOrder::where('sale_order_id', $this->createForm['client_order_id'])->get()->toArray();
 
         foreach ($orderDetail as $product) {
-            $sublots = Sublot::where('product_id', $product['product_id'])->where('available', true)->where('area_id', 8)->whereHas('product', function ($query) {
+            $sublots = Sublot::where('product_id', $product['product_id'])->where('available', true)->whereHas('product', function ($query) {
                 $query->where('is_salable', true);
             })->get();
 
@@ -346,23 +346,33 @@ class CreateSale extends Component
                 $this->createForm['client_order_id'] = null;
             }
         } catch (\Throwable $th) {
+            dd($th);
             $this->emit('error', 'Ocurrió un error al intentar guardar la venta con la orden de venta seleccionada.');
             return;
         }
 
 
         // Controlamos que exista stock para todos los productos de la orden, caso contrario, mostramos un mensaje de error
-        foreach ($this->orderSublots as $orderSublot) {
-            $sublot = Sublot::find($orderSublot['sublot_id']);
-            if ($sublot->actual_quantity < $orderSublot['quantity']) {
-                $this->emit('stockError', 'No hay stock suficiente para el producto ' . $sublot->product->name . ' en el sublote ' . $sublot->code . '.' );
-                return;
+        try {
+            foreach ($this->orderSublots as $orderSublot) {
+                $sublot = Sublot::find($orderSublot['sublot_id']);
+                if ($sublot->actual_quantity < $orderSublot['quantity']) {
+                    $this->emit('stockError', 'No hay stock suficiente para el producto ' . $sublot->product->name . ' en el sublote ' . $sublot->code . '.');
+                    return;
+                }
             }
+        } catch (\Throwable $th) {
+            $this->emit('error', 'Ocurrió un error al intentar guardar la venta.');
+            return;
         }
 
-        // dd($orderSublot);
         // Validamos los campos
-        $this->validate();
+        try {
+            $this->validate();
+        } catch (\Throwable $th) {
+            $this->emit('error', 'Ocurrió un error al intentar guardar la venta.');
+            return;
+        }
 
         $this->createForm['user_id'] = Auth::user()->id;
 
@@ -422,6 +432,7 @@ class CreateSale extends Component
             return redirect()->route('admin.sales.index');
         } catch (\Throwable $th) {
             // dd($th->getMessage());
+            dd($th->getMessage());
             $this->emit('error', '¡Ha ocurrido un error! Verifica la información ingresada.');
         }
     }

@@ -91,32 +91,32 @@
                 <thead class="border-b border-gray-300 bg-gray-200">
                     <tr>
                         <th scope="col"
-                            class="px-4 py-2 text-center text-sm font-bold text-gray-500 uppercase tracking-wider">
+                            class="px-4 py-1 text-center text-sm font-bold text-gray-500 uppercase tracking-wider">
                             ID
                         </th>
                         <th scope="col"
-                            class="w-2/6 px-4 py-2 text-center text-sm font-bold text-gray-500 uppercase tracking-wider">
+                            class="w-2/6 px-4 py-1 text-center text-sm font-bold text-gray-500 uppercase tracking-wider">
                             Denominación
                         </th>
                         <th scope="col"
-                            class="w-1/6 px-4 py-2 text-center text-sm font-bold text-gray-500 uppercase tracking-wider">
+                            class="w-1/6 px-4 py-1 text-center text-sm font-bold text-gray-500 uppercase tracking-wider">
                             Especie
                         </th>
                         <th scope="col"
-                            class="w-1/6 px-4 py-2 text-center text-sm font-bold text-gray-500 uppercase tracking-wider">
+                            class="w-1/6 px-4 py-1 text-center text-sm font-bold text-gray-500 uppercase tracking-wider">
                             Nivel stock
                         </th>
                         <th scope="col"
-                            class="w-1/6 px-4 py-2 text-center text-sm font-bold text-gray-500 uppercase tracking-wider">
+                            class="w-1/6 px-4 py-1 text-center text-sm font-bold text-gray-500 uppercase tracking-wider">
                             Stock real
                         </th>
                         <th scope="col"
-                            class="w-1/6 px-4 py-2 text-center text-sm font-bold text-gray-500 uppercase tracking-wider">
+                            class="w-1/6 px-4 py-1 text-center text-sm font-bold text-gray-500 uppercase tracking-wider">
                             M2
                         </th>
                         @can('admin.products.show')
                         <th scope="col"
-                            class="w-1/6 px-4 py-2 text-center text-sm font-bold text-gray-500 uppercase tracking-wider">
+                            class="w-1/6 px-4 py-1 text-center text-sm font-bold text-gray-500 uppercase tracking-wider">
                             Acción
                         </th>
                         @endcan
@@ -125,22 +125,22 @@
                 <tbody class="divide-y divide-gray-200">
                     @foreach ($products as $product)
                         <tr class="bg-gray-50">
-                            <td class="px-6 py-3">
+                            <td class="px-6 py-2">
                                 <p class="text-sm uppercase">
                                     {{ $product->id }}
                                 </p>
                             </td>
-                            <td class="px-6 py-3 whitespace-nowrap">
+                            <td class="px-6 py-2 whitespace-nowrap">
                                 <p class="text-sm uppercase">
                                     {{ $product->name }}
                                 </p>
                             </td>
-                            <td class="px-6 py-3 whitespace-nowrap text-center">
+                            <td class="px-6 py-2 whitespace-nowrap text-center">
                                 <p class="text-sm uppercase">
                                     {{ $product->woodType->name }}
                                 </p>
                             </td>
-                            <td class="px-6 py-3 whitespace-nowrap text-center">
+                            <td class="px-6 py-2 whitespace-nowrap text-center">
                                 <div class="flex items-center justify-center">
                                     @if ($product->real_stock > $product->minimum_stock)
                                         <span
@@ -155,13 +155,13 @@
                                     @endif
                                 </div>
                             </td>
-                            <td class="px-6 py-3 whitespace-nowrap">
+                            <td class="px-6 py-2 whitespace-nowrap">
                                 <p class="text-sm uppercase text-center">
                                     {{ $product->real_stock }}
                                     <span class="text-xs italic">{{ $product->productType->unity->name }}</span>
                                 </p>
                             </td>
-                            <td class="px-6 py-3 whitespace-nowrap">
+                            <td class="px-6 py-2 whitespace-nowrap">
                                 <p class="text-sm text-center">
                                     @if ($product->productType->measure->is_trunk)
                                     N/A
@@ -171,7 +171,7 @@
                                 </p>
                             </td>
                             @can('admin.products.show')
-                            <td class="px-6 py-3 whitespace-nowrap">
+                            <td class="px-6 py-2 whitespace-nowrap">
                                 <div class="flex items-center justify-center">
                                     <a href="{{ route('admin.products.show', $product) }}">
                                         <x-jet-button>

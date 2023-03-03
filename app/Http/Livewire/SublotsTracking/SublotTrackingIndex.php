@@ -15,11 +15,11 @@ class SublotTrackingIndex extends Component
     public $sublotStats = [];
     public $historic = [];
 
-    public function mount()
-    {
-        $this->selectedSublot = 'S9868';
-        $this->showSublot();
-    }
+    // public function mount()
+    // {
+    //     $this->selectedSublot = 'S9868';
+    //     $this->showSublot();
+    // }
 
     public function showSublot()
     {
