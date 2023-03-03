@@ -35,7 +35,7 @@ class IndexStadistics extends Component
         } else {
             $this->stadistic_type = 0;
             // Primer día del mes
-            $this->from_datetime = date('Y-m-01 06:00');
+            $this->from_datetime = date('Y-01-01 06:00');
             // Hoy
             $this->to_datetime = date('Y-m-d H:i');
         }

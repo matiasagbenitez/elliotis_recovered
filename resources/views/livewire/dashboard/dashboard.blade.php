@@ -140,14 +140,14 @@
                 </div>
             </a>
 
-            <a href="">
+            <a href="mailto:sistemaelliotis@gmail.com">
                 <div class="border px-3 py-4 rounded-lg font-semibold">
                     <i class="fas fa-mobile mr-2"></i>
                     Soporte técnico
                 </div>
             </a>
 
-            <a href="">
+            <a href="https://www.youtube.com/playlist?list=PLXB2wOujY8QaXiTJ3Ae1H3SMy571c7GFJ" target="_blank">
                 <div class="border px-3 py-4 rounded-lg font-semibold">
                     <i class="fas fa-video mr-2"></i>
                     Videotutoriales

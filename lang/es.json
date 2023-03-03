@@ -39,5 +39,10 @@
     "black": "negro",
     "Forgot your password? No problem. Just let us know your email address and we will email you a password reset link that will allow you to choose a new one." : "¿Olvidaste tu contraseña? No hay problema. Simplemente dinos tu dirección de correo electrónico y te enviaremos un enlace para restablecer la contraseña que te permitirá elegir una nueva.",
     "Email Password Reset Link": "Enviar enlace",
-    "Already registered?": "¿Ya estás registrado?"
+    "Already registered?": "¿Ya estás registrado?",
+    "Showing": "Mostrando",
+    "to": "a",
+    "of": "de",
+    "entries": "entradas",
+    "results": "resultados"
 }
