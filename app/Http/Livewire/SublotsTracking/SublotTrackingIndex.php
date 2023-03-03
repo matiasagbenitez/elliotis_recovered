@@ -5,6 +5,7 @@ namespace App\Http\Livewire\SublotsTracking;
 use App\Models\InputTaskDetail;
 use App\Models\Sublot;
 use App\Models\User;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Date;
 use Livewire\Component;
 
@@ -119,6 +120,23 @@ class SublotTrackingIndex extends Component
             } else {
                 $this->getTransformationHistory($inputTask);
             }
+        }
+    }
+
+    public function generatePDF()
+    {
+        try {
+            if (!$this->sublotStats || $this->selectedSublot == null || $this->selectedSublot == '') {
+                $this->emit('error', 'Debe seleccionar un sublote');
+                return;
+            }
+
+            $sublotStats = Crypt::encrypt($this->sublotStats);
+            $historic = Crypt::encrypt($this->historic);
+
+            return redirect()->route('admin.sublots-tracking.pdf', ['sublotStats' => $sublotStats, 'historic' => $historic]);
+        } catch (\Throwable $th) {
+            $this->emit('error', 'Ocurrió un error al generar el PDF');
         }
     }
 

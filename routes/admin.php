@@ -113,6 +113,7 @@ use App\Http\Livewire\PreviousProducts\IndexPreviousProducts;
 use App\Http\Livewire\ProductionReport\IndexProductionReport;
 use App\Http\Controllers\ProduccionEmpaquetadoraPDFController;
 use App\Http\Controllers\ProduccionMachimbradoraPDFController;
+use App\Http\Controllers\SublotHistoryPDFController;
 use App\Http\Livewire\PaymentConditions\IndexPaymentCondition;
 use App\Http\Livewire\FollowingProducts\IndexFollowingProducts;
 use App\Http\Livewire\NecesaryProduction\IndexNecessaryProduction;
@@ -219,7 +220,7 @@ Route::get('/notifications', IndexNotifications::class)->name('admin.notificatio
 
 // RUTAS PARA PRUEBAS
 Route::get('/sublots-tracking', SublotTrackingIndex::class)->name('admin.sublots-tracking.index');
-
+Route::get('/sublots-tracking/pdf', [SublotHistoryPDFController::class, 'pdf'])->name('admin.sublots-tracking.pdf');
 // PRODUCCIÓN NECESARIA
 Route::get('/necessary-production', IndexNecessaryProduction::class)->name('admin.necessary-production.index')->middleware('can:admin.necessary-production.index');
 

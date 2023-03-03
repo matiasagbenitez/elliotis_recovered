@@ -30,7 +30,7 @@
                         <i class="fas fa-eraser mr-2"></i>
                         Reiniciar
                         </x-jet-seconda-button>
-                        <x-jet-danger-button wire:click="$emit('pdf')" class="w-full">
+                        <x-jet-danger-button wire:click="generatePDF" class="w-full">
                             <i class="fas fa-file-pdf mr-2"></i>
                             Generar PDF
                         </x-jet-danger-button>
