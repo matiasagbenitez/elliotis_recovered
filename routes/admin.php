@@ -129,9 +129,9 @@ Route::get('/localities', IndexLocalities::class)->name('admin.localities.index'
 // IVA Y PARÁMETROS DE COMPRA
 Route::get('/iva-conditions', IndexIvaConditions::class)->name('admin.iva-conditions.index')->middleware('can:admin.iva-conditions.index');
 Route::get('/iva-types', IndexIvaTypes::class)->name('admin.iva-types.index')->middleware('can:admin.iva-types.index');
-Route::get('/payment-conditions', IndexPaymentCondition::class)->name('admin.payment-conditions.index');
-Route::get('/payment-methods', IndexPaymentMethods::class)->name('admin.payment-methods.index');
-Route::get('/voucher-types', IndexVoucherTypes::class)->name('admin.voucher-types.index');
+Route::get('/payment-conditions', IndexPaymentCondition::class)->name('admin.payment-conditions.index')->middleware('can:admin.payment-conditions.index');
+Route::get('/payment-methods', IndexPaymentMethods::class)->name('admin.payment-methods.index')->middleware('can:admin.payment-methods.index');
+Route::get('/voucher-types', IndexVoucherTypes::class)->name('admin.voucher-types.index')->middleware('can:admin.voucher-types.index');
 
 // CLIENTES
 Route::get('/clients', IndexClients::class)->name('admin.clients.index')->middleware('can:admin.clients.index');
@@ -153,7 +153,7 @@ Route::get('/product-types', IndexProductTypes::class)->name('admin.product-type
 // PRODUCTOS
 Route::get('/products', IndexProducts::class)->name('admin.products.index')->middleware('can:admin.products.index');
 Route::get('/products/create', CreateProduct::class)->name('admin.products.create')->middleware('can:admin.products.create');
-Route::get('/products/{product}/edit', EditProduct::class)->name('admin.products.edit');
+Route::get('/products/{product}/edit', EditProduct::class)->name('admin.products.edit')->middleware('can:admin.products.edit');
 Route::get('/products/{product}/show', ShowProduct::class)->name('admin.products.show')->middleware('can:admin.products.show');
 Route::get('/products/{product}/previous-product', CreatePreviousProduct::class)->name('admin.products.create-previous-product')->middleware('can:admin.products.create-previous-product');
 Route::get('/products/{product}/following-products', CreateFollowingProducts::class)->name('admin.products.create-following-products')->middleware('can:admin.products.create-following-products');
@@ -219,7 +219,7 @@ Route::get('/calculator', M2CalculatorIndex::class)->name('admin.calculator.inde
 Route::get('/notifications', IndexNotifications::class)->name('admin.notifications.index')->middleware('can:admin.notifications.index');
 
 // RUTAS PARA PRUEBAS
-Route::get('/sublots-tracking', SublotTrackingIndex::class)->name('admin.sublots-tracking.index');
+Route::get('/sublots-tracking', SublotTrackingIndex::class)->name('admin.sublots-tracking.index')->middleware('can:admin.sublots-tracking.index');
 Route::get('/sublots-tracking/pdf', [SublotHistoryPDFController::class, 'pdf'])->name('admin.sublots-tracking.pdf');
 // PRODUCCIÓN NECESARIA
 Route::get('/necessary-production', IndexNecessaryProduction::class)->name('admin.necessary-production.index')->middleware('can:admin.necessary-production.index');
@@ -242,7 +242,7 @@ Route::get('/audits/sales', Ventas::class)->name('admin.auditory.sales')->middle
 
 // API clima
 Route::get('/weather-api', WeatherApi::class)->name('admin.api.index')->middleware('can:admin.api.index');
-Route::get('/weather-api/edit-coordinates', EditCoordinates::class)->name('admin.api.edit-coordinates');
+Route::get('/weather-api/edit-coordinates', EditCoordinates::class)->name('admin.api.edit-coordinates')->middleware('can:admin.api.edit-coordinates');
 
 // RUTAS PDF
 Route::get('/products/pdf', [ProductPDFController::class, 'pdf'])->name('admin.products.pdf');

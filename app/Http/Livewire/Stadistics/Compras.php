@@ -78,7 +78,9 @@ class Compras extends Component
                     }
                 }
             }
-            $this->productos_comprados = $productos_comprados;
+            // Sort descending by tn
+            $this->productos_comprados  = collect($productos_comprados)->sortByDesc('tn')->values()->all();
+
 
             $total_tn = collect($productos_comprados)->sum('tn');
             $this->total_tn = $total_tn;

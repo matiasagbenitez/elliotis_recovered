@@ -250,7 +250,7 @@
                     <p style="font-weight: 700; font-size: 0.8rem; margin: 0px; text-transform: uppercase;">Tasa de
                         producción</p>
                     <span style="font-weight: 400; font-size: 0.8rem;">
-                        {{ $stats['tasa_produccion'] }} %
+                        {{ $stats['tasa_produccion_m2'] }} %
                     </span>
                 </td>
             </tr>

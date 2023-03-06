@@ -97,8 +97,7 @@ class Ventas extends Component
             }
             $this->clientes = $clientes;
 
-            $productos_vendidos_ordenados = collect($productos_vendidos)->sortByDesc('m2')->toArray();
-            $this->productos_vendidos_ordenados = $productos_vendidos_ordenados;
+            $this->productos_vendidos_ordenados = collect($productos_vendidos)->sortByDesc('m2')->values()->all();
 
         } catch (\Throwable $th) {
             $this->emit('error', $th->getMessage());

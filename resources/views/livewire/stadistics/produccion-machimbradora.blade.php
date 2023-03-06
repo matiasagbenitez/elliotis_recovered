@@ -102,7 +102,7 @@
             </div>
 
             <div>
-                <p class="text-xl text-gray-700 font-bold">Tasa de producción</p>
+                <p class="text-xl text-gray-700 font-bold">Rendimiento</p>
                 <hr>
                 <span class="text-lg font-semibold text-gray-500">{{ $tasa_produccion }}%</span>
             </div>

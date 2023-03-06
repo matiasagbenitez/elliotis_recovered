@@ -11,12 +11,14 @@
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                 Detalle de producto
             </h2>
-            <a href="{{ route('admin.products.edit', $product->id) }}">
-                <x-jet-secondary-button>
-                    <i class="fas fa-edit mr-2"></i>
-                    Editar
-                </x-jet-seconda-button>
-            </a>
+            @can('admin.products.edit')
+                <a href="{{ route('admin.products.edit', $product->id) }}">
+                    <x-jet-secondary-button>
+                        <i class="fas fa-edit mr-2"></i>
+                        Editar
+                        </x-jet-seconda-button>
+                </a>
+            @endcan
         </div>
     </x-slot>
 

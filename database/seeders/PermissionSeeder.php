@@ -39,7 +39,15 @@ class PermissionSeeder extends Seeder
                 'guard_name' => 'web',
             ],
             [
-                'name' => 'admin.purchase-parameters.index',
+                'name' => 'admin.payment-conditions.index',
+                'guard_name' => 'web',
+            ],
+            [
+                'name' => 'admin.payment-methods.index',
+                'guard_name' => 'web',
+            ],
+            [
+                'name' => 'admin.voucher-types.index',
                 'guard_name' => 'web',
             ],
 
@@ -100,6 +108,10 @@ class PermissionSeeder extends Seeder
             ],
             [
                 'name' => 'admin.products.create',
+                'guard_name' => 'web',
+            ],
+            [
+                'name' => 'admin.products.edit',
                 'guard_name' => 'web',
             ],
             [
@@ -334,6 +346,14 @@ class PermissionSeeder extends Seeder
 
             [
                 'name' => 'admin.dashboard',
+                'guard_name' => 'web',
+            ],
+            [
+                'name' => 'admin.sublots-tracking.index',
+                'guard_name' => 'web',
+            ],
+            [
+                'name' => 'admin.api.edit-coordinates',
                 'guard_name' => 'web',
             ]
         ];

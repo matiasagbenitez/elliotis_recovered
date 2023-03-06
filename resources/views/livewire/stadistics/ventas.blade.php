@@ -46,7 +46,8 @@
             <div>
                 <p class="text-xl text-gray-700 font-bold">Promedio m²/venta</p>
                 <hr>
-                <span class="text-lg font-semibold text-gray-500">{{ number_format($promedio_m2_venta) }} m²/venta</span>
+                <span class="text-lg font-semibold text-gray-500">{{ number_format($promedio_m2_venta) }}
+                    m²/venta</span>
             </div>
 
             <div class="col-span-2">
@@ -98,18 +99,20 @@
                 <hr>
                 <ul class="list-disc ml-10">
                     @if ($productos_vendidos_ordenados)
-                       @foreach ($productos_vendidos as $producto)
-                       <li class="whitespace-nowrap">
-                        <span class="font-semibold">{{ $producto['nombre'] }}</span>
-                        <br>
-                        Unidades: {{ $producto['unidades'] }}
-                        &ensp;|&ensp;
-                        m²: {{ number_format($producto['m2'], 2, ',', '.') }}
-                        &ensp;|&ensp;
-                        Total: ${{ number_format($producto['total'], 2, ',', '.') }}
-                        <br><br>
-                    </li>
-                       @endforeach
+                        @foreach ($productos_vendidos_ordenados as $producto)
+                            <li class="whitespace-nowrap">
+                                <span class="font-semibold">{{ $producto['nombre'] }}</span>
+                                <br>
+                                Unidades: {{ $producto['unidades'] }}
+                                &ensp;|&ensp;
+                                <span class="font-semibold">
+                                    m²: {{ number_format($producto['m2'], 2, ',', '.') }}
+                                </span>
+                                &ensp;|&ensp;
+                                Total: ${{ number_format($producto['total'], 2, ',', '.') }}
+                                <br><br>
+                            </li>
+                        @endforeach
                     @else
                         <li>
                             No hay datos para mostrar

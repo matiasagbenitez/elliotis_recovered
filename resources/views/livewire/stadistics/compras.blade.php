@@ -106,7 +106,9 @@
                         <br>
                         Unidades: {{ $producto['cantidad'] }}
                         &ensp;|&ensp;
-                        TN: {{ number_format($producto['tn'], 2, ',', '.') }} TN
+                        <span class="font-semibold">
+                            TN: {{ number_format($producto['tn'], 2, ',', '.') }} TN
+                        </span>
                         &ensp;|&ensp;
                         Total: ${{ number_format($producto['subtotal'], 2, ',', '.') }}
                         <br><br>

@@ -22,6 +22,7 @@ class RoleSeeder extends Seeder
         $role3->givePermissionTo(Permission::all());
         $role3->revokePermissionTo('admin.auditory.index');
         $role3->revokePermissionTo('admin.products.create');
+        $role3->revokePermissionTo('admin.products.edit');
         $role3->revokePermissionTo('admin.products.create-previous-product');
         $role3->revokePermissionTo('admin.products.create-following-products');
         $role3->revokePermissionTo('admin.roles.create');
