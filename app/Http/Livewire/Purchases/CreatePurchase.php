@@ -263,7 +263,7 @@ class CreatePurchase extends Component
 
         if ($this->createForm['type_of_purchase'] == 1) {
             foreach ($this->orderProducts as $index => $product) {
-                if (empty($product['tn_total'])) {
+                if (empty($product['tn_total']) || empty($product['tn_price'])) {
                     $this->orderProducts[$index]['subtotal'] = 0;
                 } else {
                     $aux = $product['tn_total'] * $product['tn_price'];
